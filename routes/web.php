@@ -6,6 +6,7 @@ use App\Http\Controllers\TestController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Http\Middleware\HelloMiddleware;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,12 +32,8 @@ Route::get('/', function() {
     return view('welcome');
 });
 
-Route::get('/test', 'App\Http\Controllers\TestController');
-// Route::get('/test', function() {
-//     $result = view('test');
-//     return $result;
-    // return $result->status();
-// });
+Route::get('/test', 'App\Http\Controllers\TestController')
+->middleware(HelloMiddleware::class);
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');

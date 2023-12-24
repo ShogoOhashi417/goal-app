@@ -9,9 +9,9 @@
 
 @section('content')
     <p>ここが本文</p>
-    <p>'message' = {{ $message }}</p>
-    <p>'view_message' = {{ $view_message }}</p>
-
+    @foreach ($data as $item)
+    <p>名前は{{ $item['name'] }}でメアドは{{ $item['mail'] }}</p>
+    @endforeach
 @endsection
 
 @section('footer')
