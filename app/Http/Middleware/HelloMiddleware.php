@@ -15,11 +15,15 @@ class HelloMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $data = [
-            ['name' => 'taro', 'mail' => 'taro@yamada'],
-            ['name' => 'jiro', 'mail' => 'jiro@yamada'],
-            ['name' => 'saburo', 'mail' => 'saburo@yamada']
-        ];
+        $response = $next($request);
+        $content = $response->content();
+
+        $pattern = '置き換える';
+        $replace = '置き換わった';
+
+        $content = str_replace($pattern, $replace, $content);
+        $response->setContent($content);
+        return $response;
 
         $request->merge(['data' => $data]);
         return $next($request);

@@ -9,9 +9,7 @@
 
 @section('content')
     <p>ここが本文</p>
-    @foreach ($data as $item)
-    <p>名前は{{ $item['name'] }}でメアドは{{ $item['mail'] }}</p>
-    @endforeach
+    <p>置き換える</p>
 @endsection
 
 @section('footer')
