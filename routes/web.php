@@ -33,7 +33,7 @@ Route::get('/', function() {
 });
 
 Route::get('/test', 'App\Http\Controllers\TestController')
-->middleware(HelloMiddleware::class);
+->middleware('test');
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
