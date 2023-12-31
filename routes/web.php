@@ -46,6 +46,8 @@ Route::get('/dashboard', function () {
 
 Route::get('/todolist', 'App\Http\Controllers\TodoListController@index');
 
+Route::post('/todolist', 'App\Http\Controllers\TodoListController@create');
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
