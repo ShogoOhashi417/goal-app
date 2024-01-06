@@ -30,7 +30,6 @@ Route::get('/', function() {
     return view('welcome');
 });
 
-
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
@@ -46,7 +45,9 @@ Route::get('/dashboard', function () {
 
 Route::get('/task', 'App\Http\Controllers\TaskController@index');
 
-Route::post('/task', 'App\Http\Controllers\TaskController@create');
+Route::post('/task/create', 'App\Http\Controllers\TaskController@create');
+
+Route::post('/task/delete', 'App\Http\Controllers\TaskController@remove');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

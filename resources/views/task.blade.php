@@ -7,7 +7,7 @@
         <title>Laravel</title>
 
         <!-- Fonts -->
-        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
+        <link href="https://use.fontawesome.com/releases/v6.2.0/css/all.css" rel="stylesheet">
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
 
@@ -37,7 +37,7 @@
                                             DeadLine
                                         </th>
                                         <th class='w-10'>
-                                            <a type="button" id="addTask"><i class="fas fa-plus"></i></a>
+                                            <button id="addTask"><i class="fas fa-plus"></i></button>
                                         </th>
                                     </tr>
                                 </thead>
@@ -57,6 +57,11 @@
                                             {{ $task->dead_line }}
                                         </td>
                                         <td>
+                                            <form action="/task/delete" method="POST">
+                                                @csrf
+                                                <input type="hidden" name="task_id" value="{{ $task->id }}">
+                                                <button><i class="fa-solid fa-circle-xmark"></i></button>
+                                            </form>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -67,6 +72,7 @@
                     </div>
                 </div>
             </div>
+
             <div id="addTaskModal" class="fixed top-0 left-0 w-full h-full flex items-center justify-center hidden">
                 <div class="absolute w-full h-full bg-gray-900 opacity-50">
                         
@@ -83,7 +89,7 @@
                             <span class="sr-only">Close modal</span>
                         </button>
                     </div>
-                    <form action="" method="POST" class="p-4 md:p-5">
+                    <form action="/task/create" method="POST" class="p-4 md:p-5">
                         @csrf
                         <div class="grid gap-4 mb-4 grid-cols-2">
                             <div class="col-span-2">
