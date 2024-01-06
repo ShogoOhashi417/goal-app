@@ -37,7 +37,7 @@
                                             DeadLine
                                         </th>
                                         <th class='w-10'>
-                                            <a type="button" id="addTask"><i class="fas fa-plus"></i></a>
+                                            <button id="addTask"><i class="fas fa-plus"></i></button>
                                         </th>
                                     </tr>
                                 </thead>
@@ -72,6 +72,7 @@
                     </div>
                 </div>
             </div>
+
             <div id="addTaskModal" class="fixed top-0 left-0 w-full h-full flex items-center justify-center hidden">
                 <div class="absolute w-full h-full bg-gray-900 opacity-50">
                         
@@ -88,7 +89,7 @@
                             <span class="sr-only">Close modal</span>
                         </button>
                     </div>
-                    <form action="" method="POST" class="p-4 md:p-5">
+                    <form action="/task/create" method="POST" class="p-4 md:p-5">
                         @csrf
                         <div class="grid gap-4 mb-4 grid-cols-2">
                             <div class="col-span-2">

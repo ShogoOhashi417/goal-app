@@ -45,7 +45,7 @@ Route::get('/dashboard', function () {
 
 Route::get('/task', 'App\Http\Controllers\TaskController@index');
 
-Route::post('/task', 'App\Http\Controllers\TaskController@create');
+Route::post('/task/create', 'App\Http\Controllers\TaskController@create');
 
 Route::post('/task/delete', 'App\Http\Controllers\TaskController@remove');
 

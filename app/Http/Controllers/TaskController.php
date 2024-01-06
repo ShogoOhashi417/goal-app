@@ -29,13 +29,7 @@ class TaskController extends Controller
             'updated_at' => new DateTime()
         ]);
 
-        $task_list = Task::all();
-
-        return view('task',
-            [
-                'task_list' => $task_list
-            ]
-        );
+        return redirect('/task');
     }
 
     public function remove(Request $request)
