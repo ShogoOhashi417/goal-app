@@ -7,7 +7,7 @@
         <title>Laravel</title>
 
         <!-- Fonts -->
-        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
+        <link href="https://use.fontawesome.com/releases/v6.2.0/css/all.css" rel="stylesheet">
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
 
@@ -57,6 +57,7 @@
                                             {{ $task->dead_line }}
                                         </td>
                                         <td>
+                                            <i class="fa-solid fa-circle-xmark"></i>
                                         </td>
                                     </tr>
                                 @endforeach
