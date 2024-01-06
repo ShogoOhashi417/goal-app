@@ -57,7 +57,11 @@
                                             {{ $task->dead_line }}
                                         </td>
                                         <td>
-                                            <i class="fa-solid fa-circle-xmark"></i>
+                                            <form action="/task/delete" method="POST">
+                                                @csrf
+                                                <input type="hidden" name="task_id" value="{{ $task->id }}">
+                                                <button><i class="fa-solid fa-circle-xmark"></i></button>
+                                            </form>
                                         </td>
                                     </tr>
                                 @endforeach

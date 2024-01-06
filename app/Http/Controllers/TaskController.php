@@ -37,4 +37,11 @@ class TaskController extends Controller
             ]
         );
     }
+
+    public function remove(Request $request)
+    {
+        Task::find($request->task_id)->delete();
+
+        return redirect('/task');
+    }
 }
