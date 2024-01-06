@@ -63,6 +63,7 @@
                                 </tbody>
                             </table>
                         </div>
+                        {{ $task_list->links('vendor.pagination.custom-default') }}
                     </div>
                 </div>
             </div>
