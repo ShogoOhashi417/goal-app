@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\TodoListController;
+use App\Http\Controllers\TaskController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -35,8 +35,8 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-// Route::get('/todolist', function () {
-//     return Inertia::render('ToDoList', [
+// Route::get('/task', function () {
+//     return Inertia::render('Task', [
 //         'canLogin' => Route::has('login'),
 //         'canRegister' => Route::has('register'),
 //         'laravelVersion' => Application::VERSION,
@@ -44,9 +44,9 @@ Route::get('/dashboard', function () {
 //     ]);
 // });
 
-Route::get('/todolist', 'App\Http\Controllers\TodoListController@index');
+Route::get('/task', 'App\Http\Controllers\TaskController@index');
 
-Route::post('/todolist', 'App\Http\Controllers\TodoListController@create');
+Route::post('/task', 'App\Http\Controllers\TaskController@create');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
