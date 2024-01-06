@@ -8,9 +8,11 @@ use DateTime;
 
 class TaskController extends Controller
 {
+    const PAGE_LENGTH = 10;
+    
     public function index(Request $request)
     {
-        $task_list = Task::all();
+        $task_list = Task::paginate(self::PAGE_LENGTH);
 
         return view('task',
             [
