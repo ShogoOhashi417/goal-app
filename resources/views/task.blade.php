@@ -54,7 +54,7 @@
                                             {{ $task->name }}
                                         </th>
                                         <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                            {{ $task->dead_line }}
+                                            {{ $task->dead_line_date }}
                                         </td>
                                         <td>
                                             <form action="/task/delete" method="POST">

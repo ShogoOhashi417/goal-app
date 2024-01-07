@@ -5,14 +5,19 @@ namespace App\Http\Controllers;
 use App\Models\Task;
 use Illuminate\Http\Request;
 use DateTime;
+use Carbon\Carbon;
 
 class TaskController extends Controller
 {
     const PAGE_LENGTH = 10;
-    
+
     public function index(Request $request)
     {
         $task_list = Task::paginate(self::PAGE_LENGTH);
+
+        $task_list->each(function ($task) {
+            $task->dead_line_date = Carbon::parse($task->dead_line)->format('Y/m/d');
+        });
 
         return view('task',
             [
