@@ -36,8 +36,10 @@
                                         <th scope="col" class="px-6 py-3">
                                             DeadLine
                                         </th>
-                                        <th class='w-10'>
-                                            <button id="addTask"><i class="fas fa-plus"></i></button>
+                                        <th class="w-10">
+                                            <div class="flex justify-center items-center">
+                                                <button id="addTask"><i class="fas fa-plus"></i></button>
+                                            </div>
                                         </th>
                                     </tr>
                                 </thead>
@@ -57,11 +59,14 @@
                                             {{ $task->dead_line_date }}
                                         </td>
                                         <td>
-                                            <form action="/task/delete" method="POST">
-                                                @csrf
-                                                <input type="hidden" name="task_id" value="{{ $task->id }}">
-                                                <button><i class="fa-solid fa-circle-xmark"></i></button>
-                                            </form>
+                                            <div class="flex justify-center items-center gap-1">
+                                                <button><i class="fa-solid fa-pen-to-square"></i></button>
+                                                <form action="/task/delete" method="POST">
+                                                    @csrf
+                                                    <input type="hidden" name="task_id" value="{{ $task->id }}">
+                                                    <button><i class="fa-solid fa-circle-xmark"></i></button>
+                                                </form>
+                                            </div>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -80,7 +85,7 @@
                 <div class="z-10 bg-white p-6 rounded shadow-lg w-1/2">
                     <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
                         <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                            Create New Product
+                            Add New Task
                         </h3>
                         <button id="closeModal" type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="addTaskModal">
                             <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
@@ -118,7 +123,7 @@
                 });
 
                 closeModalButton.addEventListener('click', () => {
-                addTaskModal.classList.add('hidden');
+                    addTaskModal.classList.add('hidden');
                 });
             </script>
             <footer class='font-bold bg-slate-800 text-white text-center p-2'>
