@@ -32,8 +32,10 @@ Route::get('/', function() {
     return view('welcome');
 });
 
-Route::get('/test', 'App\Http\Controllers\TestController')
+Route::get('/test', 'App\Http\Controllers\TestController@index')
 ->middleware('test');
+
+Route::post('/test', 'App\Http\Controllers\TestController@post');
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
