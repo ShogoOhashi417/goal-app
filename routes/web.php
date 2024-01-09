@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TaskController;
+use App\Http\Controllers\TestController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -29,6 +30,13 @@ use Inertia\Inertia;
 Route::get('/', function() {
     return view('welcome');
 });
+
+Route::get('/test', 'App\Http\Controllers\TestController');
+// Route::get('/test', function() {
+//     $result = view('test');
+//     return $result;
+    // return $result->status();
+// });
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
