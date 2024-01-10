@@ -56,11 +56,11 @@
                                             {{ $task->name }}
                                         </th>
                                         <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                            {{ $task->dead_line_date }}
+                                            {{ $task->formatted_date }}
                                         </td>
                                         <td>
                                             <div class="flex justify-center items-center gap-1">
-                                                <button onclick="openTaskEditModal({{ $task->id }}, '{{ $task->name }}', '{{ $task->dead_line_date }}')"><i class="fa-solid fa-pen-to-square"></i></button>
+                                                <button onclick="openTaskEditModal({{ $task->id }}, '{{ $task->name }}', '{{ $task->formatted_date }}')"><i class="fa-solid fa-pen-to-square"></i></button>
                                                 <form action="/task/delete" method="POST">
                                                     @csrf
                                                     <input type="hidden" name="task_id" value="{{ $task->id }}">
