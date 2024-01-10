@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use App\Http\Controllers\Test;
+use App\TestClasses\Test;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -20,13 +20,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // app()->singleton('App\Http\Controllers\Test', function ($app) {
+        // app()->singleton('App\TestClasses\Test', function ($app) {
         //     $test = new Test('わっはっは');
         //     return $test;
         // });
-        app()->bind('App\Http\Controllers\TestInterface', 'App\Http\Controllers\Test');
+        app()->bind('App\TestClasses\TestInterface', 'App\TestClasses\Test');
 
-        // app()->when('App\Http\Controllers\Test')
+        // app()->when('App\TestClasses\Test')
         //     ->needs('$id')
         //     ->give('わっしょい');
     }

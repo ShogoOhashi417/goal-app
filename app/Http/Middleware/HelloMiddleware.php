@@ -5,6 +5,8 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
+use App\Facades\TestService;
+use App\TestClasses\Test;
 
 class HelloMiddleware
 {
@@ -15,6 +17,7 @@ class HelloMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
+        TestService::test();
         $response = $next($request);
         $content = $response->content();
 

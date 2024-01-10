@@ -11,8 +11,8 @@ class TestServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        app()->singleton('testService', 'App\Http\Controllers\Test');
-        app()->singleton('App\Http\Controllers\TestInterface', 'App\Http\Controllers\Test');
+        app()->singleton('testService', 'App\TestClasses\Test');
+        app()->singleton('App\TestClasses\TestInterface', 'App\TestClasses\Test');
     }
 
     /**

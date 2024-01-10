@@ -50,7 +50,9 @@ Route::get('/dashboard', function () {
 //     ]);
 // });
 
-Route::get('/task', 'App\Http\Controllers\TaskController@index');
+// Route::get('/task', 'App\Http\Controllers\TaskController@index');
+Route::get('/task', 'App\Http\Controllers\TaskController@index')
+->middleware('test');
 
 Route::post('/task/create', 'App\Http\Controllers\TaskController@create');
 
