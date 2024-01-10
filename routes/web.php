@@ -47,6 +47,8 @@ Route::get('/task', 'App\Http\Controllers\TaskController@index');
 
 Route::post('/task/create', 'App\Http\Controllers\TaskController@create');
 
+Route::post('/task/update', 'App\Http\Controllers\TaskController@update');
+
 Route::post('/task/delete', 'App\Http\Controllers\TaskController@remove');
 
 Route::middleware('auth')->group(function () {

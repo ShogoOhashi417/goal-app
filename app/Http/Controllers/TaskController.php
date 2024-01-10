@@ -37,6 +37,18 @@ class TaskController extends Controller
         return redirect('/task');
     }
 
+    public function update(Request $request)
+    {
+        $task = Task::find($request->task_id);
+        $task->update([
+            'name' => $request->name,
+            'dead_line' => $request->dead_line,
+            'updated_at' => new DateTime()
+        ]);
+
+        return redirect('/task');
+    }
+
     public function remove(Request $request)
     {
         Task::find($request->task_id)->delete();
