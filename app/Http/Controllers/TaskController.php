@@ -15,10 +15,6 @@ class TaskController extends Controller
     {
         $task_list = Task::paginate(self::PAGE_LENGTH);
 
-        $task_list->each(function ($task) {
-            $task->dead_line_date = Carbon::parse($task->dead_line)->format('Y/m/d');
-        });
-
         return view('task',
             [
                 'task_list' => $task_list
