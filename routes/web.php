@@ -28,9 +28,15 @@ use App\Http\Middleware\HelloMiddleware;
 //     ]);
 // });
 
-Route::get('/', function() {
-    return view('welcome');
-});
+// Route::get('/{message?}/{name?}', function($message='hello', $name='shogo') {
+//     $parameterList = [
+//         'message' => $message,
+//         'name' => $name
+//     ];
+//     return view('welcome', $parameterList);
+// });
+
+Route::get('/{message?}/{name?}', 'App\Http\Controllers\TestController@index');
 
 Route::get('/test', 'App\Http\Controllers\TestController@index')
 ->middleware('test');
@@ -50,9 +56,8 @@ Route::get('/dashboard', function () {
 //     ]);
 // });
 
-// Route::get('/task', 'App\Http\Controllers\TaskController@index');
-Route::get('/task', 'App\Http\Controllers\TaskController@index')
-->middleware('test');
+Route::get('/task', 'App\Http\Controllers\TaskController@index');
+// ->middleware('test');
 
 Route::post('/task/create', 'App\Http\Controllers\TaskController@create');
 

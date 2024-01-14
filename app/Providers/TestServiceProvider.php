@@ -11,8 +11,8 @@ class TestServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        app()->singleton('testService', 'App\TestClasses\Test');
-        app()->singleton('App\TestClasses\TestInterface', 'App\TestClasses\Test');
+        // app()->singleton('testService', 'App\TestClasses\Test');
+        // app()->singleton('App\TestClasses\TestInterface', 'App\TestClasses\Test');
     }
 
     /**
@@ -20,7 +20,6 @@ class TestServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        echo 'BB';
-        
+        // echo 'BBaa';
     }
 }

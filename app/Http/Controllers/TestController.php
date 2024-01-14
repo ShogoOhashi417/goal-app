@@ -10,17 +10,21 @@ use App\Facades\TestService;
 
 class TestController extends Controller
 {
-    function __construct(Test $test)
+    function __construct()
     {
-        $test = app('App\TestClasses\Test');
+        // $test = app('App\TestClasses\Test');
     }
     
-    public function index(Request $request, Response $reponse) {
+    public function index(Request $request, Response $reponse, $message="hello", $name="shogo") {
 
         // $test = app()->makeWith('App\TestClasses\Test', ['id'=>'指定された']);
-        TestService::test();
+        // TestService::test();
         // return view('test', ['data' => $request->data]);
-        return view('test', ['message' => "失敗", 'data' => [['name'=>'山田太郎', 'mail' => 'lbridgeatnoon9617@icloud.com'], ['name'=>'山田太郎', 'mail' => 'lbridgeatnoon9617@icloud.com']]]);
+        $parameterList = [
+            'message' => $message,
+            'name' => $name
+        ];
+        return view('welcome', $parameterList);
     
         // return <<< EOF
         //     <div>{$request}</div>
