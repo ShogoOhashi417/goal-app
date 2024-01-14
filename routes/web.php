@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PersonController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\TestController;
 use Illuminate\Foundation\Application;
@@ -40,6 +41,8 @@ Route::post('/test', 'App\Http\Controllers\TestController@post');
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::get('person', [PersonController::class, 'index']);
 
 // Route::get('/task', function () {
 //     return Inertia::render('Task', [
