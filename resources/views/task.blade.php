@@ -21,6 +21,9 @@
             <header class='font-bold bg-slate-800 text-white text-center p-2'>
                 ヘッダー
             </header>
+            <div id="app">
+
+            </div>
             <div class="w-5/6 mx-auto my-3 flex-1 relative sm:justify-center bg-white bg-dots-darker bg-center bg-gray-100 dark:bg-dots-lighter dark:bg-gray-900 selection:text-white">
                 <div class='container'>
                     <div class="mx-auto mt-3">
@@ -73,7 +76,7 @@
                                 </tbody>
                             </table>
                         </div>
-                        {{ $task_list->links('vendor.pagination.custom-default') }}
+                        {{-- {{ $task_list->links('vendor.pagination.custom-default') }} --}}
                     </div>
                 </div>
             </div>

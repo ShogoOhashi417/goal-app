@@ -7,6 +7,7 @@ use Illuminate\Http\Response;
 use App\Http\Requests\TestRequest;
 use Validator;
 use App\Facades\TestService;
+use App\Jobs\Testjob;
 
 class TestController extends Controller
 {
@@ -17,6 +18,7 @@ class TestController extends Controller
     
     public function index(Request $request, Response $reponse, $message="hello", $name="shogo") {
 
+        Testjob::dispatch()->delay(now()->addSeconds(10));
         // $test = app()->makeWith('App\TestClasses\Test', ['id'=>'指定された']);
         // TestService::test();
         // return view('test', ['data' => $request->data]);

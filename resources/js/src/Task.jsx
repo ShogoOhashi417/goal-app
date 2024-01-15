@@ -1,14 +1,18 @@
 import { Link, Head } from '@inertiajs/react';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-// import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
+import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
 
-export default function Welcome({ auth, laravelVersion, phpVersion }) {
+export default function Task({ auth, laravelVersion, phpVersion }) {
+    const propsData = document.getElementById('app').getAttribute('data-props');
+    const data = JSON.parse(propsData);
+    const dataInfo = data.data;
+    console.log(dataInfo);
     return (
         <>
-            <Head title="テスト" />
+            {/* <Head title="テスト" /> */}
             <div className='flex flex-col min-h-screen'>
                 <header className='font-bold bg-slate-800 text-white text-center p-2'>
-                    ヘッダー
+                    ヘッダ{dataInfo.name}
                 </header>
                 <div className="w-5/6 mx-auto my-3 flex-1 relative sm:justify-center bg-white bg-dots-darker bg-center bg-gray-100 selection:text-white">
                     <div className='container'>
@@ -31,22 +35,28 @@ export default function Welcome({ auth, laravelVersion, phpVersion }) {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr className="bg-white border-b hover:bg-gray-50">
-                                            <td className="w-4 p-4">
-                                                <div className="flex items-center">
-                                                    <input id="checkbox-table-search-1" type="checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"></input>
-                                                    <label for="checkbox-table-search-1" className="sr-only">checkbox</label>
-                                                </div>
-                                            </td>
-                                            <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                                                UI作成
-                                            </th>
-                                            <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                                                2023 12/31 (Sun)
-                                            </td>
-                                            <td>
-                                            </td>
-                                        </tr>
+                                    {dataInfo.map((item, index) => (
+                                        <>
+                                            <tr className="bg-white border-b hover:bg-gray-50">
+                                                <td className="w-4 p-4">
+                                                    <div className="flex items-center">
+                                                        <input id="checkbox-table-search-1" type="checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"></input>
+                                                        <label htmlFor="checkbox-table-search-1" className="sr-only">checkbox</label>
+                                                    </div>
+                                                </td>
+                                                <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                                                    {item.name}
+                                                </th>
+                                                <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                                                    {item.dead_line}
+                                                </td>
+                                                <td>
+                                                </td>
+                                            </tr>
+                                        </>
+                                        // 他のデータに対する表示を適切に行う
+                                    ))}
+                                        
                                     </tbody>
                                 </table>
                             </div>

@@ -335,3 +335,7 @@ export default function Welcome({ auth, laravelVersion, phpVersion }) {
         </>
     );
 }
+
+const container = document.getElementById('app');
+const root = ReactDOM.reateRoot(container);
+root.render(<Welcome />);

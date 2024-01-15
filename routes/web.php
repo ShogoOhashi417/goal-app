@@ -28,21 +28,6 @@ use App\Http\Middleware\HelloMiddleware;
 //     ]);
 // });
 
-// Route::get('/{message?}/{name?}', function($message='hello', $name='shogo') {
-//     $parameterList = [
-//         'message' => $message,
-//         'name' => $name
-//     ];
-//     return view('welcome', $parameterList);
-// });
-
-Route::get('/{message?}/{name?}', 'App\Http\Controllers\TestController@index');
-
-Route::get('/test', 'App\Http\Controllers\TestController@index')
-->middleware('test');
-
-Route::post('/test', 'App\Http\Controllers\TestController@post');
-
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
@@ -55,6 +40,8 @@ Route::get('/dashboard', function () {
 //         'phpVersion' => PHP_VERSION,
 //     ]);
 // });
+
+Route::get('/', 'App\Http\Controllers\TestController@index');
 
 Route::get('/task', 'App\Http\Controllers\TaskController@index');
 // ->middleware('test');
