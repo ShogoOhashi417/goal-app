@@ -6,6 +6,7 @@ use App\Models\Task;
 use Illuminate\Http\Request;
 use DateTime;
 use Carbon\Carbon;
+use App\Events\PersonEvent;
 
 class TaskController extends Controller
 {
@@ -50,5 +51,22 @@ class TaskController extends Controller
         Task::find($request->task_id)->delete();
 
         return redirect('/task');
+    }
+
+    public function send(Request $request)
+    {
+        $id = $request->input('id');
+        $id = 6;
+
+        $person = Task::find($id);
+
+        event(new PersonEvent($person));
+        $data = [
+            'input' => '',
+            'message' => 'id=' . $id,
+            'data' => [$person],
+        ];
+
+        return view('welcome', $data);
     }
 }
