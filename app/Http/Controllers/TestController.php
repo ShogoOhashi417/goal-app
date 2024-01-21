@@ -18,7 +18,7 @@ class TestController extends Controller
     
     public function index(Request $request, Response $reponse, $message="hello", $name="shogo") {
 
-        Testjob::dispatch()->delay(now()->addSeconds(10));
+        // Testjob::dispatch()->delay(now()->addSeconds(10));
         // $test = app()->makeWith('App\TestClasses\Test', ['id'=>'指定された']);
         // TestService::test();
         // return view('test', ['data' => $request->data]);
@@ -51,5 +51,9 @@ class TestController extends Controller
 
         // $this->validate($request, $validate_rule);
         return view('test', ['message' => "成功！" ,'data' => [['name'=>'山田太郎', 'mail' => 'lbridgeatnoon9617@icloud.com'], ['name'=>'山田太郎', 'mail' => 'lbridgeatnoon9617@icloud.com']]]);
+    }
+
+    public function json() {
+        return json_encode(['message' => 'わっしょい']);
     }
 }

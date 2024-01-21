@@ -43,6 +43,8 @@ Route::get('/dashboard', function () {
 
 Route::get('/', 'App\Http\Controllers\TaskController@send');
 
+Route::get('/test', 'App\Http\Controllers\TestController@json');
+
 Route::get('/task', 'App\Http\Controllers\TaskController@index');
 // ->middleware('test');
 
