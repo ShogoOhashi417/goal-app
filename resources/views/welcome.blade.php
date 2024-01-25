@@ -20,9 +20,21 @@
         </style>
     </head>
     <body class="antialiased">
-        {{-- @php
+        @php
             echo $message . "," .  $name;
-        @endphp --}}
+        @endphp
+
+        @foreach ($loopDataList as $loopData)
+            @if ($loop->first)
+                <h1><b>配列の始まりだ</b></h1>
+            @endif
+                <p>{{ $loopData }}</p>
+            @if ($loop->last)
+                <h3><b>配列の終わりだ</b></h3>
+            @endif
+        @endforeach
+
+        <p><a href="http://localhost/csrf?name=%E3%82%8F%E3%81%A3%E3%81%97%E3%82%87%E3%81%84&dead_line=2024/1/25">エッチなお姉さんの写真はこちら！！！</a></p>
 
         <div id="example"></div>
         <div class="relative sm:flex sm:justify-center sm:items-center min-h-screen bg-dots-darker bg-center bg-gray-100 dark:bg-dots-lighter dark:bg-gray-900 selection:bg-red-500 selection:text-white">

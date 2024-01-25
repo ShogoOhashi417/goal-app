@@ -1,1 +1,2 @@
-    <li>{{ $item['name'] }} [{{ $item['mail'] }}]</li>
+{{-- <p>{{ $name }}</p> --}}
+<p>{{ $loopData }}</p>

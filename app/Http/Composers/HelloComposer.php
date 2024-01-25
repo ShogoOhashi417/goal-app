@@ -7,6 +7,6 @@ class HelloComposer
 {
     public function compose(View $view)
     {
-        $view->with('view_message', 'this view iaa ' . $view->getName() . '!!');
+        $view->with('view_message', 'this view is ' . $view->getName() . '!!');
     }
 }

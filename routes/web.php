@@ -41,7 +41,10 @@ Route::get('/dashboard', function () {
 //     ]);
 // });
 
-Route::get('/', 'App\Http\Controllers\TaskController@send');
+Route::get('/', 'App\Http\Controllers\TestController@index');
+Route::get('/csrf', 'App\Http\Controllers\TaskController@csrf');
+
+Route::get('/{name?}', 'App\Http\Controllers\TestController@index');
 
 Route::get('/test', 'App\Http\Controllers\TestController@json');
 

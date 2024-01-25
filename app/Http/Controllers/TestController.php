@@ -8,6 +8,7 @@ use App\Http\Requests\TestRequest;
 use Validator;
 use App\Facades\TestService;
 use App\Jobs\Testjob;
+use Illuminate\Support\Facades\Auth;
 
 class TestController extends Controller
 {
@@ -15,18 +16,25 @@ class TestController extends Controller
     {
         // $test = app('App\TestClasses\Test');
     }
-    
-    public function index(Request $request, Response $reponse, $message="hello", $name="shogo") {
 
+    public function index(Request $request, Response $reponse, $message="hello", $name="shogo") {
+        // dd(Auth::user()->name);
         // Testjob::dispatch()->delay(now()->addSeconds(10));
         // $test = app()->makeWith('App\TestClasses\Test', ['id'=>'指定された']);
         // TestService::test();
         // return view('test', ['data' => $request->data]);
+        $loopDataList = ['わっしょい', 'よいしょ', 'どっこいしょ'];
+
         $parameterList = [
-            'message' => $message,
-            'name' => $name
+            'message' => $name,
+            // 'message' => $request->message,
+            'name' => $message,
+            // 'name' => $request->name
+            'loopDataList' => $loopDataList
         ];
-        return view('welcome', $parameterList);
+
+        return view('test', $parameterList);
+        // return view('welcome', $parameterList);
     
         // return <<< EOF
         //     <div>{$request}</div>

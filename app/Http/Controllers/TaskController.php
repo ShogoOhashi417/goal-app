@@ -7,10 +7,21 @@ use Illuminate\Http\Request;
 use DateTime;
 use Carbon\Carbon;
 use App\Events\PersonEvent;
+use Illuminate\Support\Facades\Auth;
+
 
 class TaskController extends Controller
 {
     const PAGE_LENGTH = 10;
+
+    public function csrf(Request $request) {
+        Task::insert([
+            'name' => Auth::user()->name,
+            'dead_line' => '2024-1-24',
+            'created_at' => new DateTime(),
+            'updated_at' => new DateTime()
+        ]);
+    }
 
     public function index(Request $request)
     {

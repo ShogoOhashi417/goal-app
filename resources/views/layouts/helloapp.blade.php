@@ -4,8 +4,10 @@
 </head>
 <body>
     <h1>@yield('title')</h1>
+    <h2>@yield('title')</h2>
     @section('menubar')
     <h2>メニュー</h2>
+    <h3>@yield('wasshoi')</h3>
     <ul>
         <li>@show</li>
     </ul>

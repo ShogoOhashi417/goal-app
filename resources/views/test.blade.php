@@ -1,13 +1,14 @@
+{{-- レイアウトの継承設定 --}}
 @extends('layouts.helloapp')
 
-@section('title', 'Index')
+@section('title', 'わっっっしょい')
 
 @section('menubar')
     @parent
     インデックスページ
 @endsection
 
-@section('content')
+{{-- @section('content')
 <p>{{ $message }}</p>
 @error('mail')
 <p>{{ $message }}</p>
@@ -19,8 +20,30 @@
         <input type="text" name="age">
         <button type="submit" value="send">送信</button>
     </form>
+@endsection --}}
+
+@section('wasshoi', 'ワッショイ！！！！')
+
+{{-- @section('content')
+    <p>コンポーネントですよ</p> --}}
+    {{-- @component('components.message')
+        @slot('name')
+            わっしょいコンポーネント
+        @endslot
+    @endcomponent --}}
+    {{-- @include('components.message', ['name' => 'インクルードわっしょい'])
+@endsection --}}
+
+@section('content')
+<p>繰り返しますよ</p>
+@each('components.message', $loopDataList, 'loopData')
 @endsection
 
+
 @section('footer')
-hellll<br>llloooooo
+<p>フッターですよ</p>
 @endsection
+
+@php
+    echo $view_message;
+@endphp
