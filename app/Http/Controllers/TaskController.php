@@ -21,6 +21,15 @@ class TaskController extends Controller
             ]);
     }
 
+    public function get()
+    {
+        $taskList = Task::paginate(self::PAGE_LENGTH);
+
+        return [
+            'task_list' => $taskList
+        ];
+    }
+
     public function create(Request $request)
     {
         Task::insert([
@@ -47,8 +56,6 @@ class TaskController extends Controller
 
     public function remove(Request $request)
     {
-        Task::find($request->task_id)->delete();
-
-        return redirect('/task');
+        Task::find($request->id)->delete();
     }
 }
