@@ -4,7 +4,7 @@ import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
 import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import React from "react"
-import { useRef, useEffect } from 'react';
+import { useRef, useState } from 'react';
 import { createHeadManager } from '@inertiajs/core';
 
 const changeDate = (date) => {
@@ -22,7 +22,8 @@ const changeDate = (date) => {
 function Task() {
     const propsData = document.getElementById('task-page').getAttribute('data-props');
     const data = JSON.parse(propsData);
-    const dataInfo = data.data;
+
+    const [taskList, setTaskList] = useState(data.data);
 
     const addTaskRef = useRef(null);
 
@@ -41,7 +42,16 @@ function Task() {
         editTaskRef.current.classList.add('hidden');
     }
 
-    const deleteTask = () => {
+    const fetchTaskList = async () => {
+        const response = await axios.get('/task/get');
+        setTaskList(response.data.task_list.data);
+    };
+
+    const deleteTask = (taskId) => {
+        axios.post('/task/delete', {"id" : taskId})
+        .then(response => {
+            fetchTaskList();
+        });
     }
 
     return (
@@ -71,7 +81,7 @@ function Task() {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {dataInfo.map((item, index) => (
+                                        {taskList.map((item, index) => (
                                             <React.Fragment key={index}>
                                             <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                                                 <td className="w-4 p-4">
@@ -91,7 +101,7 @@ function Task() {
                                                         <button onClick={openEditTask}>
                                                             <FontAwesomeIcon icon={faPenToSquare} />
                                                         </button>
-                                                        <button onClick={deleteTask}>
+                                                        <button onClick={() => deleteTask(item.id)}>
                                                             <FontAwesomeIcon icon={faCircleXmark} />
                                                         </button>
                                                     </div>
