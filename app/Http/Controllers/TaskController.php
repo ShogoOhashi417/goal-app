@@ -44,7 +44,7 @@ class TaskController extends Controller
 
     public function update(Request $request)
     {
-        $task = Task::find($request->task_id);
+        $task = Task::find($request->id);
         $task->update([
             'name' => $request->name,
             'dead_line' => $request->dead_line,
