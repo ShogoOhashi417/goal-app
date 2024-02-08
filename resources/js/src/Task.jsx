@@ -27,8 +27,33 @@ function Task() {
 
     const addTaskRef = useRef(null);
 
-    const addTask = () => {
+    const openAddTaskModal = () => {
         addTaskRef.current.classList.remove('hidden');
+    }
+
+    const [taskName, setTaskName] = useState('');
+    const [taskDeadLine, setTaskDeadLine] = useState('');
+
+    const taskNameChange = (event) => {
+        setTaskName(event.target.value);
+    }
+
+    const taskDeadLineChange = (event) => {
+        setTaskDeadLine(event.target.value);
+    }
+
+    const addTask = () => {
+        axios.post('/task/create', {
+            'name' : taskName,
+            'dead_line' : taskDeadLine
+        })
+        .then(response => {
+            fetchTaskList();
+            closeModal();
+        });
+
+        setTaskName('');
+        setTaskDeadLine('');
     }
 
     const editTaskRef = useRef(null);
@@ -54,6 +79,8 @@ function Task() {
         });
     }
 
+    const isTaskInfoFilled = taskName && taskDeadLine;
+
     return (
         <>
         {/* <Head title="テスト" /> */}
@@ -75,7 +102,9 @@ function Task() {
                                             </th>
                                             <th className='w-10'>
                                                 <div className="flex justify-center items-center">
-                                                    <button onClick={addTask}><FontAwesomeIcon icon={faCirclePlus} size="lg" /></button>
+                                                    <button onClick={openAddTaskModal}>
+                                                        <FontAwesomeIcon icon={faCirclePlus} size="lg" />
+                                                    </button>
                                                 </div>
                                             </th>
                                         </tr>
@@ -86,8 +115,11 @@ function Task() {
                                             <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                                                 <td className="w-4 p-4">
                                                     <div className="flex items-center">
-                                                        <input id="checkbox-table-search-1" type="checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"></input>
-                                                        <label htmlFor="checkbox-table-search-1" className="sr-only">checkbox</label>
+                                                        <input
+                                                            type="checkbox"
+                                                            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                                        </input>
+                                                        <label className="sr-only">checkbox</label>
                                                     </div>
                                                 </td>
                                                 <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
@@ -133,21 +165,24 @@ function Task() {
                             <span className="sr-only">Close modal</span>
                         </button>
                     </div>
-                    <form action="/task/create" method="POST" className="p-4 md:p-5">
-                        <div className="grid gap-4 mb-4 grid-cols-2">
-                            <div className="col-span-2">
-                                <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Task Name</label>
-                                <input type="text" name="name" id="name" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Type product name" required="" />
-                            </div>
-                            <div className="col-span-2">
-                                <input type="date" name="dead_line" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
-                            </div>
+                    <div className="grid gap-4 mb-4 grid-cols-2">
+                        <div className="col-span-2">
+                            <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Task Name</label>
+                            <input type="text" name="name" value={taskName} onChange={taskNameChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Type product name" required="" />
                         </div>
-                        <button type="submit" className="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                            <svg className="me-1 -ms-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clipRule="evenodd"></path></svg>
-                            Add new task
-                        </button>
-                    </form>
+                        <div className="col-span-2">
+                            <input type="date" name="dead_line" value={taskDeadLine} onChange={taskDeadLineChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
+                        </div>
+                    </div>
+                    <button 
+                        onClick={addTask}
+                        type="submit"
+                        style={{ opacity: isTaskInfoFilled ? 1 : 0.5 }}
+                        disabled={!isTaskInfoFilled}
+                        className="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                        <svg className="me-1 -ms-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clipRule="evenodd"></path></svg>
+                        Add new task
+                    </button>
                 </div>
             </div>
 
