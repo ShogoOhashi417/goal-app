@@ -48,6 +48,7 @@ function Task() {
         addTaskRef.current.classList.remove('hidden');
     }
 
+    const [taskId, setTaskId] = useState(0);
     const [taskName, setTaskName] = useState('');
     const [taskDeadLine, setTaskDeadLine] = useState('');
 
@@ -75,8 +76,16 @@ function Task() {
 
     const editTaskRef = useRef(null);
 
-    const openEditTask = () => {
+    const openEditTaskModal = (
+        taskId,
+        taskName,
+        taskDeadLine
+    ) => {
         editTaskRef.current.classList.remove('hidden');
+
+        setTaskId(taskId);
+        setTaskName(taskName);
+        setTaskDeadLine(taskDeadLine);
     }
 
     const closeModal = () => {
@@ -147,7 +156,7 @@ function Task() {
                                                 </td>
                                                 <td>
                                                     <div className="flex justify-center items-center gap-1">
-                                                        <button onClick={openEditTask}>
+                                                        <button onClick={() => openEditTaskModal(item.id, item.name, item.dead_line)}>
                                                             <FontAwesomeIcon icon={faPenToSquare} />
                                                         </button>
                                                         <button onClick={() => deleteTask(item.id)}>
