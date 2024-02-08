@@ -12,11 +12,28 @@ const changeDate = (date) => {
     const month = originalDate.getMonth() + 1;
 
     const year = originalDate.getFullYear();
-    const day = originalDate.getDate();
+    const month = (originalDate.getMonth() + 1).toString().padStart(2, '0');
+    const day = originalDate.getDate().toString().padStart(2, '0');
 
-    const newDateFormat = `${year}/${month}/${day}`;
+    const formattedDate = `${year}/${month}/${day}`;
 
-    return newDateFormat;
+    return formattedDate;
+}
+
+const convertDateFormat = (date) => {
+    const yearPart = 0;
+    const monthPart = 1;
+    const dayPart = 2;
+
+    const separatedPartList = date.split('/');
+    
+    const year = separatedPartList[yearPart];
+    const month = separatedPartList[monthPart];
+    const day = separatedPartList[dayPart];
+
+    const convertedDate = year + '-' + month + '-' + day;
+
+    return convertedDate;
 }
 
 function Task() {
