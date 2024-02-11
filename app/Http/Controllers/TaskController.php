@@ -6,14 +6,18 @@ use App\Models\Task;
 use Illuminate\Http\Request;
 use DateTime;
 use Carbon\Carbon;
+use App\Application\UseCase\Task\Read\ReadTaskUseCase;
+use App\Infrastructure\Task\TaskRepository;
 
 class TaskController extends Controller
 {
-    const PAGE_LENGTH = 10;
-
     public function index(Request $request)
     {
-        $task_list = Task::paginate(self::PAGE_LENGTH);
+        $readTaskUseCase = new ReadTaskUseCase(
+            new TaskRepository()
+        );
+
+        $task_list = $readTaskUseCase->handle();
 
         return view('task',
             [
