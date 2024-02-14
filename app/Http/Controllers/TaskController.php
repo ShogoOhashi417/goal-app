@@ -27,7 +27,11 @@ class TaskController extends Controller
 
     public function get()
     {
-        $taskList = Task::paginate(self::PAGE_LENGTH);
+        $readTaskUseCase = new ReadTaskUseCase(
+            new TaskRepository()
+        );
+
+        $taskList = $readTaskUseCase->handle();
 
         return [
             'task_list' => $taskList
