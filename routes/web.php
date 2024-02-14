@@ -17,33 +17,15 @@ use Inertia\Inertia;
 |
 */
 
-// Route::get('/', function () {
-//     return Inertia::render('Welcome', [
-//         'canLogin' => Route::has('login'),
-//         'canRegister' => Route::has('register'),
-//         'laravelVersion' => Application::VERSION,
-//         'phpVersion' => PHP_VERSION,
-//     ]);
-// });
-
-Route::get('/', function() {
+Route::get('/', function () {
     return view('welcome');
 });
 
 Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
+    return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-// Route::get('/task', function () {
-//     return Inertia::render('Task', [
-//         'canLogin' => Route::has('login'),
-//         'canRegister' => Route::has('register'),
-//         'laravelVersion' => Application::VERSION,
-//         'phpVersion' => PHP_VERSION,
-//     ]);
-// });
-
-Route::get('/task', 'App\Http\Controllers\TaskController@index');
+Route::get('/task', 'App\Http\Controllers\TaskController@index')->name('task');
 
 Route::get('/task/get', 'App\Http\Controllers\TaskController@get');
 
@@ -52,7 +34,6 @@ Route::post('/task/create', 'App\Http\Controllers\TaskController@create');
 Route::post('/task/update', 'App\Http\Controllers\TaskController@update');
 
 Route::post('/task/delete', 'App\Http\Controllers\TaskController@remove');
-
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

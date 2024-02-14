@@ -125,7 +125,7 @@ function Task() {
         <>
         {/* <Head title="テスト" /> */}
             <div className='flex flex-col min-h-screen'>
-                <div className=" w-5/6 mx-auto my-3 flex-1 relative sm:justify-center bg-white bg-dots-darker bg-center bg-gray-100 dark:bg-dots-lighter dark:bg-gray-900 selection:text-white">
+                <div className=" w-5/6 mx-auto my-3 flex-1 relative sm:justify-center bg-dots-darker bg-center bg-gray-100 dark:bg-dots-lighter dark:bg-gray-900 selection:text-white">
                     <div className='container'>
                         <div className="mx-auto mt-3">
                             <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -170,10 +170,10 @@ function Task() {
                                                 </td>
                                                 <td>
                                                     <div className="flex justify-center items-center gap-1">
-                                                        <button onClick={() => openEditTaskModal(item.id, item.name, item.dead_line)}>
+                                                        <button className='mx-auto' onClick={() => openEditTaskModal(item.id, item.name, item.dead_line)}>
                                                             <FontAwesomeIcon icon={faPenToSquare} />
                                                         </button>
-                                                        <button onClick={() => deleteTask(item.id)}>
+                                                        <button className='mx-auto' onClick={() => deleteTask(item.id)}>
                                                             <FontAwesomeIcon icon={faCircleXmark} />
                                                         </button>
                                                     </div>
@@ -274,17 +274,6 @@ function Task() {
                     </button>
                 </div>
             </div>
-            
-            <style>{`
-                .bg-dots-darker {
-                    background-image: url("data:image/svg+xml,%3Csvg width='30' height='30' viewBox='0 0 30 30' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1.22676 0C1.91374 0 2.45351 0.539773 2.45351 1.22676C2.45351 1.91374 1.91374 2.45351 1.22676 2.45351C0.539773 2.45351 0 1.91374 0 1.22676C0 0.539773 0.539773 0 1.22676 0Z' fill='rgba(0,0,0,0.07)'/%3E%3C/svg%3E");
-                }
-                @media (prefers-color-scheme: dark) {
-                    .dark\\:bg-dots-lighter {
-                        background-image: url("data:image/svg+xml,%3Csvg width='30' height='30' viewBox='0 0 30 30' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1.22676 0C1.91374 0 2.45351 0.539773 2.45351 1.22676C2.45351 1.91374 1.91374 2.45351 1.22676 2.45351C0.539773 2.45351 0 1.91374 0 1.22676C0 0.539773 0.539773 0 1.22676 0Z' fill='rgba(255,255,255,0.07)'/%3E%3C/svg%3E");
-                    }
-                }
-            `}</style>
         </>
     )
 }
