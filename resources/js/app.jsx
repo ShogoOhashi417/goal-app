@@ -6,7 +6,7 @@ import { createRoot } from 'react-dom/client';
 import { createInertiaApp } from '@inertiajs/react';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import Task from './src/Task';
-
+import LifeInsuranceCard from './src/LifeInsurance/Create';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
@@ -16,8 +16,18 @@ const TaskDom = () => {
     )
 }
 
+const LifeInsuranceTopPage = () => {
+    return (
+        <LifeInsuranceCard />
+    )
+}
+
 if(document.getElementById('task-page')){
     createRoot(document.getElementById('task-page')).render(<TaskDom />)
+}
+
+if(document.getElementById('life_insurance_page')){
+    createRoot(document.getElementById('life_insurance_page')).render(<LifeInsuranceTopPage />)
 }
 
 // const App = (props) => {

@@ -40,4 +40,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+Route::get('/life_insurance', function () {
+    return view('life_insurance');
+})->name('life_insurance');
+
 require __DIR__.'/auth.php';
