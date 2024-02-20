@@ -5,7 +5,7 @@
         </h2>
     </x-slot>
 
-    <div id="life_insurance_page">
+    <div id="life_insurance_page" data-props="{{ json_encode($life_insurance_info_list) }}">
 
     </div>
 </x-app-layout>
