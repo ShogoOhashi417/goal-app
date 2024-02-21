@@ -49,4 +49,14 @@ class LifeInsuranceRepository implements LifeInsuranceRepositoryInterface {
         print('保存した');
         // todo DBに保存
     }
+
+    /**
+     *
+     * @param integer $id
+     * @return void
+     */
+    public function remove(int $id): void
+    {
+        // todo DBから削除
+    }
 }
