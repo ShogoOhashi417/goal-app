@@ -46,4 +46,7 @@ Route::get('/life_insurance/get', 'App\Http\Controllers\LifeInsuranceController@
 
 Route::post('/life_insurance/create', 'App\Http\Controllers\LifeInsuranceController@create');
 
+Route::post('/life_insurance/delete', 'App\Http\Controllers\LifeInsuranceController@remove');
+// Route::get('/life_insurance/delete', 'App\Http\Controllers\LifeInsuranceController@remove');
+
 require __DIR__.'/auth.php';
