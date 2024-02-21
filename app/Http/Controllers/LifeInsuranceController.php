@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Infrastructure\LifeInsurance\LifeInsuranceRepository;
 use App\Application\UseCase\LifeInsurance\Read\ReadLifeInsuranceUseCase;
 use App\Application\UseCase\LifeInsurance\Create\CreateLifeInsuranceUseCase;
+use App\Application\UseCase\LifeInsurance\Delete\DeleteLifeInsuranceUseCase;
 
 class LifeInsuranceController extends Controller
 {
@@ -44,5 +45,17 @@ class LifeInsuranceController extends Controller
             $request->payment_type,
             $request->insurance_type
         );
+    }
+
+    public function remove(Request $request)
+    {
+        $deleteLifeInsuranceUseCase = new DeleteLifeInsuranceUseCase(
+            new LifeInsuranceRepository()
+        );
+
+        // $deleteLifeInsuranceUseCase->handle($request->id);
+        $deleteLifeInsuranceUseCase->handle(1);
+
+        return '削除した';
     }
 }
