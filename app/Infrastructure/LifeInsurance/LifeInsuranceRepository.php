@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Infrastructure\LifeInsurance;
 
 use App\Domain\LifeInsurance\LifeInsuranceRepositoryInterface;
+use App\Domain\LifeInsurance\LifeInsurance;
 
 class LifeInsuranceRepository implements LifeInsuranceRepositoryInterface {
     
@@ -41,5 +42,11 @@ class LifeInsuranceRepository implements LifeInsuranceRepositoryInterface {
                 'insurance_type' => '定期'
             ]
         ];
+    }
+
+    public function save(LifeInsurance $lifeInsurance)
+    {
+        print('保存した');
+        // todo DBに保存
     }
 }
