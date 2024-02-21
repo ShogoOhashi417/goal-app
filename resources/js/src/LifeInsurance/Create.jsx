@@ -3,6 +3,15 @@ import PrimaryButton from '@/Components/PrimaryButton';
 import { useRef, useState } from 'react';
 
 function LifeInsuranceCard() {
+    const mothlyPayment     = 1;
+    const harfYearlyPayment = 2;
+    const yearlyPayment     = 3;
+    const lumpSumPayment    = 4;
+
+    const TermInsurance      = 1;
+    const TotalLfeInsurance  = 2;
+    const EndowmentInsurance = 3;
+
     const propsData = document.getElementById('life_insurance_page').getAttribute('data-props');
     const data = JSON.parse(propsData);
 
@@ -18,8 +27,44 @@ function LifeInsuranceCard() {
         lifeInsuranceCreateModal.current.classList.add('hidden');
     };
 
+    const fetchLifeInsuranceList = async () => {
+        const response = await axios.get('/life_insurance/get');
+        setLifeInsuranceInfoList(response.data.life_insurance_info_list);
+    };
+
+    const [lifeInsuranceName, setLifeInsuranceName] = useState('');
+    const [fee, setFee] = useState('');
+    const [paymentType, setPaymentType] = useState(0);
+    const [insuranceType, setInsuranceType] = useState(0);
+
+    const lifeInsuranceNameChange = (event) => {
+        setLifeInsuranceName(event.target.value);
+    }
+    
+    const feeChange = (event) => {
+        setFee(event.target.value);
+    }
+
+    const paymentTypeChange = (event) => {
+        setPaymentType(event.target.value);
+    }
+    
+    const insuranceTypeChange = (event) => {
+        setInsuranceType(event.target.value);
+    }
+
     const createLifeInsurance = () => {
-        lifeInsuranceCreateModal.current.classList.add('hidden');
+        closeModal();
+
+        axios.post('/life_insurance/create', {
+            'life_insurance_name' : lifeInsuranceName,
+            'fee' : fee,
+            'payment_type' : paymentType,
+            'insurance_type' : insuranceType
+        })
+        .then(response => {
+            fetchLifeInsuranceList();
+        });
     }
 
     return (
@@ -80,29 +125,29 @@ function LifeInsuranceCard() {
                                         <div className="grid gap-4 mb-4 grid-cols-2">
                                             <div className="col-span-2">
                                                 <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">商品名</label>
-                                                <input type="text" name="name" id="name" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="商品名" required="" />
+                                                <input type="text" name="name" id="name" onChange={lifeInsuranceNameChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="商品名" required="" />
                                             </div>
                                             <div className="col-span-2 sm:col-span-1">
                                                 <label htmlFor="price" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">保険料</label>
-                                                <input type="number" name="price" id="price" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="1,000" required="" />
+                                                <input type="number" name="price" id="price" onChange={feeChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="1,000" required="" />
                                             </div>
                                             <div className="col-span-2 sm:col-span-1">
                                                 <label htmlFor="category" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">払込方法</label>
-                                                <select id="category" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                                                <select id="category" onChange={paymentTypeChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                                                     <option>選択してください</option>
-                                                    <option value="TV">月払い</option>
-                                                    <option value="TV">半年払い</option>
-                                                    <option value="PC">年払い</option>
-                                                    <option value="GA">一時払い</option>
+                                                    <option value={mothlyPayment}>月払い</option>
+                                                    <option value={harfYearlyPayment}>半年払い</option>
+                                                    <option value={yearlyPayment}>年払い</option>
+                                                    <option value={lumpSumPayment}>一時払い</option>
                                                 </select>
                                             </div>
                                             <div className="col-span-2">
                                                 <label htmlFor="description" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">保険種類</label>
-                                                <select id="category" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                                                <select id="category" onChange={insuranceTypeChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                                                     <option>選択してください</option>
-                                                    <option value="TV">定期</option>
-                                                    <option value="TV">養老</option>
-                                                    <option value="PC">終身</option>
+                                                    <option value={TermInsurance}>定期</option>
+                                                    <option value={TotalLfeInsurance}>養老</option>
+                                                    <option value={EndowmentInsurance}>終身</option>
                                                 </select>
                                             </div>
                                         </div>

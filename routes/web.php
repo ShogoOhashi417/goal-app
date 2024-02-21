@@ -42,4 +42,8 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/life_insurance', 'App\Http\Controllers\LifeInsuranceController@index')->name('life_insurance');
 
+Route::get('/life_insurance/get', 'App\Http\Controllers\LifeInsuranceController@get');
+
+Route::post('/life_insurance/create', 'App\Http\Controllers\LifeInsuranceController@create');
+
 require __DIR__.'/auth.php';

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Infrastructure\LifeInsurance\LifeInsuranceRepository;
 use App\Application\UseCase\LifeInsurance\Read\ReadLifeInsuranceUseCase;
+use App\Application\UseCase\LifeInsurance\Create\CreateLifeInsuranceUseCase;
 
 class LifeInsuranceController extends Controller
 {
@@ -19,5 +20,29 @@ class LifeInsuranceController extends Controller
         return view('life_insurance', [
             'life_insurance_info_list' => $lifeInsuranceInfoList
         ]);
+    }
+
+    public function get() {
+        $readLifeInsuranceUseCase = new ReadLifeInsuranceUseCase(
+            new LifeInsuranceRepository()
+        );
+
+        return [
+            'life_insurance_info_list' => $readLifeInsuranceUseCase->handle()
+        ];
+    }
+
+    public function create(Request $request)
+    {
+        $createLifeInsuranceUseCase = new CreateLifeInsuranceUseCase(
+            new LifeInsuranceRepository()
+        );
+
+        $createLifeInsuranceUseCase->handle(
+            $request->life_insurance_name,
+            $request->fee,
+            $request->payment_type,
+            $request->insurance_type
+        );
     }
 }
