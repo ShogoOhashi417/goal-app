@@ -144,7 +144,7 @@ function LifeInsuranceCard() {
                                     </p>
 
                                     <p className="mb-3 font-normal text-gray-500 dark:text-gray-400">
-                                        保険タイプ : {item.insurance_type}
+                                        保険タイプ : {item.type}
                                     </p>
                                 </div>
                             </React.Fragment>
@@ -169,7 +169,7 @@ function LifeInsuranceCard() {
                                             <span className="sr-only">Close modal</span>
                                         </button>
                                     </div>
-                                    <form className="p-4 md:p-5">
+                                    <div className="p-4 md:p-5">
                                         <div className="grid gap-4 mb-4 grid-cols-2">
                                             <div className="col-span-2">
                                                 <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">商品名</label>
@@ -194,8 +194,8 @@ function LifeInsuranceCard() {
                                                 <select id="category" onChange={insuranceTypeChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                                                     <option>選択してください</option>
                                                     <option value={TermInsurance}>定期</option>
-                                                    <option value={TotalLfeInsurance}>養老</option>
-                                                    <option value={EndowmentInsurance}>終身</option>
+                                                    <option value={TotalLfeInsurance}>終身</option>
+                                                    <option value={EndowmentInsurance}>養老</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -203,7 +203,7 @@ function LifeInsuranceCard() {
                                             <svg className="me-1 -ms-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clipRule="evenodd"></path></svg>
                                             保存する
                                         </button>
-                                    </form>
+                                    </div>
                                 </div>
                             </div>
                         </div> 
