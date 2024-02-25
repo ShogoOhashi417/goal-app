@@ -28,6 +28,6 @@ class LifeInsuranceRepository implements LifeInsuranceRepositoryInterface {
      */
     public function remove(int $id): void
     {
-        // todo DBから削除
+        LifeInsuranceModel::where('id', $id)->delete();
     }
 }
