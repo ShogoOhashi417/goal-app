@@ -7,6 +7,7 @@ use App\Infrastructure\LifeInsurance\LifeInsuranceRepository;
 use App\Application\UseCase\LifeInsurance\Read\ReadLifeInsuranceUseCase;
 use App\Application\UseCase\LifeInsurance\Create\CreateLifeInsuranceUseCase;
 use App\Application\UseCase\LifeInsurance\Delete\DeleteLifeInsuranceUseCase;
+use Exception;
 
 class LifeInsuranceController extends Controller
 {
@@ -39,12 +40,24 @@ class LifeInsuranceController extends Controller
             new LifeInsuranceRepository()
         );
 
-        $createLifeInsuranceUseCase->handle(
-            $request->life_insurance_name,
-            $request->fee,
-            $request->payment_type,
-            $request->insurance_type
-        );
+        try {
+            $createLifeInsuranceUseCase->handle(
+                $request->life_insurance_name,
+                $request->fee,
+                $request->payment_type,
+                $request->insurance_type
+            );
+        } catch (RuntimeException $exception) {
+            return [
+                'message' => '生命保険の登録に失敗しました。お手数ですが再度処理を実行してください。',
+                'result_status' => 'error'
+            ];
+        } catch (Exception $e) {
+            return [
+                'message' => '生命保険の登録に失敗しました。' . $e->getMessage(),
+                'result_status' => 'error'
+            ];
+        }
     }
 
     public function remove(Request $request)

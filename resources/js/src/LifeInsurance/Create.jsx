@@ -35,7 +35,7 @@ function LifeInsuranceCard() {
     };
 
     const [lifeInsuranceName, setLifeInsuranceName] = useState('');
-    const [fee, setFee] = useState('');
+    const [fee, setFee] = useState(0);
     const [paymentType, setPaymentType] = useState(0);
     const [insuranceType, setInsuranceType] = useState(0);
 
@@ -55,7 +55,14 @@ function LifeInsuranceCard() {
         setInsuranceType(event.target.value);
     }
 
+    const [isActioned, setIsActioned] = useState(false);
+
+    const [messageClass, setMessageClass] = useState("bg-green-300 p-8 mb-4");
+
+    const [actionMessage, setActionMessage] = useState('');
+
     const createLifeInsurance = () => {
+        setIsActioned(true);
         closeModal();
 
         axios.post('/life_insurance/create', {
@@ -65,8 +72,19 @@ function LifeInsuranceCard() {
             'insurance_type' : insuranceType
         })
         .then(response => {
+            if (response.data.result_status == "error") {
+                setActionMessage(response.data.message);
+                setMessageClass("bg-red-300 p-8 mb-4")
+            } else {
+                setActionMessage('新しい保険商品を登録しました。');
+                setMessageClass("bg-green-300 p-8 mb-4")
+            }
             fetchLifeInsuranceList();
-        });
+        })
+        .catch (error => {
+            setActionMessage('処理が失敗しました。お手数ですが再度実行してください。');
+            setMessageClass("bg-red-300 p-8 mb-4")
+        })
     }
 
     const deleteLifeInsurance = (lifeInsuranceId) => {
@@ -86,6 +104,17 @@ function LifeInsuranceCard() {
             <div className="w-5/6 mx-auto my-3 flex-1 relative sm:justify-center bg-dots-darker bg-center bg-gray-100 dark:bg-dots-lighter dark:bg-gray-900 selection:text-white">
                 <div className='container'>
                     <div className="mx-auto mt-3">
+                        {
+                            (() => {
+                                if (isActioned) {
+                                    return(
+                                        <div className={messageClass}>
+                                            <p>{actionMessage}</p>
+                                        </div>
+                                    )
+                                }
+                            })()
+                        }
                         <PrimaryButton className="ms-4 mb-4" onClick={openCreateModal}>
                             保険を新規登録する
                         </PrimaryButton>
