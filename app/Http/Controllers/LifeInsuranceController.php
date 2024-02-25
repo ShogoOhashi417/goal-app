@@ -66,8 +66,7 @@ class LifeInsuranceController extends Controller
             new LifeInsuranceRepository()
         );
 
-        // $deleteLifeInsuranceUseCase->handle($request->id);
-        $deleteLifeInsuranceUseCase->handle(1);
+        $deleteLifeInsuranceUseCase->handle($request->id);
 
         return '削除した';
     }
