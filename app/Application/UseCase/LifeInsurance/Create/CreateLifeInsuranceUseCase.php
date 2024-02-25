@@ -23,17 +23,24 @@ class CreateLifeInsuranceUseCase {
     public function handle(
         string $name,
         int $fee,
-        int $payment_type,
-        int $insurance_type
+        int $paymentType,
+        int $insuranceType
     ) {
         // todo トランザクションをかける
+
         $lifeInsurance = new LifeInsurance(
             new LifeInsuranceName($name),
             new Fee($fee),
-            PaymentType::from($payment_type),
-            InsuranceType::from($insurance_type)
+            PaymentType::from($paymentType),
+            InsuranceType::from($insuranceType)
         );
 
-        $this->lifeInsuranceRepository->save($lifeInsurance);
+        try {
+            $this->lifeInsuranceRepository->save($lifeInsurance);
+        } catch (RuntimeException $exeption) {
+            throw $exeption;
+        } catch (Exception $exeption) {
+            throw $exeption;
+        }
     }
 }
