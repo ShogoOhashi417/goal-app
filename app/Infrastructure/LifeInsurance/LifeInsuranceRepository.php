@@ -17,8 +17,12 @@ class LifeInsuranceRepository implements LifeInsuranceRepositoryInterface {
 
     public function save(LifeInsurance $lifeInsurance)
     {
-        print('保存した');
-        // todo DBに保存
+        LifeInsuranceModel::create([
+            'name' => $lifeInsurance->getName()->getName(),
+            'fee' => $lifeInsurance->getFee()->getFee(),
+            'payment_type' => $lifeInsurance->getPaymentType()->value,
+            'type' => $lifeInsurance->getInsuranceType()->value
+        ]);
     }
 
     /**
