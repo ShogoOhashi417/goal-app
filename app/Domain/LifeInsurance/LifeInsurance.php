@@ -40,6 +40,6 @@ class LifeInsurance {
     
     public function getInsuranceType()
     {
-        return $this->insuranceType();
+        return $this->insuranceType;
     }
 }
