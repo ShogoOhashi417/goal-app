@@ -17,6 +17,11 @@ class LifeInsuranceRepository implements LifeInsuranceRepositoryInterface {
 
     public function save(LifeInsurance $lifeInsurance)
     {
+        if ($lifeInsurance->isEdit()) {
+            $this->updateById($lifeInsurance);
+            return;
+        }
+
         LifeInsuranceModel::create([
             'name' => $lifeInsurance->getName()->getName(),
             'fee' => $lifeInsurance->getFee()->getFee(),
@@ -33,5 +38,20 @@ class LifeInsuranceRepository implements LifeInsuranceRepositoryInterface {
     public function remove(int $id): void
     {
         LifeInsuranceModel::where('id', $id)->delete();
+    }
+
+    /**
+     * @param LifeInsurance $lifeInsurance
+     * @return void
+     */
+    private function updateById(LifeInsurance $lifeInsurance): void
+    {
+        LifeInsuranceModel::where('id', $lifeInsurance->getId())
+            ->update([
+                'name' => $lifeInsurance->getName()->getName(),
+                'fee' => $lifeInsurance->getFee()->getFee(),
+                'payment_type' => $lifeInsurance->getPaymentType()->value,
+                'type' => $lifeInsurance->getInsuranceType()->value
+            ]);
     }
 }

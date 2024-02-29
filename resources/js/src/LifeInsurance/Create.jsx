@@ -2,6 +2,7 @@ import React from "react";
 import PrimaryButton from '@/Components/PrimaryButton';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
+import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import { useRef, useState } from 'react';
 
 function LifeInsuranceCard() {
@@ -34,6 +35,7 @@ function LifeInsuranceCard() {
         setLifeInsuranceInfoList(response.data.life_insurance_info_list);
     };
 
+    const [lifeInsuranceId, setLifeInsuranceId] = useState(0);
     const [lifeInsuranceName, setLifeInsuranceName] = useState('');
     const [fee, setFee] = useState(0);
     const [paymentType, setPaymentType] = useState(0);
@@ -55,6 +57,15 @@ function LifeInsuranceCard() {
         setInsuranceType(event.target.value);
     }
 
+    const openEditModal = (lifeInsuranceInfoList) => {
+        lifeInsuranceCreateModal.current.classList.remove('hidden');
+        setLifeInsuranceId(lifeInsuranceInfoList.id);
+        setLifeInsuranceName(lifeInsuranceInfoList.name);
+        setFee(lifeInsuranceInfoList.fee);
+        setPaymentType(lifeInsuranceInfoList.payment_type);
+        setInsuranceType(lifeInsuranceInfoList.type);
+    }
+
     const [isActioned, setIsActioned] = useState(false);
 
     const [messageClass, setMessageClass] = useState("bg-green-300 p-8 mb-4");
@@ -66,6 +77,7 @@ function LifeInsuranceCard() {
         closeModal();
 
         axios.post('/life_insurance/create', {
+            'id' : lifeInsuranceId,
             'life_insurance_name' : lifeInsuranceName,
             'fee' : fee,
             'payment_type' : paymentType,
@@ -127,9 +139,14 @@ function LifeInsuranceCard() {
                                         <svg className="mb-2 w-7 h-7 text-gray-500 dark:text-gray-400 mb-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                                             <path d="M18 5h-.7c.229-.467.349-.98.351-1.5a3.5 3.5 0 0 0-3.5-3.5c-1.717 0-3.215 1.2-4.331 2.481C8.4.842 6.949 0 5.5 0A3.5 3.5 0 0 0 2 3.5c.003.52.123 1.033.351 1.5H2a2 2 0 0 0-2 2v3a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1V7a2 2 0 0 0-2-2ZM8.058 5H5.5a1.5 1.5 0 0 1 0-3c.9 0 2 .754 3.092 2.122-.219.337-.392.635-.534.878Zm6.1 0h-3.742c.933-1.368 2.371-3 3.739-3a1.5 1.5 0 0 1 0 3h.003ZM11 13H9v7h2v-7Zm-4 0H2v5a2 2 0 0 0 2 2h3v-7Zm6 0v7h3a2 2 0 0 0 2-2v-5h-5Z"/>
                                         </svg>
-                                        <button onClick={() => deleteLifeInsurance(item.id)}>
-                                            <FontAwesomeIcon icon={faCircleXmark} />
-                                        </button>
+                                        <div>
+                                            <button className="mr-2" onClick={() => openEditModal(item)}>
+                                                <FontAwesomeIcon icon={faPenToSquare} />
+                                            </button>
+                                            <button onClick={() => deleteLifeInsurance(item.id)}>
+                                                <FontAwesomeIcon icon={faCircleXmark} />
+                                            </button>
+                                        </div>
                                     </div>
                                 
                                     <h5 className="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">
@@ -173,29 +190,29 @@ function LifeInsuranceCard() {
                                         <div className="grid gap-4 mb-4 grid-cols-2">
                                             <div className="col-span-2">
                                                 <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">商品名</label>
-                                                <input type="text" name="name" id="name" onChange={lifeInsuranceNameChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="商品名" required="" />
+                                                <input type="text" name="name" id="name" value={lifeInsuranceName} onChange={lifeInsuranceNameChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="商品名" required="" />
                                             </div>
                                             <div className="col-span-2 sm:col-span-1">
                                                 <label htmlFor="price" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">保険料</label>
-                                                <input type="number" name="price" id="price" onChange={feeChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="1,000" required="" />
+                                                <input type="number" name="price" id="price" value={fee} onChange={feeChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="1,000" required="" />
                                             </div>
                                             <div className="col-span-2 sm:col-span-1">
                                                 <label htmlFor="category" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">払込方法</label>
-                                                <select id="category" onChange={paymentTypeChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                                                <select id="category" value={paymentType} onChange={paymentTypeChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                                                     <option>選択してください</option>
-                                                    <option value={mothlyPayment}>月払い</option>
-                                                    <option value={harfYearlyPayment}>半年払い</option>
-                                                    <option value={yearlyPayment}>年払い</option>
-                                                    <option value={lumpSumPayment}>一時払い</option>
+                                                    <option value="月払い">月払い</option>
+                                                    <option value="半年払い">半年払い</option>
+                                                    <option value="年払い">年払い</option>
+                                                    <option value="一時払い">一時払い</option>
                                                 </select>
                                             </div>
                                             <div className="col-span-2">
                                                 <label htmlFor="description" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">保険種類</label>
                                                 <select id="category" onChange={insuranceTypeChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                                                     <option>選択してください</option>
-                                                    <option value={TermInsurance}>定期</option>
-                                                    <option value={TotalLfeInsurance}>終身</option>
-                                                    <option value={EndowmentInsurance}>養老</option>
+                                                    <option value="定期保険">定期保険</option>
+                                                    <option value="終身保険">終身保険</option>
+                                                    <option value="養老保険">養老保険</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -207,7 +224,6 @@ function LifeInsuranceCard() {
                                 </div>
                             </div>
                         </div> 
-
                     </div>
                 </div>
             </div>
