@@ -9,6 +9,15 @@ enum InsuranceType: int {
     case TotalLlfe = 2;
     case Endowment = 3;
 
+    public static function fromString(string $string)
+    {
+        return match ($string) {
+            '定期保険' => self::Term,
+            '終身保険' => self::TotalLlfe,
+            '養老保険' => self::Endowment
+        };
+    }
+
     public function toString()
     {
         return match ($this) {

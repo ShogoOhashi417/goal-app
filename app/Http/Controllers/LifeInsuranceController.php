@@ -42,6 +42,7 @@ class LifeInsuranceController extends Controller
 
         try {
             $createLifeInsuranceUseCase->handle(
+                $request->id ?? 0,
                 $request->life_insurance_name,
                 $request->fee,
                 $request->payment_type,

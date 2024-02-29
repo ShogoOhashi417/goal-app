@@ -21,18 +21,20 @@ class CreateLifeInsuranceUseCase {
     }
 
     public function handle(
+        int $id,
         string $name,
         int $fee,
-        int $paymentType,
-        int $insuranceType
+        string $paymentType,
+        string $insuranceType
     ) {
         // todo トランザクションをかける
 
         $lifeInsurance = new LifeInsurance(
+            $id,
             new LifeInsuranceName($name),
             new Fee($fee),
-            PaymentType::from($paymentType),
-            InsuranceType::from($insuranceType)
+            PaymentType::fromString($paymentType),
+            InsuranceType::fromString($insuranceType)
         );
 
         try {
