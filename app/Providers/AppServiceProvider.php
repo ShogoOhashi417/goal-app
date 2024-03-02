@@ -22,7 +22,7 @@ class AppServiceProvider extends ServiceProvider
     {
         app()->bind('App\TestService\TestService',
             function ($app) {
-                $myService = new TestService();
+                $myService = TestService::create();
                 $myService->setId(0);
                 return $myService;
             }
