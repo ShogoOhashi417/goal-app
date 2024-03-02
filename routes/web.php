@@ -17,9 +17,7 @@ use Inertia\Inertia;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', 'App\Http\Controllers\TestController@index');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
