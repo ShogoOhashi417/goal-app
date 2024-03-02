@@ -14,8 +14,8 @@ class TestController extends Controller
             'data' => ['Hello', 'GoodBye']
         ]);
 
-        // newすればいいのだが、シングルトンパターンだとそうもいかない
-        dd($testService->say());
+        dd($testService->getId());
+
         return view('welcome');
     }
 }
