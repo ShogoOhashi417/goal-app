@@ -7,12 +7,14 @@ use App\TestService\TestService;
 
 class TestController extends Controller
 {
+    public function __construct()
+    {
+        app('App\TestService\TestService');
+    }
+
     public function index()
     {
-        $testService = app()->makeWith('App\TestService\TestService', [
-            'message' => 'Hello!!',
-            'data' => ['Hello', 'GoodBye']
-        ]);
+        $testService = app('App\TestService\TestService');
 
         dd($testService->getId());
 

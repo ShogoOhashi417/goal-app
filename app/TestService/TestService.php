@@ -3,25 +3,15 @@
 namespace App\TestService;
 
 class TestService {
-    private static $singlton;
-
     private int $id;
     private readonly string $message;
     private readonly array $data;
 
-    private function __construct()
+    public function __construct()
     {
+        var_dump(rand());
         $this->message = 'Hello! This is MyService';
         $this->data = ['Hello', 'Welcome', 'Bye'];
-    }
-
-    public static function create()
-    {
-        if (isset(self::$singlton)) {
-            return self::$singlton;
-        }
-
-        return new self();
     }
 
     public function getId()
