@@ -7,9 +7,9 @@ class TestService {
     private readonly string $message;
     private readonly array $data;
 
-    public function __construct()
+    public function __construct($id)
     {
-        var_dump(rand());
+        $this->id = $id;
         $this->message = 'Hello! This is MyService';
         $this->data = ['Hello', 'Welcome', 'Bye'];
     }
