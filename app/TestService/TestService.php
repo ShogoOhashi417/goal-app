@@ -6,10 +6,10 @@ class TestService {
     private readonly string $message;
     private readonly array $data;
 
-    public function __construct()
+    public function __construct(string $message, array $data)
     {
-        $this->message = 'Hello! This is MyService';
-        $this->data = ['Hello', 'Welcome', 'Bye'];
+        $this->message = $message;
+        $this->data = $data;
     }
 
     public function say()

@@ -9,11 +9,10 @@ class TestController extends Controller
 {
     public function index()
     {
-        $testService = app('App\TestService\TestService');
-        // もしくは
-        $testService = app()->make('App\TestService\TestService');
-        // もしくは
-        $testService = resolve('App\TestService\TestService');
+        $testService = app()->makeWith('App\TestService\TestService', [
+            'message' => 'Hello!!',
+            'data' => ['Hello', 'GoodBye']
+        ]);
 
         // newすればいいのだが、シングルトンパターンだとそうもいかない
         dd($testService->say());
