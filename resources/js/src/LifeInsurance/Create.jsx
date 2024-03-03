@@ -6,15 +6,6 @@ import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import { useRef, useState } from 'react';
 
 function LifeInsuranceCard() {
-    const mothlyPayment     = 1;
-    const harfYearlyPayment = 2;
-    const yearlyPayment     = 3;
-    const lumpSumPayment    = 4;
-
-    const TermInsurance      = 1;
-    const TotalLfeInsurance  = 2;
-    const EndowmentInsurance = 3;
-
     const propsData = document.getElementById('life_insurance_page').getAttribute('data-props');
     const data = JSON.parse(propsData);
 
@@ -208,7 +199,7 @@ function LifeInsuranceCard() {
                                             </div>
                                             <div className="col-span-2">
                                                 <label htmlFor="description" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">保険種類</label>
-                                                <select id="category" onChange={insuranceTypeChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                                                <select id="category" value={insuranceType} onChange={insuranceTypeChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                                                     <option>選択してください</option>
                                                     <option value="定期保険">定期保険</option>
                                                     <option value="終身保険">終身保険</option>
