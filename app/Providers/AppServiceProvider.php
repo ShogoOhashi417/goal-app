@@ -20,8 +20,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        app()->when('App\TestService\TestService')
-            ->needs('$id')
-            ->give(2);
+        app()->bind('App\TestService\TestServiceInterface',
+        'App\TestService\TestService');
     }
 }

@@ -7,15 +7,11 @@ use App\TestService\TestService;
 
 class TestController extends Controller
 {
-    public function __construct()
-    {
-        app('App\TestService\TestService');
-    }
-
     public function index()
     {
         $testService = app('App\TestService\TestService');
 
+        $testService->setId(1);
         dd($testService->getId());
 
         return view('welcome');

@@ -2,14 +2,13 @@
 
 namespace App\TestService;
 
-class TestService {
+class TestService implements TestServiceInterface {
     private int $id;
     private readonly string $message;
     private readonly array $data;
 
-    public function __construct($id)
+    public function __construct()
     {
-        $this->id = $id;
         $this->message = 'Hello! This is MyService';
         $this->data = ['Hello', 'Welcome', 'Bye'];
     }
