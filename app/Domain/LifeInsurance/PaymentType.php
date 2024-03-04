@@ -6,7 +6,7 @@ namespace App\Domain\LifeInsurance;
 
 enum PaymentType: int {
     case Monthly = 1;
-    case HarfYearly = 2;
+    case HalfYearly = 2;
     case Yearly = 3;
     case LumpSum = 4;
 
@@ -14,7 +14,7 @@ enum PaymentType: int {
     {
         return match ($string) {
             '月払い' => self::Monthly,
-            '半年払い' => self::HarfYearly,
+            '半年払い' => self::HalfYearly,
             '年払い' => self::Yearly,
             '一時払い' => self::LumpSum
         };
@@ -24,9 +24,45 @@ enum PaymentType: int {
     {
         return match ($this) {
             self::Monthly => '月払い',
-            self::HarfYearly => '半年払い',
+            self::HalfYearly => '半年払い',
             self::Yearly => '年払い',
             self::LumpSum => '一時払い'
         };
+    }
+
+    /**
+     *
+     * @return boolean
+     */
+    public function isMonthly(): bool
+    {
+        return $this === self::Monthly;
+    }
+
+    /**
+     *
+     * @return boolean
+     */
+    public function isHalfYearly(): bool
+    {
+        return $this === self::HalfYearly;
+    }
+
+    /**
+     *
+     * @return boolean
+     */
+    public function isYealy(): bool
+    {
+        return $this === self::Yearly;
+    }
+
+    /**
+     *
+     * @return boolean
+     */
+    public function isAlreadyPaied(): bool
+    {
+        return $this === self::LumpSum;
     }
 }
