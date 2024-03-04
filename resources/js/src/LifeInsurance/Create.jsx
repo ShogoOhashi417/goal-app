@@ -9,6 +9,8 @@ function LifeInsuranceCard() {
     const propsData = document.getElementById('life_insurance_page').getAttribute('data-props');
     const data = JSON.parse(propsData);
 
+    const totalFee = document.getElementById('life_insurance_page').getAttribute('data-total-fee');
+
     const [lifeInsuranceInfoList, setLifeInsuranceInfoList] = useState(data);
 
     const lifeInsuranceCreateModal = useRef(null);
@@ -118,10 +120,18 @@ function LifeInsuranceCard() {
                                 }
                             })()
                         }
-                        <PrimaryButton className="ms-4 mb-4" onClick={openCreateModal}>
-                            保険を新規登録する
-                        </PrimaryButton>
-
+                        <div className="mb-3 flex justify-between">
+                            <PrimaryButton className="ms-4 mb-4" onClick={openCreateModal}>
+                                保険を新規登録する
+                            </PrimaryButton>
+                            <div className="flex w-1/4 justify-center items-center">
+                                <p><b>年間合計保険料</b></p>
+                                <div className="rounded-full bg-sky-100 text-lg ml-3 w-1/2 bg-white h-full justify-center flex items-center">
+                                    {totalFee}円
+                                </div>
+                            </div>
+                        </div>
+                        
                         <div className="grid grid-cols-4 gap-4">
                         {lifeInsuranceInfoList.map((item) => (
                             <React.Fragment key={item.id}>

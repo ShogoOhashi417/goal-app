@@ -7,6 +7,8 @@ use App\Infrastructure\LifeInsurance\LifeInsuranceRepository;
 use App\Application\UseCase\LifeInsurance\Read\ReadLifeInsuranceUseCase;
 use App\Application\UseCase\LifeInsurance\Create\CreateLifeInsuranceUseCase;
 use App\Application\UseCase\LifeInsurance\Delete\DeleteLifeInsuranceUseCase;
+use App\Domain\LifeInsurance\PaymentType;
+use App\Domain\LifeInsurance\Fee;
 use Exception;
 
 class LifeInsuranceController extends Controller
@@ -19,8 +21,19 @@ class LifeInsuranceController extends Controller
 
         $lifeInsuranceInfoList = $readLifeInsuranceUseCase->handle();
 
+        $fee = new Fee(0);
+
+        foreach ($lifeInsuranceInfoList as $lifeInsuranceInfo) {
+            $yealyFee = 0;
+
+            $paymentType = PaymentType::fromString($lifeInsuranceInfo['payment_type']);
+
+            $fee = $fee->add($lifeInsuranceInfo['fee'], $paymentType);
+        }
+
         return view('life_insurance', [
-            'life_insurance_info_list' => $lifeInsuranceInfoList
+            'life_insurance_info_list' => $lifeInsuranceInfoList,
+            'total_fee' => $fee->getFee()
         ]);
     }
 

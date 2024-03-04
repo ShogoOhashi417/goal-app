@@ -5,7 +5,11 @@
         </h2>
     </x-slot>
 
-    <div id="life_insurance_page" data-props="{{ json_encode($life_insurance_info_list) }}">
+    <div 
+        id="life_insurance_page"
+        data-props="{{ json_encode($life_insurance_info_list) }}"
+        data-total-fee="{{ $total_fee }}"
+    >
 
     </div>
 </x-app-layout>
