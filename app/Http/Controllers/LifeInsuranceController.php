@@ -42,8 +42,21 @@ class LifeInsuranceController extends Controller
             new LifeInsuranceRepository()
         );
 
+        $lifeInsuranceInfoList = $readLifeInsuranceUseCase->handle();
+
+        $fee = new Fee(0);
+
+        foreach ($lifeInsuranceInfoList as $lifeInsuranceInfo) {
+            $yealyFee = 0;
+
+            $paymentType = PaymentType::fromString($lifeInsuranceInfo['payment_type']);
+
+            $fee = $fee->add($lifeInsuranceInfo['fee'], $paymentType);
+        }
+
         return [
-            'life_insurance_info_list' => $readLifeInsuranceUseCase->handle()
+            'life_insurance_info_list' => $lifeInsuranceInfoList,
+            'total_fee' => $fee->getFee()
         ];
     }
 

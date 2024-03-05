@@ -9,7 +9,9 @@ function LifeInsuranceCard() {
     const propsData = document.getElementById('life_insurance_page').getAttribute('data-props');
     const data = JSON.parse(propsData);
 
-    const totalFee = document.getElementById('life_insurance_page').getAttribute('data-total-fee');
+    const [totalFee, setTotalFee] = useState(
+        document.getElementById('life_insurance_page').getAttribute('data-total-fee')
+    );
 
     const [lifeInsuranceInfoList, setLifeInsuranceInfoList] = useState(data);
 
@@ -26,6 +28,7 @@ function LifeInsuranceCard() {
     const fetchLifeInsuranceList = async () => {
         const response = await axios.get('/life_insurance/get');
         setLifeInsuranceInfoList(response.data.life_insurance_info_list);
+        setTotalFee(response.data.total_fee);
     };
 
     const [lifeInsuranceId, setLifeInsuranceId] = useState(0);
