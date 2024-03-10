@@ -22,6 +22,7 @@ function LifeInsuranceCard() {
     }
 
     const closeModal = () => {
+        clearModalFields();
         lifeInsuranceCreateModal.current.classList.add('hidden');
     };
 
@@ -60,6 +61,14 @@ function LifeInsuranceCard() {
         setFee(lifeInsuranceInfoList.fee);
         setPaymentType(lifeInsuranceInfoList.payment_type);
         setInsuranceType(lifeInsuranceInfoList.type);
+    }
+
+    const clearModalFields = () => {
+        setLifeInsuranceId(0);
+        setLifeInsuranceName('');
+        setFee(0);
+        setPaymentType(0);
+        setInsuranceType(0);
     }
 
     const [isActioned, setIsActioned] = useState(false);
