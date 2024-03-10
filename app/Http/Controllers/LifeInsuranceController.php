@@ -10,6 +10,7 @@ use App\Application\UseCase\LifeInsurance\Delete\DeleteLifeInsuranceUseCase;
 use App\Domain\LifeInsurance\PaymentType;
 use App\Domain\LifeInsurance\Fee;
 use Exception;
+use RuntimeException;
 
 class LifeInsuranceController extends Controller
 {
