@@ -17,8 +17,8 @@
                     </x-nav-link>
                 </div>
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('task')" :active="request()->routeIs('task')">
-                        {{ __('Task') }}
+                    <x-nav-link :href="route('expenditure')" :active="request()->routeIs('expenditure')">
+                        {{ __('支出管理') }}
                     </x-nav-link>
                 </div>
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
