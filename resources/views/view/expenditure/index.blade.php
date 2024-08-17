@@ -6,7 +6,8 @@
     </x-slot>
 
     <div
-        id="family_page"
+        id="expenditure_page"
+        data-props="{{ json_encode($expenditure_info_list); }}"
     >
     </div>
 </x-app-layout>
