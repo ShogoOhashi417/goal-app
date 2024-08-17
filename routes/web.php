@@ -40,6 +40,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+Route::get('/income', 'App\Http\Controllers\Income\IncomeController@index')->name('income');
+
+
+Route::get('/life_insurance', 'App\Http\Controllers\LifeInsuranceController@index')->name('life_insurance');
 Route::get('/life_insurance', 'App\Http\Controllers\LifeInsuranceController@index')->name('life_insurance');
 
 Route::get('/life_insurance/get', 'App\Http\Controllers\LifeInsuranceController@get');
