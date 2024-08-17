@@ -11,6 +11,16 @@ class IncomeController extends Controller
 {
     public function index()
     {
-        return view('view.income.index');
+        // todo ダミーデータ
+        $income_info_list = [
+            [
+                'name' => '給料',
+                'amount' => 300000
+            ],
+        ];
+
+        return view('view.income.index', [
+            'income_info_list' => $income_info_list
+        ]);
     }
 }
