@@ -25,5 +25,11 @@ final class DeleteIncomeUseCase
     public function handle(DeleteIncomeInputData $inputData): void
     {
         $incomeInfoList = $this->incomeRepository->fetchById($inputData->id);
+
+        $income = Income::reconstruct(
+            $inputData->id,
+            $incomeInfoList['name'],
+            $incomeInfoList['amount']
+        );
     }
 }
