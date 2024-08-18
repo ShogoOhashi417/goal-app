@@ -11,6 +11,12 @@ function Income() {
 
     const [incomeInfoList, setincomeInfoList] = useState(data);
 
+    const addIncomeRef = useRef(null);
+
+    const openAddModal = () => {
+        addIncomeRef.current.classList.remove('hidden');
+    }
+
     return (
         <>
             <div className='flex flex-col min-h-screen'>
@@ -29,7 +35,7 @@ function Income() {
                                             </th>
                                             <th className='w-10'>
                                                 <div className="flex justify-center items-center">
-                                                    <button>
+                                                    <button onClick={openAddModal}>
                                                         <FontAwesomeIcon icon={faCirclePlus} size="lg" />
                                                     </button>
                                                 </div>
@@ -64,6 +70,24 @@ function Income() {
                                 </table>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+
+            <div ref={addIncomeRef} className="fixed top-0 left-0 w-full h-full flex items-center justify-center hidden">
+                <div className="absolute w-full h-full bg-gray-900 opacity-50">
+                        
+                </div>
+                <div className="z-10 bg-white p-6 rounded shadow-lg w-1/2">
+                    <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                            収入を登録する
+                        </h3>
+                        <button type="button" className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="addTaskModal">
+                            <svg className="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                            </svg>
+                        </button>
                     </div>
                 </div>
             </div>
