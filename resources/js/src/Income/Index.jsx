@@ -11,6 +11,17 @@ function Income() {
 
     const [incomeInfoList, setincomeInfoList] = useState(data);
 
+    const [incomeName, setIncomeName] = useState('');
+    const [incomeAmount, setIncomeAmount] = useState(0);
+
+    const changeIncomeName = (event) => {
+        setIncomeName(event.target.value);
+    }
+
+    const changeIncomeAmount = (event) => {
+        setIncomeAmount(parseInt(event.target.value));
+    }
+
     const addIncomeRef = useRef(null);
 
     const openAddModal = () => {
