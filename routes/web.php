@@ -42,6 +42,7 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/income', 'App\Http\Controllers\Income\IncomeController@index')->name('income');
 
+Route::get('/expenditure', 'App\Http\Controllers\Expenditure\ExpenditureController@index')->name('expenditure');
 
 Route::get('/life_insurance', 'App\Http\Controllers\LifeInsuranceController@index')->name('life_insurance');
 Route::get('/life_insurance', 'App\Http\Controllers\LifeInsuranceController@index')->name('life_insurance');
