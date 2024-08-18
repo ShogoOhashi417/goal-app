@@ -6,4 +6,5 @@ namespace App\Domain\Model\Income;
 
 interface IncomeRepositoryInterface
 {
+    public function create(Income $income): void;
 }
