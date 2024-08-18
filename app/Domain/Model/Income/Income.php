@@ -20,4 +20,21 @@ final class Income
         $this->name = $name;
         $this->amount = $amount;
     }
+
+    /**
+     * @param string $name
+     * @param integer $amount
+     * @return self
+     */
+    public static function create(
+        string $name,
+        int $amount
+    ): self
+    {
+        return new self(
+            0,
+            new IncomeName($name),
+            new IncomeAmount($amount)
+        );
+    }
 }
