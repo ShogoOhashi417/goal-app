@@ -22,6 +22,22 @@ final class Income
     }
 
     /**
+     * @return IncomeName
+     */
+    public function getName(): IncomeName
+    {
+        return $this->name;
+    }
+
+    /**
+     * @return IncomeAmount
+     */
+    public function getAmount(): IncomeAmount
+    {
+        return $this->amount;
+    }
+
+    /**
      * @param string $name
      * @param integer $amount
      * @return self
