@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Income;
 
-use App\Application\UseCase\Income\Create\CreateIncomeInputData;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Income AS IncomeModel;
@@ -12,6 +11,9 @@ use App\Infrastructure\Query\Income\IncomeQueryService;
 use App\Infrastructure\Repository\Income\IncomeRepository;
 use App\Application\UseCase\Income\Fetch\FetchIncomeUseCase;
 use App\Application\UseCase\Income\Create\CreateIncomeUseCase;
+use App\Application\UseCase\Income\Delete\DeleteIncomeUseCase;
+use App\Application\UseCase\Income\Create\CreateIncomeInputData;
+use App\Application\UseCase\Income\Delete\DeleteIncomeInputData;
 
 class IncomeController extends Controller
 {
@@ -57,6 +59,23 @@ class IncomeController extends Controller
             new CreateIncomeInputData(
                 $request->income_name,
                 $request->income_amount
+            )
+        );
+    }
+
+    public function delete(Request $request)
+    {
+        $deleteIncomeUseCase = new DeleteIncomeUseCase(
+            new IncomeRepository(
+                new IncomeModel()
+            )
+        );
+
+        $deleteIncomeUseCase->handle(
+            new DeleteIncomeInputData(
+                $request->id,
+                $request->name,
+                $request->amount
             )
         );
     }
