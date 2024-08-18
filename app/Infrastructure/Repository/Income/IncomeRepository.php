@@ -20,6 +20,15 @@ final class IncomeRepository implements IncomeRepositoryInterface
     }
 
     /**
+     * @param integer $id
+     * @return array
+     */
+    public function fetchById(int $id): array
+    {
+        return $this->incomeModel->fetchById($id);
+    }
+
+    /**
      * @return void
      */
     public function create(Income $income): void

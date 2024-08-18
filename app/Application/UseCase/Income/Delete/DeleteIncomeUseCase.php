@@ -17,4 +17,13 @@ final class DeleteIncomeUseCase
     {
         $this->incomeRepository = $incomeRepository;
     }
+
+    /**
+     * @param DeleteIncomeInputData $inputData
+     * @return void
+     */
+    public function handle(DeleteIncomeInputData $inputData): void
+    {
+        $incomeInfoList = $this->incomeRepository->fetchById($inputData->id);
+    }
 }
