@@ -38,4 +38,15 @@ final class IncomeRepository implements IncomeRepositoryInterface
             $income->getAmount()->getValue()
         );
     }
+
+    /**
+     * @param Income $income
+     * @return void
+     */
+    public function remove(Income $income): void
+    {
+        $this->incomeModel->deleteById(
+            $income->getId(),
+        );
+    }
 }

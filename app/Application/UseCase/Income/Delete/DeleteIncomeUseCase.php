@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Application\UseCase\Income\Delete;
 
+use App\Domain\Model\Income\Income;
 use App\Domain\Model\Income\IncomeRepositoryInterface;
 use App\Infrastructure\Repository\Income\IncomeRepository;
 
@@ -31,5 +32,7 @@ final class DeleteIncomeUseCase
             $incomeInfoList['name'],
             $incomeInfoList['amount']
         );
+        
+        $this->incomeRepository->remove($income);
     }
 }

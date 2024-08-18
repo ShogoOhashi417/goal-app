@@ -45,4 +45,13 @@ final class Income extends Model
             ]
         );
     }
+
+    /**
+     * @param integer $id
+     * @return void
+     */
+    public function deleteById(int $id): void
+    {
+        $this->where('id', $id)->delete();
+    }
 }

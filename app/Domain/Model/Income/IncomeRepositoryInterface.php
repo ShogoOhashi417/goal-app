@@ -8,5 +8,7 @@ interface IncomeRepositoryInterface
 {
     public function create(Income $income): void;
 
+    public function remove(Income $income): void;
+
     public function fetchById(int $id): array;
 }
