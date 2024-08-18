@@ -6,6 +6,8 @@ import React from "react"
 import { useRef, useState } from 'react';
 
 function Income() {
+    let csrfToken = document.head.querySelector('meta[name="csrf-token"]').content;
+
     const propsData = document.getElementById('income_page').getAttribute('data-props');
     const data = JSON.parse(propsData);
 
