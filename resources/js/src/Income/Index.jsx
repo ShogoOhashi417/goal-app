@@ -32,6 +32,20 @@ function Income() {
         addIncomeRef.current.classList.add('hidden');
     }
 
+    const addIncome = () => {
+        axios.post('/income/add', {
+            'income_name' : incomeName,
+            'income_amount': incomeAmount,
+            '_token' : csrfToken
+        })
+        .then(response => {
+            closeModal();
+        });
+
+        setIncomeName('');
+        setIncomeAmount(0);
+    }
+
     return (
         <>
             <div className='flex flex-col min-h-screen'>
