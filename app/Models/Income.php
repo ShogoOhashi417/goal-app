@@ -27,7 +27,7 @@ final class Income extends Model
     public function createIncome(
         string $name,
         int $amount
-    )
+    ): void
     {
         $this->create(
             [
