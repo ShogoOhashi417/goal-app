@@ -42,6 +42,8 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/income', 'App\Http\Controllers\Income\IncomeController@index')->name('income');
 
+Route::get('/income/get', 'App\Http\Controllers\Income\IncomeController@get');
+
 Route::post('income/add', 'App\Http\Controllers\Income\IncomeController@create');
 
 Route::get('/expenditure', 'App\Http\Controllers\Expenditure\ExpenditureController@index')->name('expenditure');

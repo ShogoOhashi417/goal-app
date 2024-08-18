@@ -34,6 +34,11 @@ function Income() {
         addIncomeRef.current.classList.add('hidden');
     }
 
+    const getInfo = async () => {
+        const response = await axios.get('/income/get');
+        setincomeInfoList(response.data.income_info_list);
+    }
+
     const addIncome = () => {
         axios.post('/income/add', {
             'income_name' : incomeName,
@@ -41,6 +46,7 @@ function Income() {
             '_token' : csrfToken
         })
         .then(response => {
+            getInfo();
             closeModal();
         });
 

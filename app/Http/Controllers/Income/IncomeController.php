@@ -30,6 +30,21 @@ class IncomeController extends Controller
         ]);
     }
 
+    public function get()
+    {
+        $fetchIncomeUseCase = new FetchIncomeUseCase(
+            new IncomeQueryService(
+                new IncomeModel()
+            )
+        );
+
+        $incomeInfoList = $fetchIncomeUseCase->handle();
+
+        return [
+            'income_info_list' => $incomeInfoList
+        ];
+    }
+
     public function create(Request $request)
     {
         $createIncomeUseCase = new CreateIncomeUseCase(
