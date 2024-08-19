@@ -26,9 +26,17 @@ function Income() {
     }
 
     const addIncomeRef = useRef(null);
+    const updateIncomeRef = useRef(null);
 
     const openAddModal = () => {
         addIncomeRef.current.classList.remove('hidden');
+    }
+
+    const openUpdateModal = (incomeId, incomeName, incomeAmount) => {
+        setIncomeId(incomeId);
+        setIncomeName(incomeName);
+        setIncomeAmount(incomeAmount);
+        updateIncomeRef.current.classList.remove('hidden');
     }
 
     const closeModal = () => {
@@ -126,7 +134,7 @@ function Income() {
                                                 
                                                 <td>
                                                     <div className="flex justify-center items-center gap-1">
-                                                        <button className='mx-auto' onClick={() => openEditTaskModal(item.id, item.name, item.dead_line)}>
+                                                        <button className='mx-auto' onClick={() => openUpdateModal(item.id, item.name, item.amount)}>
                                                             <FontAwesomeIcon icon={faPenToSquare} />
                                                         </button>
                                                         <button className='mx-auto' onClick={() => deleteIncome(item.id)}>
