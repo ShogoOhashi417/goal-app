@@ -41,6 +41,7 @@ function Income() {
 
     const closeModal = () => {
         addIncomeRef.current.classList.add('hidden');
+        updateIncomeRef.current.classList.add('hidden');
     }
 
     const getInfo = async () => {
