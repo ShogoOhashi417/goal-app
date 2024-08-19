@@ -55,6 +55,10 @@ function Income() {
     }
 
     const deleteIncome = (incomeId) => {
+        if (!confirm('本当にこの生命保険を削除しますか？')) {
+            return;
+        }
+        
         axios.post('/income/delete', {
             'id' : incomeId,
             'income_name' : incomeName,
