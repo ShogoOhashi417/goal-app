@@ -43,6 +43,19 @@ final class IncomeRepository implements IncomeRepositoryInterface
      * @param Income $income
      * @return void
      */
+    public function update(Income $income): void
+    {
+        $this->incomeModel->updateById(
+            $income->getId(),
+            $income->getName()->getValue(),
+            $income->getAmount()->getValue()
+        );
+    }
+
+    /**
+     * @param Income $income
+     * @return void
+     */
     public function remove(Income $income): void
     {
         $this->incomeModel->deleteById(
