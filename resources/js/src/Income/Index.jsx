@@ -13,6 +13,7 @@ function Income() {
 
     const [incomeInfoList, setincomeInfoList] = useState(data);
 
+    const [incomeId, setIncomeId] = useState(0);
     const [incomeName, setIncomeName] = useState('');
     const [incomeAmount, setIncomeAmount] = useState(0);
 
@@ -50,6 +51,23 @@ function Income() {
             closeModal();
         });
 
+        setIncomeName('');
+        setIncomeAmount(0);
+    }
+
+    const updateIncome = () => {
+        axios.post('/income/update', {
+            'id' : incomeId,
+            'income_name' : incomeName,
+            'income_amount': incomeAmount,
+            '_token' : csrfToken
+        })
+        .then(response => {
+            getInfo();
+            closeModal();
+        });
+
+        setIncomeId(0);
         setIncomeName('');
         setIncomeAmount(0);
     }
