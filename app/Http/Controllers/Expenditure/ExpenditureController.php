@@ -11,7 +11,11 @@ use App\Infrastructure\Query\Expenditure\ExpenditureQueryService;
 use App\Infrastructure\Repository\Expenditure\ExpenditureRepository;
 use App\Application\UseCase\Expenditure\Fetch\FetchExpenditureUseCase;
 use App\Application\UseCase\Expenditure\Create\CreateExpenditureUseCase;
+use App\Application\UseCase\Expenditure\Delete\DeleteExpenditureUseCase;
+use App\Application\UseCase\Expenditure\Update\UpdateExpenditureUseCase;
 use App\Application\UseCase\Expenditure\Create\CreateExpenditureInputData;
+use App\Application\UseCase\Expenditure\Delete\DeleteExpenditureInputData;
+use App\Application\UseCase\Expenditure\Update\UpdateExpenditureInputData;
 
 class ExpenditureController extends Controller
 {
@@ -57,6 +61,40 @@ class ExpenditureController extends Controller
             new CreateExpenditureInputData(
                 $request->expenditure_name,
                 $request->expenditure_amount
+            )
+        );
+    }
+
+    public function update(Request $request)
+    {
+        $updateExpenditureUseCase = new UpdateExpenditureUseCase(
+            new ExpenditureRepository(
+                new ExpenditureModel()
+            )
+        );
+
+        $updateExpenditureUseCase->handle(
+            new UpdateExpenditureInputData(
+                $request->id,
+                $request->expenditure_name,
+                $request->expenditure_amount
+            )
+        );
+    }
+
+    public function delete(Request $request)
+    {
+        $deleteExpenditureUseCase = new DeleteExpenditureUseCase(
+            new ExpenditureRepository(
+                new ExpenditureModel()
+            )
+        );
+
+        $deleteExpenditureUseCase->handle(
+            new DeleteExpenditureInputData(
+                $request->id,
+                $request->name,
+                $request->amount
             )
         );
     }
