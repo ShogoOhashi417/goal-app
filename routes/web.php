@@ -46,6 +46,8 @@ Route::get('/income/get', 'App\Http\Controllers\Income\IncomeController@get');
 
 Route::post('income/add', 'App\Http\Controllers\Income\IncomeController@create');
 
+Route::post('income/delete', 'App\Http\Controllers\Income\IncomeController@delete');
+
 Route::get('/expenditure', 'App\Http\Controllers\Expenditure\ExpenditureController@index')->name('expenditure');
 
 Route::get('/life_insurance', 'App\Http\Controllers\LifeInsuranceController@index')->name('life_insurance');

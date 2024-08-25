@@ -20,6 +20,15 @@ final class Income extends Model
     }
 
     /**
+     * @param integer $id
+     * @return array
+     */
+    public function fetchById(int $id): array
+    {
+        return $this->find($id)->toArray();
+    }
+
+    /**
      * @param string $name
      * @param integer $amount
      * @return void
@@ -35,5 +44,14 @@ final class Income extends Model
                 'amount' => $amount
             ]
         );
+    }
+
+    /**
+     * @param integer $id
+     * @return void
+     */
+    public function deleteById(int $id): void
+    {
+        $this->where('id', $id)->delete();
     }
 }

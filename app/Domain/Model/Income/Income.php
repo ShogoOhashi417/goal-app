@@ -22,6 +22,14 @@ final class Income
     }
 
     /**
+     * @return integer
+     */
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    /**
      * @return IncomeName
      */
     public function getName(): IncomeName
@@ -49,6 +57,25 @@ final class Income
     {
         return new self(
             0,
+            new IncomeName($name),
+            new IncomeAmount($amount)
+        );
+    }
+
+    /**
+     * @param integer $id
+     * @param string $name
+     * @param integer $amount
+     * @return self
+     */
+    public static function reconstruct(
+        int $id,
+        string $name,
+        int $amount
+    ): self
+    {
+        return new self(
+            $id,
             new IncomeName($name),
             new IncomeAmount($amount)
         );

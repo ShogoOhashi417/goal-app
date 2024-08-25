@@ -54,6 +54,22 @@ function Income() {
         setIncomeAmount(0);
     }
 
+    const deleteIncome = (incomeId) => {
+        if (!confirm('本当にこの生命保険を削除しますか？')) {
+            return;
+        }
+        
+        axios.post('/income/delete', {
+            'id' : incomeId,
+            'income_name' : incomeName,
+            'income_amount': incomeAmount,
+            '_token' : csrfToken
+        })
+        .then(response => {
+            getInfo();
+        });
+    }
+
     return (
         <>
             <div className='flex flex-col min-h-screen'>
@@ -95,7 +111,7 @@ function Income() {
                                                         <button className='mx-auto' onClick={() => openEditTaskModal(item.id, item.name, item.dead_line)}>
                                                             <FontAwesomeIcon icon={faPenToSquare} />
                                                         </button>
-                                                        <button className='mx-auto' onClick={() => deleteFamily(item.id)}>
+                                                        <button className='mx-auto' onClick={() => deleteIncome(item.id)}>
                                                             <FontAwesomeIcon icon={faCircleXmark} />
                                                         </button>
                                                     </div>

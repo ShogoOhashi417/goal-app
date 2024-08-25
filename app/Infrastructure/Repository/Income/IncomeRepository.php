@@ -20,6 +20,15 @@ final class IncomeRepository implements IncomeRepositoryInterface
     }
 
     /**
+     * @param integer $id
+     * @return array
+     */
+    public function fetchById(int $id): array
+    {
+        return $this->incomeModel->fetchById($id);
+    }
+
+    /**
      * @return void
      */
     public function create(Income $income): void
@@ -27,6 +36,17 @@ final class IncomeRepository implements IncomeRepositoryInterface
         $this->incomeModel->createIncome(
             $income->getName()->getValue(),
             $income->getAmount()->getValue()
+        );
+    }
+
+    /**
+     * @param Income $income
+     * @return void
+     */
+    public function remove(Income $income): void
+    {
+        $this->incomeModel->deleteById(
+            $income->getId(),
         );
     }
 }
