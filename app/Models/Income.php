@@ -48,6 +48,25 @@ final class Income extends Model
 
     /**
      * @param integer $id
+     * @param string $name
+     * @param integer $amount
+     * @return void
+     */
+    public function updateById(
+        int $id,
+        string $name,
+        int $amount
+    ): void {
+        $this->where('id', $id)->update(
+            [
+                'name' => $name,
+                'amount' => $amount
+            ]
+        );
+    }
+
+    /**
+     * @param integer $id
      * @return void
      */
     public function deleteById(int $id): void

@@ -12,8 +12,10 @@ use App\Infrastructure\Repository\Income\IncomeRepository;
 use App\Application\UseCase\Income\Fetch\FetchIncomeUseCase;
 use App\Application\UseCase\Income\Create\CreateIncomeUseCase;
 use App\Application\UseCase\Income\Delete\DeleteIncomeUseCase;
+use App\Application\UseCase\Income\Update\UpdateIncomeUseCase;
 use App\Application\UseCase\Income\Create\CreateIncomeInputData;
 use App\Application\UseCase\Income\Delete\DeleteIncomeInputData;
+use App\Application\UseCase\Income\Update\UpdateIncomeInputData;
 
 class IncomeController extends Controller
 {
@@ -57,6 +59,23 @@ class IncomeController extends Controller
 
         $createIncomeUseCase->handle(
             new CreateIncomeInputData(
+                $request->income_name,
+                $request->income_amount
+            )
+        );
+    }
+
+    public function update(Request $request)
+    {
+        $updateIncomeUseCase = new UpdateIncomeUseCase(
+            new IncomeRepository(
+                new IncomeModel()
+            )
+        );
+
+        $updateIncomeUseCase->handle(
+            new UpdateIncomeInputData(
+                $request->id,
                 $request->income_name,
                 $request->income_amount
             )
