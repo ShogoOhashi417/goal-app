@@ -4,27 +4,26 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Expenditure;
 
-use App\Http\Controllers\Controller;
+use App\Models\Expenditure AS ExpenditureModel;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Infrastructure\Query\Expenditure\ExpenditureQueryService;
+use App\Application\UseCase\Expenditure\Fetch\FetchExpenditureUseCase;
 
 class ExpenditureController extends Controller
 {
     public function index()
     {
-        // todo ダミーデータ
-        $expenditure_info_list = [
-            [
-                'name' => '家賃',
-                'amount' => 105000
-            ],
-            [
-                'name' => '電気料金',
-                'amount' => 3000
-            ],
-        ];
+        $fetchExpenditureUseCase = new FetchExpenditureUseCase(
+            new ExpenditureQueryService(
+                new ExpenditureModel()
+            )
+        );
+
+        $expenditureInfoList = $fetchExpenditureUseCase->handle();
 
         return view('view.expenditure.index', [
-            'expenditure_info_list' => $expenditure_info_list
+            'expenditure_info_list' => $expenditureInfoList
         ]);
     }
 }
