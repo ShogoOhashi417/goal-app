@@ -22,6 +22,11 @@
                     </x-nav-link>
                 </div>
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('household_management')" :active="request()->routeIs('household_management')">
+                        {{ __('家計管理') }}
+                    </x-nav-link>
+                </div>
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('life_insurance')" :active="request()->routeIs('life_insurance')">
                         {{ __('LifeInsurance') }}
                     </x-nav-link>
