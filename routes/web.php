@@ -60,6 +60,8 @@ Route::post('/expenditure/update', 'App\Http\Controllers\Expenditure\Expenditure
 
 Route::post('/expenditure/delete', 'App\Http\Controllers\Expenditure\ExpenditureController@delete');
 
+Route::get('/household_management', 'App\Http\Controllers\HouseholdManagement\HouseholdManagementController@index')->name('household_management');
+
 Route::get('/life_insurance', 'App\Http\Controllers\LifeInsuranceController@index')->name('life_insurance');
 Route::get('/life_insurance', 'App\Http\Controllers\LifeInsuranceController@index')->name('life_insurance');
 
