@@ -1,9 +1,11 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
-use Illuminate\Foundation\Application;
-use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Foundation\Application;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Income\IncomeController;
+use App\Http\Controllers\Expenditure\ExpenditureController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,10 +31,28 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+Route::get('/income', function () {
+    return Inertia::render('Income/Index');
+})->middleware(['auth', 'verified'])->name('income');
+
+Route::get('/expenditure', function () {
+    return Inertia::render('Expenditure/Index');
+})->middleware(['auth', 'verified'])->name('expenditure');
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+Route::get('/income/get', [IncomeController::class, 'get']);
+Route::post('/income/add', [IncomeController::class, 'create']);
+Route::post('/income/update', [IncomeController::class, 'update']);
+Route::post('/income/delete', [IncomeController::class, 'delete']);
+
+Route::get('/expenditure/get', [ExpenditureController::class, 'get']);
+Route::post('/expenditure/add', [ExpenditureController::class, 'create']);
+Route::post('/expenditure/update', [ExpenditureController::class, 'update']);
+Route::post('/expenditure/delete', [ExpenditureController::class, 'delete']);
 
 require __DIR__.'/auth.php';

@@ -4,14 +4,11 @@ import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import React from "react"
 import { useRef, useState } from 'react';
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import { Head } from '@inertiajs/react';
 
-function Expenditure() {
-    let csrfToken = document.head.querySelector('meta[name="csrf-token"]').content;
-
-    const propsData = document.getElementById('expenditure_page').getAttribute('data-props');
-    const data = JSON.parse(propsData);
-
-    const [expenditureInfoList, setExpenditureInfoList] = useState(data);
+export default function Expenditure({ auth }) {
+    const [expenditureInfoList, setExpenditureInfoList] = useState([]);
 
     const [expenditureId, setExpenditureId] = useState(0);
     const [expenditureName, setExpenditureName] = useState('');
@@ -49,11 +46,12 @@ function Expenditure() {
         setExpenditureInfoList(response.data.expenditure_info_list);
     }
 
+    getInfo();
+
     const addExpenditure = () => {
         axios.post('/expenditure/add', {
             'expenditure_name' : expenditureName,
             'expenditure_amount': expenditureAmount,
-            '_token' : csrfToken
         })
         .then(response => {
             getInfo();
@@ -69,7 +67,6 @@ function Expenditure() {
             'id' : expenditureId,
             'expenditure_name' : expenditureName,
             'expenditure_amount': expenditureAmount,
-            '_token' : csrfToken
         })
         .then(response => {
             getInfo();
@@ -90,7 +87,6 @@ function Expenditure() {
             'id' : expenditureId,
             'expenditure_name' : expenditureName,
             'expenditure_amount': expenditureAmount,
-            '_token' : csrfToken
         })
         .then(response => {
             getInfo();
@@ -99,60 +95,68 @@ function Expenditure() {
 
     return (
         <>
-            <div className='flex flex-col min-h-screen'>
-                <div className=" w-5/6 mx-auto my-3 flex-1 relative sm:justify-center bg-dots-darker bg-center bg-gray-100 selection:text-white">
-                    <div className='container'>
-                        <div className="mx-auto mt-3">
-                            <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-                                <table className="w-full text-sm text-left rtl:text-right text-gray-500">
-                                    <thead className="text-xs text-gray-700 uppercase bg-gray-50">
-                                        <tr>
-                                            <th scope="col" className="px-6 py-3">
-                                                支出名
-                                            </th>
-                                            <th scope="col" className="px-6 py-3">
-                                                金額
-                                            </th>
-                                            <th className='w-10'>
-                                                <div className="flex justify-center items-center">
-                                                    <button onClick={openAddModal}>
-                                                        <FontAwesomeIcon icon={faCirclePlus} size="lg" />
-                                                    </button>
-                                                </div>
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {expenditureInfoList.map((item, index) => (
-                                            <React.Fragment key={index}>
-                                            <tr className="bg-white border-b hover:bg-gray-50">
-                                                <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                                                    {item.name}
+            <AuthenticatedLayout
+                user={auth.user}
+                header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">支出管理</h2>}
+            >
+
+                <Head title="支出管理" />
+                
+                <div className='flex flex-col min-h-screen'>
+                    <div className=" w-5/6 mx-auto my-3 flex-1 relative sm:justify-center bg-dots-darker bg-center bg-gray-100 selection:text-white">
+                        <div className='container'>
+                            <div className="mx-auto mt-3">
+                                <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+                                    <table className="w-full text-sm text-left rtl:text-right text-gray-500">
+                                        <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+                                            <tr>
+                                                <th scope="col" className="px-6 py-3">
+                                                    支出名
                                                 </th>
-                                                <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                                                    {item.amount}
-                                                </td>
-                                                
-                                                <td>
-                                                    <div className="flex justify-center items-center gap-1">
-                                                        <button className='mx-auto' onClick={() => openUpdateModal(item.id, item.name, item.amount)}>
-                                                            <FontAwesomeIcon icon={faPenToSquare} />
-                                                        </button>
-                                                        <button className='mx-auto' onClick={() => deleteExpenditure(item.id)}>
-                                                            <FontAwesomeIcon icon={faCircleXmark} />
+                                                <th scope="col" className="px-6 py-3">
+                                                    金額
+                                                </th>
+                                                <th className='w-10'>
+                                                    <div className="flex justify-center items-center">
+                                                        <button onClick={openAddModal}>
+                                                            <FontAwesomeIcon icon={faCirclePlus} size="lg" />
                                                         </button>
                                                     </div>
-                                                </td>
+                                                </th>
                                             </tr>
-                                            </React.Fragment>
-                                            ))}
-                                    </tbody>
-                                </table>
+                                        </thead>
+                                        <tbody>
+                                            {expenditureInfoList.map((item, index) => (
+                                                <React.Fragment key={index}>
+                                                <tr className="bg-white border-b hover:bg-gray-50">
+                                                    <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                                                        {item.name}
+                                                    </th>
+                                                    <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                                                        {item.amount}
+                                                    </td>
+                                                    
+                                                    <td>
+                                                        <div className="flex justify-center items-center gap-1">
+                                                            <button className='mx-auto' onClick={() => openUpdateModal(item.id, item.name, item.amount)}>
+                                                                <FontAwesomeIcon icon={faPenToSquare} />
+                                                            </button>
+                                                            <button className='mx-auto' onClick={() => deleteExpenditure(item.id)}>
+                                                                <FontAwesomeIcon icon={faCircleXmark} />
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                </React.Fragment>
+                                                ))}
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </AuthenticatedLayout>
 
             <div ref={addExpenditureRef} className="fixed top-0 left-0 w-full h-full flex items-center justify-center hidden">
                 <div
@@ -276,5 +280,3 @@ function Expenditure() {
         </>
     )
 }
-
-export default Expenditure
