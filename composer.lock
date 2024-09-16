@@ -1378,16 +1378,16 @@
         },
         {
             "name": "laravel/sanctum",
-            "version": "v3.3.2",
+            "version": "v3.3.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/sanctum.git",
-                "reference": "e1a272893bec13cf135627f7e156030b3afe1e60"
+                "reference": "8c104366459739f3ada0e994bcd3e6fd681ce3d5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/sanctum/zipball/e1a272893bec13cf135627f7e156030b3afe1e60",
-                "reference": "e1a272893bec13cf135627f7e156030b3afe1e60",
+                "url": "https://api.github.com/repos/laravel/sanctum/zipball/8c104366459739f3ada0e994bcd3e6fd681ce3d5",
+                "reference": "8c104366459739f3ada0e994bcd3e6fd681ce3d5",
                 "shasum": ""
             },
             "require": {
@@ -1440,7 +1440,7 @@
                 "issues": "https://github.com/laravel/sanctum/issues",
                 "source": "https://github.com/laravel/sanctum"
             },
-            "time": "2023-11-03T13:42:14+00:00"
+            "time": "2023-12-19T18:44:48+00:00"
         },
         {
             "name": "laravel/serializable-closure",
@@ -5514,16 +5514,16 @@
         },
         {
             "name": "tightenco/ziggy",
-            "version": "v1.8.1",
+            "version": "v1.8.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tighten/ziggy.git",
-                "reference": "22dafc51f3f5ae5ed51f7cb6b566e6b9537f6937"
+                "reference": "939576ad0f3d3e633a9401c8c377bc7bc873ff35"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tighten/ziggy/zipball/22dafc51f3f5ae5ed51f7cb6b566e6b9537f6937",
-                "reference": "22dafc51f3f5ae5ed51f7cb6b566e6b9537f6937",
+                "url": "https://api.github.com/repos/tighten/ziggy/zipball/939576ad0f3d3e633a9401c8c377bc7bc873ff35",
+                "reference": "939576ad0f3d3e633a9401c8c377bc7bc873ff35",
                 "shasum": ""
             },
             "require": {
@@ -5531,8 +5531,8 @@
                 "laravel/framework": ">=5.4@dev"
             },
             "require-dev": {
-                "orchestra/testbench": "^3.0 || ^4.0 || ^5.0 || ^6.0 || ^7.0 || ^8.0",
-                "phpunit/phpunit": "^6.0 || ^7.0 || ^8.0 || ^9.0"
+                "orchestra/testbench": "^3.0 || ^4.0 || ^5.0 || ^6.0 || ^7.0 || ^8.0 || ^9.0",
+                "phpunit/phpunit": "^6.0 || ^7.0 || ^8.0 || ^9.0 || ^10.0"
             },
             "type": "library",
             "extra": {
@@ -5575,9 +5575,9 @@
             ],
             "support": {
                 "issues": "https://github.com/tighten/ziggy/issues",
-                "source": "https://github.com/tighten/ziggy/tree/v1.8.1"
+                "source": "https://github.com/tighten/ziggy/tree/v1.8.2"
             },
-            "time": "2023-10-12T18:31:26+00:00"
+            "time": "2024-02-20T19:56:04+00:00"
         },
         {
             "name": "tijsverkoyen/css-to-inline-styles",
@@ -8357,5 +8357,5 @@
         "php": "^8.1"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.2.0"
+    "plugin-api-version": "2.3.0"
 }
