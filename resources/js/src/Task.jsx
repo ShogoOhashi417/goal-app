@@ -125,12 +125,12 @@ function Task() {
         <>
         {/* <Head title="テスト" /> */}
             <div className='flex flex-col min-h-screen'>
-                <div className=" w-5/6 mx-auto my-3 flex-1 relative sm:justify-center bg-dots-darker bg-center bg-gray-100 dark:bg-dots-lighter dark:bg-gray-900 selection:text-white">
+                <div className=" w-5/6 mx-auto my-3 flex-1 relative sm:justify-center bg-dots-darker bg-center bg-gray-100 selection:text-white">
                     <div className='container'>
                         <div className="mx-auto mt-3">
                             <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-                                <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                                    <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                <table className="w-full text-sm text-left rtl:text-right text-gray-500">
+                                    <thead className="text-xs text-gray-700 uppercase bg-gray-50">
                                         <tr>
                                             <th scope="col" className="p-4">
                                             </th>
@@ -152,20 +152,20 @@ function Task() {
                                     <tbody>
                                         {taskList.map((item, index) => (
                                             <React.Fragment key={index}>
-                                            <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                            <tr className="bg-white border-b hover:bg-gray-50">
                                                 <td className="w-4 p-4">
                                                     <div className="flex items-center">
                                                         <input
                                                             type="checkbox"
-                                                            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                                            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2">
                                                         </input>
                                                         <label className="sr-only">checkbox</label>
                                                     </div>
                                                 </td>
-                                                <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                                <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
                                                     {item.name}
                                                 </th>
-                                                <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                                <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
                                                     {changeDate(item.dead_line)}
                                                 </td>
                                                 <td>
@@ -194,11 +194,11 @@ function Task() {
                         
                 </div>
                 <div className="z-10 bg-white p-6 rounded shadow-lg w-1/2">
-                    <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                    <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t">
+                        <h3 className="text-lg font-semibold text-gray-900">
                             Add New Task
                         </h3>
-                        <button type="button" onClick={closeModal} className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="addTaskModal">
+                        <button type="button" onClick={closeModal} className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center" data-modal-toggle="addTaskModal">
                             <svg className="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
                                 <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
                             </svg>
@@ -207,11 +207,11 @@ function Task() {
                     </div>
                     <div className="grid gap-4 mb-4 grid-cols-2">
                         <div className="col-span-2">
-                            <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Task Name</label>
-                            <input type="text" name="name" value={taskName} onChange={taskNameChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Type product name" required="" />
+                            <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900">Task Name</label>
+                            <input type="text" name="name" value={taskName} onChange={taskNameChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" placeholder="Type product name" required="" />
                         </div>
                         <div className="col-span-2">
-                            <input type="date" name="dead_line" value={taskDeadLine} onChange={taskDeadLineChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" />
+                            <input type="date" name="dead_line" value={taskDeadLine} onChange={taskDeadLineChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" />
                         </div>
                     </div>
                     <button 
@@ -219,7 +219,7 @@ function Task() {
                         type="submit"
                         style={{ opacity: isTaskInfoFilled ? 1 : 0.5 }}
                         disabled={!isTaskInfoFilled}
-                        className="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                        className="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
                         <svg className="me-1 -ms-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clipRule="evenodd"></path></svg>
                         Add new task
                     </button>
@@ -231,11 +231,11 @@ function Task() {
                         
                 </div>
                 <div className="z-10 bg-white p-6 rounded shadow-lg w-1/2">
-                    <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                    <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t">
+                        <h3 className="text-lg font-semibold text-gray-900">
                             Edit Task
                         </h3>
-                        <button type="button" onClick={closeModal} className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="addTaskModal">
+                        <button type="button" onClick={closeModal} className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center" data-modal-toggle="addTaskModal">
                             <svg className="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
                                 <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
                             </svg>
@@ -244,13 +244,13 @@ function Task() {
                     </div>
                     <div className="grid gap-4 mb-4 grid-cols-2">
                         <div className="col-span-2">
-                            <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Task Name</label>
+                            <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900">Task Name</label>
                             <input
                                 type="text"
                                 name="name"
                                 value={taskName}
                                 onChange={taskNameChange}
-                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Type product name" required=""
+                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" placeholder="Type product name" required=""
                             />
                         </div>
                         <div className="col-span-2">
@@ -259,7 +259,7 @@ function Task() {
                                 name="dead_line"
                                 value={convertDateFormat(changeDate(taskDeadLine))}
                                 onChange={taskDeadLineChange}
-                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                             />
                         </div>
                     </div>
@@ -268,7 +268,7 @@ function Task() {
                         type="submit"
                         style={{ opacity: isTaskInfoFilled ? 1 : 0.5 }}
                         disabled={!isTaskInfoFilled}
-                        className="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                        className="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
                         <svg className="me-1 -ms-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clipRule="evenodd"></path></svg>
                         Edit task
                     </button>
