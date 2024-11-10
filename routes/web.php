@@ -5,7 +5,9 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Income\IncomeController;
+use App\Domain\Model\Category\Income\IncomeCategory;
 use App\Http\Controllers\Expenditure\ExpenditureController;
+use App\Http\Controllers\IncomeCategory\IncomeCategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -58,5 +60,7 @@ Route::get('/expenditure/get', [ExpenditureController::class, 'get']);
 Route::post('/expenditure/add', [ExpenditureController::class, 'create']);
 Route::post('/expenditure/update', [ExpenditureController::class, 'update']);
 Route::post('/expenditure/delete', [ExpenditureController::class, 'delete']);
+
+Route::post('/income_category/add', [IncomeCategoryController::class, 'store']);
 
 require __DIR__.'/auth.php';
