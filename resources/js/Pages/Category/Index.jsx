@@ -40,6 +40,39 @@ export default function Income({ auth }) {
         setAddExpenditureCategory(false);
     };
 
+    const [incomeCategoryName, setIncomeCategoryName] = useState('');
+    const [expenditureCategoryName, setExpenditureCategoryName] = useState('');
+
+    const changeIncomeCaterogyName = (event) => {
+        setIncomeCategoryName(event.target.value);
+    }
+    
+    const addIncomeCategory = () => {
+        axios.post('/income_category/add', {
+            'incomeCategoryName' : incomeCategoryName,
+        })
+        .then(response => {
+            closeModal();
+        });
+
+        setIncomeCategoryName('');
+    }
+
+    const changeExpenditureCaterogyName = (event) => {
+        setExpenditureCategoryName(event.target.value);
+    }
+    
+    const saveExpenditureCategory = () => {
+        axios.post('/expenditure_category/add', {
+            'expenditureCategoryName' : expenditureCategoryName,
+        })
+        .then(response => {
+            closeModal();
+        });
+
+        setIncomeCategoryName('');
+    }
+
     return (
         <>
             <AuthenticatedLayout
@@ -162,6 +195,8 @@ export default function Income({ auth }) {
                             className="mt-1 block w-3/4"
                             isFocused
                             placeholder="収入カテゴリー"
+                            value={incomeCategoryName}
+                            onChange={changeIncomeCaterogyName}
                         />
 
                         <InputError className="mt-2" />
@@ -170,7 +205,10 @@ export default function Income({ auth }) {
                     <div className="mt-6 flex justify-end">
                         <SecondaryButton onClick={closeModal}>キャンセル</SecondaryButton>
 
-                        <PrimaryButton className="ms-3">
+                        <PrimaryButton
+                            className="ms-3"
+                            onClick={addIncomeCategory}
+                        >
                             収入カテゴリーを追加する
                         </PrimaryButton>
                     </div>
@@ -196,7 +234,9 @@ export default function Income({ auth }) {
                             name="expenditure_category"
                             className="mt-1 block w-3/4"
                             isFocused
-                            placeholder="収入カテゴリー"
+                            placeholder="支出カテゴリー"
+                            value={expenditureCategoryName}
+                            onChange={changeExpenditureCaterogyName}
                         />
 
                         <InputError className="mt-2" />
@@ -205,7 +245,10 @@ export default function Income({ auth }) {
                     <div className="mt-6 flex justify-end">
                         <SecondaryButton onClick={closeModal}>キャンセル</SecondaryButton>
 
-                        <PrimaryButton className="ms-3">
+                        <PrimaryButton
+                            className="ms-3"
+                            onClick={saveExpenditureCategory}
+                        >
                             支出カテゴリーを追加する
                         </PrimaryButton>
                     </div>
