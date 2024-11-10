@@ -6,6 +6,12 @@ import React from "react"
 import { useRef, useState } from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
+import Modal from '@/Components/Modal';
+import PrimaryButton from "@/Components/PrimaryButton";
+import SecondaryButton from '@/Components/SecondaryButton';
+import InputError from '@/Components/InputError';
+import InputLabel from '@/Components/InputLabel';
+import TextInput from '@/Components/TextInput';
 
 export default function Income({ auth }) {
     const [activeTab, setActiveTab] = useState('income');
@@ -14,8 +20,25 @@ export default function Income({ auth }) {
         setActiveTab(tab);
     }
 
-    const activeTabClassAttribute = "bg-white inline-block border-l border-t border-r rounded-t py-2 px-4 text-blue-700 font-semibold";
-    const inactiveTabClassAttribute = "bg-white inline-block py-2 px-4 text-blue-300 hover:text-blue-800 font-semibold";
+    const activeTabClassAttribute = "bg-white inline-block border-l border-t border-r rounded-t py-2 px-4 text-blue-700 font-semibold cursor-pointer";
+    const inactiveTabClassAttribute = "bg-white inline-block py-2 px-4 text-blue-300 hover:text-blue-800 font-semibold cursor-pointer";
+
+    const [addCategory, setAddCategory] = useState(false);
+
+    const showAddCategoryModal = () => {
+        setAddCategory(true);
+    }
+
+    const [addExpenditureCategory, setAddExpenditureCategory] = useState(false);
+
+    const showExpenditureCategoryModal = () => {
+        setAddExpenditureCategory(true);
+    }
+
+    const closeModal = () => {
+        setAddCategory(false);
+        setAddExpenditureCategory(false);
+    };
 
     return (
         <>
@@ -55,7 +78,7 @@ export default function Income({ auth }) {
                                                 </th>
                                                 <th className='w-10'>
                                                     <div className="flex justify-center items-center">
-                                                        <button>
+                                                        <button onClick={showAddCategoryModal}>
                                                             <FontAwesomeIcon icon={faCirclePlus} size="lg" />
                                                         </button>
                                                     </div>
@@ -88,7 +111,7 @@ export default function Income({ auth }) {
                                                 </th>
                                                 <th className='w-10'>
                                                     <div className="flex justify-center items-center">
-                                                        <button>
+                                                        <button onClick={showExpenditureCategoryModal}>
                                                             <FontAwesomeIcon icon={faCirclePlus} size="lg" />
                                                         </button>
                                                     </div>
@@ -119,111 +142,75 @@ export default function Income({ auth }) {
                 </div>
             </AuthenticatedLayout>
 
-            <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center hidden">
-                <div
-                    className="absolute w-full h-full bg-gray-900 opacity-50"
-                >
-                </div>
-                <div className="z-10 bg-white p-6 rounded shadow-lg w-1/2">
-                    <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t">
-                        <h3 className="text-lg font-semibold text-gray-900">
-                            カテゴリーを追加する
-                        </h3>
-                        <button
-                            type="button"
-                            className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
-                            data-modal-toggle="addTaskModal"
-                        >
-                            <svg className="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-                            </svg>
-                        </button>
-                    </div>
-                    <div className="grid gap-4 mb-4 grid-cols-2">
-                        <div className="col-span-2">
-                            <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900">
-                                カテゴリー
-                            </label>
-                            <input
-                                type="text"
-                                name="income_name"
-                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-                                placeholder="例) 給料"
-                            />
-                        </div>
-                        <div className="col-span-2">
-                            <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900">
-                                金額
-                            </label>
-                            <input
-                                type="number"
-                                name="amount"
-                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-                                min="1"
-                            />
-                        </div>
-                    </div>
-                    <button
-                        type="submit"
-                        className="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
-                        <svg className="me-1 -ms-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clipRule="evenodd"></path></svg>
-                        収入を登録する
-                    </button>
-                </div>
-            </div>
+            <Modal show={addCategory} onClose={closeModal}>
+                <div className="p-6">
+                    <h2 className="text-lg font-medium text-gray-900">
+                        収入カテゴリーを追加
+                    </h2>
 
-            <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center hidden">
-                <div
-                    className="absolute w-full h-full bg-gray-900 opacity-50"
-                >
-                </div>
-                <div className="z-10 bg-white p-6 rounded shadow-lg w-1/2">
-                    <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t">
-                        <h3 className="text-lg font-semibold text-gray-900">
-                            収入を編集する
-                        </h3>
-                        <button
-                            type="button"
-                            className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
-                            data-modal-toggle="addTaskModal"
-                        >
-                            <svg className="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-                            </svg>
-                        </button>
+                    <p className="mt-1 text-sm text-gray-600">
+                        収入のカテゴリーを追加してください
+                    </p>
+
+                    <div className="mt-6">
+                        <InputLabel htmlFor="income_category" className="sr-only" />
+
+                        <TextInput
+                            id="income_category"
+                            type="text"
+                            name="income_category"
+                            className="mt-1 block w-3/4"
+                            isFocused
+                            placeholder="収入カテゴリー"
+                        />
+
+                        <InputError className="mt-2" />
                     </div>
-                    <div className="grid gap-4 mb-4 grid-cols-2">
-                        <div className="col-span-2">
-                            <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900">
-                                収入名
-                            </label>
-                            <input
-                                type="text"
-                                name="income_name"
-                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-                                placeholder="例) 給料"
-                            />
-                        </div>
-                        <div className="col-span-2">
-                            <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900">
-                                金額
-                            </label>
-                            <input
-                                type="number"
-                                name="amount"
-                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-                                min="1"
-                            />
-                        </div>
+
+                    <div className="mt-6 flex justify-end">
+                        <SecondaryButton onClick={closeModal}>キャンセル</SecondaryButton>
+
+                        <PrimaryButton className="ms-3">
+                            収入カテゴリーを追加する
+                        </PrimaryButton>
                     </div>
-                    <button
-                        type="submit"
-                        className="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
-                        <svg className="me-1 -ms-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clipRule="evenodd"></path></svg>
-                        収入を登録する
-                    </button>
                 </div>
-            </div>
+            </Modal>
+
+            <Modal show={addExpenditureCategory} onClose={closeModal}>
+                <div className="p-6">
+                    <h2 className="text-lg font-medium text-gray-900">
+                        支出カテゴリーを追加
+                    </h2>
+
+                    <p className="mt-1 text-sm text-gray-600">
+                        支出のカテゴリーを追加してください
+                    </p>
+
+                    <div className="mt-6">
+                        <InputLabel htmlFor="expenditure_category" className="sr-only" />
+
+                        <TextInput
+                            id="expenditure_category"
+                            type="text"
+                            name="expenditure_category"
+                            className="mt-1 block w-3/4"
+                            isFocused
+                            placeholder="収入カテゴリー"
+                        />
+
+                        <InputError className="mt-2" />
+                    </div>
+
+                    <div className="mt-6 flex justify-end">
+                        <SecondaryButton onClick={closeModal}>キャンセル</SecondaryButton>
+
+                        <PrimaryButton className="ms-3">
+                            支出カテゴリーを追加する
+                        </PrimaryButton>
+                    </div>
+                </div>
+            </Modal>
         </>
     )
 }
