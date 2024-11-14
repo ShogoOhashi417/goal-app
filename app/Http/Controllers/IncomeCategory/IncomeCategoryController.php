@@ -2,21 +2,30 @@
 
 namespace App\Http\Controllers\IncomeCategory;
 
-use App\Application\UseCase\Category\Income\Create\CreateIncomeCategoryInputData;
-use App\Application\UseCase\Category\Income\Create\CreateIncomeCategoryUseCase;
 use Illuminate\Http\Request;
+use App\Models\IncomeCategory;
 use App\Http\Controllers\Controller;
 use App\Infrastructure\Repository\Category\Income\IncomeCategoryRepository;
-use App\Models\IncomeCategory;
+use App\Application\UseCase\Category\Income\Fetch\FetchIncomeCategoryUseCase;
+use App\Application\UseCase\Category\Income\Create\CreateIncomeCategoryUseCase;
+use App\Application\UseCase\Category\Income\Create\CreateIncomeCategoryInputData;
 
 class IncomeCategoryController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function get()
     {
-        //
+        $fetchIncomeCategoryUseCase = new FetchIncomeCategoryUseCase(
+            new IncomeCategory()
+        );
+
+        $incomeCategoryInfoList = $fetchIncomeCategoryUseCase->handle();
+
+        return [
+            'income_category_info_list' => $incomeCategoryInfoList
+        ];
     }
 
     /**
