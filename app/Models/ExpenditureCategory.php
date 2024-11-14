@@ -12,6 +12,14 @@ class ExpenditureCategory extends Model
     protected $fillable = ['name'];
 
     /**
+     * @return array
+     */
+    public function fetchAll(): array
+    {
+        return $this->all()->toArray();
+    }
+
+    /**
      * @param string $name
      * @return void
      */

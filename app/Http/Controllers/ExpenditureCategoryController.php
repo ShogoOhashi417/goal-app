@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\ExpenditureCategory;
 use App\Infrastructure\Repository\Category\Expenditure\ExpenditureCategoryRepository;
+use App\Application\UseCase\Category\Expenditure\Fetch\FetchExpenditureCategoryUseCase;
 use App\Application\UseCase\Category\Expenditure\Create\CreateExpenditureCategoryUseCase;
 use App\Application\UseCase\Category\Expenditure\Create\CreateExpenditureCategoryInputData;
 
@@ -13,9 +14,17 @@ class ExpenditureCategoryController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function get()
     {
-        //
+        $fetchExpenditureCategoryUseCase = new FetchExpenditureCategoryUseCase(
+            new ExpenditureCategory()
+        );
+
+        $expenditureCategoryInfoList = $fetchExpenditureCategoryUseCase->handle();
+
+        return [
+            "expenditure_category_info_list" => $expenditureCategoryInfoList
+        ];
     }
 
     /**

@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
 import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
-import React from "react"
+import React, { useEffect } from "react"
 import { useRef, useState } from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
@@ -14,6 +14,25 @@ import InputLabel from '@/Components/InputLabel';
 import TextInput from '@/Components/TextInput';
 
 export default function Income({ auth }) {
+    const [incomeCategoryInfoList, setIncomeCategoryInfoList] = useState([]);
+    
+    const getIncomeCategory = async () => {
+        const response = await axios.get('/income_category/get');
+        setIncomeCategoryInfoList(response.data.income_category_info_list);
+    }
+
+    const [expenditureCategoryInfoList, setExpenditureCategoryInfoList] = useState([]);
+
+    const getExpenditureCategory = async () => {
+        const response = await axios.get('/expenditure_category/get');
+        setExpenditureCategoryInfoList(response.data.expenditure_category_info_list);
+    }
+
+    useEffect(() => {
+        getIncomeCategory();
+        getExpenditureCategory();
+    }, []);
+    
     const [activeTab, setActiveTab] = useState('income');
 
     const changeActiveTab = (tab) => {
@@ -53,6 +72,7 @@ export default function Income({ auth }) {
         })
         .then(response => {
             closeModal();
+            getIncomeCategory();
         });
 
         setIncomeCategoryName('');
@@ -71,6 +91,7 @@ export default function Income({ auth }) {
         });
 
         setIncomeCategoryName('');
+        getExpenditureCategory();
     }
 
     return (
@@ -119,20 +140,23 @@ export default function Income({ auth }) {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {/* todo ダミー */}
-                                            <tr className="bg-white border-b hover:bg-gray-50">
-                                                <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">給料</td>
-                                                <td>
-                                                    <div className="flex justify-center items-center gap-1">
-                                                        <button className='mx-auto'>
-                                                            <FontAwesomeIcon icon={faPenToSquare} />
-                                                        </button>
-                                                        <button className='mx-auto'>
-                                                            <FontAwesomeIcon icon={faCircleXmark} />
-                                                        </button>
-                                                    </div>
-                                                </td>
-                                            </tr>
+                                        {incomeCategoryInfoList.map((item, index) => (
+                                                <React.Fragment key={index}>
+                                                <tr className="bg-white border-b hover:bg-gray-50">
+                                                        <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">{item.name}</td>
+                                                    <td>
+                                                        <div className="flex justify-center items-center gap-1">
+                                                            <button className='mx-auto'>
+                                                                <FontAwesomeIcon icon={faPenToSquare} />
+                                                            </button>
+                                                            <button className='mx-auto'>
+                                                                <FontAwesomeIcon icon={faCircleXmark} />
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                </React.Fragment>
+                                            ))}
                                         </tbody>
                                     </table>
 
@@ -152,20 +176,23 @@ export default function Income({ auth }) {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {/* todo ダミー */}
-                                            <tr className="bg-white border-b hover:bg-gray-50">
-                                                <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">給料</td>
-                                                <td>
-                                                    <div className="flex justify-center items-center gap-1">
-                                                        <button className='mx-auto'>
-                                                            <FontAwesomeIcon icon={faPenToSquare} />
-                                                        </button>
-                                                        <button className='mx-auto'>
-                                                            <FontAwesomeIcon icon={faCircleXmark} />
-                                                        </button>
-                                                    </div>
-                                                </td>
-                                            </tr>
+                                            {expenditureCategoryInfoList.map((item, index) => (
+                                                <React.Fragment key={index}>
+                                                <tr className="bg-white border-b hover:bg-gray-50">
+                                                        <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">{item.name}</td>
+                                                    <td>
+                                                        <div className="flex justify-center items-center gap-1">
+                                                            <button className='mx-auto'>
+                                                                <FontAwesomeIcon icon={faPenToSquare} />
+                                                            </button>
+                                                            <button className='mx-auto'>
+                                                                <FontAwesomeIcon icon={faCircleXmark} />
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                </React.Fragment>
+                                            ))}
                                         </tbody>
                                     </table>
                                 </div>

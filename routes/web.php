@@ -62,8 +62,10 @@ Route::post('/expenditure/add', [ExpenditureController::class, 'create']);
 Route::post('/expenditure/update', [ExpenditureController::class, 'update']);
 Route::post('/expenditure/delete', [ExpenditureController::class, 'delete']);
 
+Route::get('/income_category/get', [IncomeCategoryController::class, 'get']);
 Route::post('/income_category/add', [IncomeCategoryController::class, 'store']);
 
+Route::get('/expenditure_category/get', [ExpenditureCategoryController::class, 'get']);
 Route::post('/expenditure_category/add', [ExpenditureCategoryController::class, 'store']);
 
 require __DIR__.'/auth.php';
