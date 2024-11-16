@@ -93,6 +93,13 @@ export default function Income({ auth }) {
         });
     }
 
+    const [incomeCategoryInfoList, setIncomeCategoryInfoList] = useState([]);
+    
+    const getIncomeCategory = async () => {
+        const response = await axios.get('/income_category/get');
+        setIncomeCategoryInfoList(response.data.income_category_info_list);
+    }
+
     return (
         <>
             <AuthenticatedLayout
@@ -192,6 +199,20 @@ export default function Income({ auth }) {
                                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                                 placeholder="例) 給料"
                             />
+                        </div>
+                        <div className="col-span-2">
+                            <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900">
+                                カテゴリー
+                            </label>
+
+                            <select class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" name="" id="">
+                                <option value="">選択してください</option>
+                                {incomeInfoList.map((item, index) => (
+                                    <React.Fragment key={index}>
+                                        <option value={item.name}>{item.name}</option>
+                                    </React.Fragment>
+                                ))}
+                            </select>
                         </div>
                         <div className="col-span-2">
                             <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900">
