@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
 import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
-import React from "react"
+import React, { useEffect } from "react"
 import { useRef, useState } from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
@@ -12,10 +12,15 @@ export default function Income({ auth }) {
 
     const [incomeId, setIncomeId] = useState(0);
     const [incomeName, setIncomeName] = useState('');
+    const [incomeCategoryId, setIncomeCategoryId] = useState(0);
     const [incomeAmount, setIncomeAmount] = useState(0);
 
     const changeIncomeName = (event) => {
         setIncomeName(event.target.value);
+    }
+
+    const changeIncomeCategoryId = (event) => {
+        setIncomeCategoryId(event.target.value);
     }
 
     const changeIncomeAmount = (event) => {
@@ -46,11 +51,15 @@ export default function Income({ auth }) {
         setincomeInfoList(response.data.income_info_list);
     }
 
-    getInfo();
+    useEffect(() => {
+        getInfo();
+        getIncomeCategory()
+    }, []);
 
     const addIncome = () => {
         axios.post('/income/add', {
-            'income_name' : incomeName,
+            'income_name': incomeName,
+            'income_category_id' : incomeCategoryId,
             'income_amount': incomeAmount,
         })
         .then(response => {
@@ -205,11 +214,16 @@ export default function Income({ auth }) {
                                 カテゴリー
                             </label>
 
-                            <select class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" name="" id="">
+                            <select
+                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                                name=""
+                                id=""
+                                onChange={changeIncomeCategoryId}
+                            >
                                 <option value="">選択してください</option>
-                                {incomeInfoList.map((item, index) => (
+                                {incomeCategoryInfoList.map((item, index) => (
                                     <React.Fragment key={index}>
-                                        <option value={item.name}>{item.name}</option>
+                                        <option value={item.id}>{item.name}</option>
                                     </React.Fragment>
                                 ))}
                             </select>

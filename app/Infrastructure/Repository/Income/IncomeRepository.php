@@ -35,6 +35,7 @@ final class IncomeRepository implements IncomeRepositoryInterface
     {
         $this->incomeModel->createIncome(
             $income->getName()->getValue(),
+            $income->getCategoryId()->getValue(),
             $income->getAmount()->getValue()
         );
     }

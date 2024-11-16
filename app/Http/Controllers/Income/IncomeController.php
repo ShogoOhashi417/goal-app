@@ -60,6 +60,7 @@ class IncomeController extends Controller
         $createIncomeUseCase->handle(
             new CreateIncomeInputData(
                 $request->income_name,
+                (int)$request->income_category_id,
                 $request->income_amount
             )
         );

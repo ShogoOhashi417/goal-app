@@ -9,7 +9,7 @@ final class Income extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'amount'];
+    protected $fillable = ['name', 'category_id', 'amount'];
 
     /**
      * @return array
@@ -35,12 +35,14 @@ final class Income extends Model
      */
     public function createIncome(
         string $name,
+        int $categoryId,
         int $amount
     ): void
     {
         $this->create(
             [
                 'name' => $name,
+                'category_id' => $categoryId,
                 'amount' => $amount
             ]
         );
