@@ -60,6 +60,8 @@ export default function Income({ auth }) {
     };
 
     const [incomeCategoryName, setIncomeCategoryName] = useState('');
+
+    const [expenditureCategoryId, setExpenditureCategoryId] = useState(0);
     const [expenditureCategoryName, setExpenditureCategoryName] = useState('');
 
     const changeIncomeCaterogyName = (event) => {
@@ -92,6 +94,23 @@ export default function Income({ auth }) {
 
         setIncomeCategoryName('');
         getExpenditureCategory();
+    }
+
+    const deleteExpenditureCategory = (expenditureCategoryId) => {
+        if (!confirm('a')) {
+            return;
+        }
+
+        axios.post('/expenditure_category/delete', {
+            'id' : expenditureCategoryId,
+        })
+        .then(response => {
+            closeModal();
+
+            setExpenditureCategoryId(0);
+            setExpenditureCategoryName('');
+            getExpenditureCategory();
+        });
     }
 
     return (
@@ -185,7 +204,10 @@ export default function Income({ auth }) {
                                                             <button className='mx-auto'>
                                                                 <FontAwesomeIcon icon={faPenToSquare} />
                                                             </button>
-                                                            <button className='mx-auto'>
+                                                            <button
+                                                                className='mx-auto'
+                                                                onClick={() => deleteExpenditureCategory(item.id)}
+                                                            >
                                                                 <FontAwesomeIcon icon={faCircleXmark} />
                                                             </button>
                                                         </div>

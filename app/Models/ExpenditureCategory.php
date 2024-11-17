@@ -20,6 +20,15 @@ class ExpenditureCategory extends Model
     }
 
     /**
+     * @param integer $id
+     * @return array
+     */
+    public function fetchById(int $id): array
+    {
+        return $this->where('id', $id)->get()->toArray();
+    }
+
+    /**
      * @param string $name
      * @return void
      */
@@ -30,5 +39,14 @@ class ExpenditureCategory extends Model
                 'name' => $name,
             ]
         );
+    }
+
+    /**
+     * @param integer $id
+     * @return void
+     */
+    public function deleteById(int $id): void
+    {
+        $this->where('id', $id)->delete();
     }
 }

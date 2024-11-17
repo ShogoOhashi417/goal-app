@@ -7,7 +7,9 @@ use App\Models\ExpenditureCategory;
 use App\Infrastructure\Repository\Category\Expenditure\ExpenditureCategoryRepository;
 use App\Application\UseCase\Category\Expenditure\Fetch\FetchExpenditureCategoryUseCase;
 use App\Application\UseCase\Category\Expenditure\Create\CreateExpenditureCategoryUseCase;
+use App\Application\UseCase\Category\Expenditure\Delete\DeleteExpenditureCategoryUseCase;
 use App\Application\UseCase\Category\Expenditure\Create\CreateExpenditureCategoryInputData;
+use App\Application\UseCase\Category\Expenditure\Delete\DeleteExpenditureCategoryInputData;
 
 class ExpenditureCategoryController extends Controller
 {
@@ -77,11 +79,18 @@ class ExpenditureCategoryController extends Controller
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function delete(Request $request)
     {
-        //
+        $deleteExpenditureCategoryUseCase = new DeleteExpenditureCategoryUseCase(
+            new ExpenditureCategoryRepository(
+                new ExpenditureCategory()
+            )
+        );
+
+        $deleteExpenditureCategoryUseCase->handle(
+            new DeleteExpenditureCategoryInputData(
+                (int)$request->id
+            )
+        );
     }
 }

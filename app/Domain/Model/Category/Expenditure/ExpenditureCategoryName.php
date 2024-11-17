@@ -2,7 +2,7 @@
 
 namespace App\Domain\Model\Category\Expenditure;
 
-final class ExpenditureCategoryNAme
+final class ExpenditureCategoryName
 {
     private readonly string $name;
 
