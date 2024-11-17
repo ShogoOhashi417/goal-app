@@ -35,6 +35,7 @@ final class ExpenditureRepository implements ExpenditureRepositoryInterface
     {
         $this->expenditureModel->createExpenditure(
             $expenditure->getName()->getValue(),
+            $expenditure->getCategoryId()->getValue(),
             $expenditure->getAmount()->getValue()
         );
     }
@@ -48,6 +49,7 @@ final class ExpenditureRepository implements ExpenditureRepositoryInterface
         $this->expenditureModel->updateById(
             $expenditure->getId(),
             $expenditure->getName()->getValue(),
+            $expenditure->getCategoryId()->getValue(),
             $expenditure->getAmount()->getValue()
         );
     }

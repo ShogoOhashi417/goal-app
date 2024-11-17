@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
 import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
-import React from "react"
+import React, { useEffect } from "react"
 import { useRef, useState } from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
@@ -12,10 +12,15 @@ export default function Income({ auth }) {
 
     const [incomeId, setIncomeId] = useState(0);
     const [incomeName, setIncomeName] = useState('');
+    const [incomeCategoryId, setIncomeCategoryId] = useState(0);
     const [incomeAmount, setIncomeAmount] = useState(0);
 
     const changeIncomeName = (event) => {
         setIncomeName(event.target.value);
+    }
+
+    const changeIncomeCategoryId = (event) => {
+        setIncomeCategoryId(event.target.value);
     }
 
     const changeIncomeAmount = (event) => {
@@ -29,9 +34,10 @@ export default function Income({ auth }) {
         addIncomeRef.current.classList.remove('hidden');
     }
 
-    const openUpdateModal = (incomeId, incomeName, incomeAmount) => {
+    const openUpdateModal = (incomeId, incomeName, incomeCategoryId, incomeAmount) => {
         setIncomeId(incomeId);
         setIncomeName(incomeName);
+        setIncomeCategoryId(incomeCategoryId);
         setIncomeAmount(incomeAmount);
         updateIncomeRef.current.classList.remove('hidden');
     }
@@ -46,11 +52,15 @@ export default function Income({ auth }) {
         setincomeInfoList(response.data.income_info_list);
     }
 
-    getInfo();
+    useEffect(() => {
+        getInfo();
+        getIncomeCategory()
+    }, []);
 
     const addIncome = () => {
         axios.post('/income/add', {
-            'income_name' : incomeName,
+            'income_name': incomeName,
+            'income_category_id' : incomeCategoryId,
             'income_amount': incomeAmount,
         })
         .then(response => {
@@ -65,7 +75,8 @@ export default function Income({ auth }) {
     const updateIncome = () => {
         axios.post('/income/update', {
             'id' : incomeId,
-            'income_name' : incomeName,
+            'income_name': incomeName,
+            'income_category_id' : incomeCategoryId,
             'income_amount': incomeAmount,
         })
         .then(response => {
@@ -75,6 +86,7 @@ export default function Income({ auth }) {
 
         setIncomeId(0);
         setIncomeName('');
+        setIncomeCategoryId(0);
         setIncomeAmount(0);
     }
 
@@ -91,6 +103,13 @@ export default function Income({ auth }) {
         .then(response => {
             getInfo();
         });
+    }
+
+    const [incomeCategoryInfoList, setIncomeCategoryInfoList] = useState([]);
+    
+    const getIncomeCategory = async () => {
+        const response = await axios.get('/income_category/get');
+        setIncomeCategoryInfoList(response.data.income_category_info_list);
     }
 
     return (
@@ -137,7 +156,7 @@ export default function Income({ auth }) {
                                                     
                                                     <td>
                                                         <div className="flex justify-center items-center gap-1">
-                                                            <button className='mx-auto' onClick={() => openUpdateModal(item.id, item.name, item.amount)}>
+                                                            <button className='mx-auto' onClick={() => openUpdateModal(item.id, item.name, item.category_id, item.amount)}>
                                                                 <FontAwesomeIcon icon={faPenToSquare} />
                                                             </button>
                                                             <button className='mx-auto' onClick={() => deleteIncome(item.id)}>
@@ -192,6 +211,25 @@ export default function Income({ auth }) {
                                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                                 placeholder="例) 給料"
                             />
+                        </div>
+                        <div className="col-span-2">
+                            <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900">
+                                カテゴリー
+                            </label>
+
+                            <select
+                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                                name=""
+                                id=""
+                                onChange={changeIncomeCategoryId}
+                            >
+                                <option value="">選択してください</option>
+                                {incomeCategoryInfoList.map((item, index) => (
+                                    <React.Fragment key={index}>
+                                        <option value={item.id}>{item.name}</option>
+                                    </React.Fragment>
+                                ))}
+                            </select>
                         </div>
                         <div className="col-span-2">
                             <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900">
@@ -252,6 +290,26 @@ export default function Income({ auth }) {
                                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                                 placeholder="例) 給料"
                             />
+                        </div>
+                        <div className="col-span-2">
+                            <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900">
+                                カテゴリー
+                            </label>
+
+                            <select
+                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                                name=""
+                                id=""
+                                value={incomeCategoryId}
+                                onChange={changeIncomeCategoryId}
+                            >
+                                <option value="">選択してください</option>
+                                {incomeCategoryInfoList.map((item, index) => (
+                                    <React.Fragment key={index}>
+                                        <option value={item.id}>{item.name}</option>
+                                    </React.Fragment>
+                                ))}
+                            </select>
                         </div>
                         <div className="col-span-2">
                             <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900">

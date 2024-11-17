@@ -26,6 +26,7 @@ final class CreateIncomeUseCase
     {
         $income = Income::create(
             $inputData->name,
+            $inputData->categoryId,
             $inputData->amount
         );
 

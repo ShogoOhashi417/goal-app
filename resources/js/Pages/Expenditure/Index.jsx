@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
 import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
-import React from "react"
+import React, { useEffect } from "react"
 import { useRef, useState } from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
@@ -12,10 +12,15 @@ export default function Expenditure({ auth }) {
 
     const [expenditureId, setExpenditureId] = useState(0);
     const [expenditureName, setExpenditureName] = useState('');
+    const [expenditureCategoryId, setExpenditureCategoryId] = useState(0);
     const [expenditureAmount, setExpenditureAmount] = useState(0);
 
     const changeExpenditureName = (event) => {
         setExpenditureName(event.target.value);
+    }
+
+    const changeExpenditureCategoryId = (event) => {
+        setExpenditureCategoryId(event.target.value);
     }
 
     const changeExpenditureAmount = (event) => {
@@ -29,9 +34,10 @@ export default function Expenditure({ auth }) {
         addExpenditureRef.current.classList.remove('hidden');
     }
 
-    const openUpdateModal = (expenditureId, expenditureName, expenditureAmount) => {
+    const openUpdateModal = (expenditureId, expenditureName, expenditureCategoryId, expenditureAmount) => {
         setExpenditureId(expenditureId);
         setExpenditureName(expenditureName);
+        setExpenditureCategoryId(expenditureCategoryId);
         setExpenditureAmount(expenditureAmount);
         updateExpenditureRef.current.classList.remove('hidden');
     }
@@ -46,11 +52,15 @@ export default function Expenditure({ auth }) {
         setExpenditureInfoList(response.data.expenditure_info_list);
     }
 
-    getInfo();
+    useEffect(() => {
+        getInfo();
+        getExpenditureCategory()
+    }, []);
 
     const addExpenditure = () => {
         axios.post('/expenditure/add', {
             'expenditure_name' : expenditureName,
+            'expenditure_category_id' : expenditureCategoryId,
             'expenditure_amount': expenditureAmount,
         })
         .then(response => {
@@ -59,6 +69,7 @@ export default function Expenditure({ auth }) {
         });
 
         setExpenditureName('');
+        setExpenditureCategoryId(0);
         setExpenditureAmount(0);
     }
 
@@ -66,6 +77,7 @@ export default function Expenditure({ auth }) {
         axios.post('/expenditure/update', {
             'id' : expenditureId,
             'expenditure_name' : expenditureName,
+            'expenditure_category_id' : expenditureCategoryId,
             'expenditure_amount': expenditureAmount,
         })
         .then(response => {
@@ -75,6 +87,7 @@ export default function Expenditure({ auth }) {
 
         setExpenditureId(0);
         setExpenditureName('');
+        setExpenditureCategoryId(0);
         setExpenditureAmount(0);
     }
 
@@ -91,6 +104,13 @@ export default function Expenditure({ auth }) {
         .then(response => {
             getInfo();
         });
+    }
+
+    const [expenditureCategoryInfoList, setExpenditureCategoryInfoList] = useState([]);
+
+    const getExpenditureCategory = async () => {
+        const response = await axios.get('/expenditure_category/get');
+        setExpenditureCategoryInfoList(response.data.expenditure_category_info_list);
     }
 
     return (
@@ -138,7 +158,7 @@ export default function Expenditure({ auth }) {
                                                     
                                                     <td>
                                                         <div className="flex justify-center items-center gap-1">
-                                                            <button className='mx-auto' onClick={() => openUpdateModal(item.id, item.name, item.amount)}>
+                                                            <button className='mx-auto' onClick={() => openUpdateModal(item.id, item.name, item.category_id, item.amount)}>
                                                                 <FontAwesomeIcon icon={faPenToSquare} />
                                                             </button>
                                                             <button className='mx-auto' onClick={() => deleteExpenditure(item.id)}>
@@ -193,6 +213,25 @@ export default function Expenditure({ auth }) {
                                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                                 placeholder="例) 給料"
                             />
+                        </div>
+                        <div className="col-span-2">
+                            <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900">
+                                カテゴリー
+                            </label>
+
+                            <select
+                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                                name=""
+                                id=""
+                                onChange={changeExpenditureCategoryId}
+                            >
+                                <option value="">選択してください</option>
+                                {expenditureCategoryInfoList.map((item, index) => (
+                                    <React.Fragment key={index}>
+                                        <option value={item.id}>{item.name}</option>
+                                    </React.Fragment>
+                                ))}
+                            </select>
                         </div>
                         <div className="col-span-2">
                             <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900">
@@ -253,6 +292,26 @@ export default function Expenditure({ auth }) {
                                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                                 placeholder="例) 給料"
                             />
+                        </div>
+                        <div className="col-span-2">
+                            <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900">
+                                カテゴリー
+                            </label>
+
+                            <select
+                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                                name=""
+                                id=""
+                                value={expenditureCategoryId}
+                                onChange={changeExpenditureCategoryId}
+                            >
+                                <option value="">選択してください</option>
+                                {expenditureCategoryInfoList.map((item, index) => (
+                                    <React.Fragment key={index}>
+                                        <option value={item.id}>{item.name}</option>
+                                    </React.Fragment>
+                                ))}
+                            </select>
                         </div>
                         <div className="col-span-2">
                             <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900">

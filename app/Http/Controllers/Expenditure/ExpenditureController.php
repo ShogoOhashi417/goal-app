@@ -60,6 +60,7 @@ class ExpenditureController extends Controller
         $createExpenditureUseCase->handle(
             new CreateExpenditureInputData(
                 $request->expenditure_name,
+                (int)$request->expenditure_category_id,
                 $request->expenditure_amount
             )
         );
@@ -77,6 +78,7 @@ class ExpenditureController extends Controller
             new UpdateExpenditureInputData(
                 $request->id,
                 $request->expenditure_name,
+                (int)$request->expenditure_category_id,
                 $request->expenditure_amount
             )
         );

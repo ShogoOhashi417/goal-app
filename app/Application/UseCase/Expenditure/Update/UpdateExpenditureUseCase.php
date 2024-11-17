@@ -23,6 +23,7 @@ final class UpdateExpenditureUseCase
         $expenditure = Expenditure::reconstruct(
             $inputData->id,
             $inputData->name,
+            $inputData->categoryId,
             $inputData->amount
         );
 

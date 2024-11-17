@@ -23,6 +23,7 @@ final class UpdateIncomeUseCase
         $income = Income::reconstruct(
             $inputData->id,
             $inputData->name,
+            $inputData->categoryId,
             $inputData->amount
         );
 
