@@ -11,12 +11,12 @@ final class Expenditure extends Model
 
     protected $fillable = ['name', 'category_id', 'amount'];
 
-    /**
-     * @return array
-     */
     public function fetchAll(): array
     {
-        return $this->all()->toArray();
+        return $this->join('expenditure_categories', 'expenditures.category_id', '=', 'expenditure_categories.id')
+                    ->select('expenditures.*', 'expenditure_categories.name as category_name')
+                    ->get()
+                    ->toArray();
     }
 
         /**

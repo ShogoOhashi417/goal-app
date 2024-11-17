@@ -46,6 +46,10 @@ Route::get('/category', function () {
     return Inertia::render('Category/Index');
 })->middleware(['auth', 'verified'])->name('category');
 
+Route::get('/report', function () {
+    return Inertia::render('Report/Index');
+})->middleware(['auth', 'verified'])->name('report');
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -58,6 +62,7 @@ Route::post('/income/update', [IncomeController::class, 'update']);
 Route::post('/income/delete', [IncomeController::class, 'delete']);
 
 Route::get('/expenditure/get', [ExpenditureController::class, 'get']);
+Route::get('/expenditure/get_by_category', [ExpenditureController::class, 'fetchByCategory']);
 Route::post('/expenditure/add', [ExpenditureController::class, 'create']);
 Route::post('/expenditure/update', [ExpenditureController::class, 'update']);
 Route::post('/expenditure/delete', [ExpenditureController::class, 'delete']);

@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Expenditure AS ExpenditureModel;
 use App\Infrastructure\Query\Expenditure\ExpenditureQueryService;
+use App\Infrastructure\Adaptor\Calculation\CategoryAmountCalculater;
 use App\Infrastructure\Repository\Expenditure\ExpenditureRepository;
 use App\Application\UseCase\Expenditure\Fetch\FetchExpenditureUseCase;
 use App\Application\UseCase\Expenditure\Create\CreateExpenditureUseCase;
@@ -46,6 +47,25 @@ class ExpenditureController extends Controller
 
         return [
             'expenditure_info_list' => $expenditureInfoList
+        ];
+    }
+
+    public function fetchByCategory()
+    {
+        $fetchExpenditureUseCase = new FetchExpenditureUseCase(
+            new ExpenditureQueryService(
+                new ExpenditureModel()
+            )
+        );
+
+        $expenditureInfoList = $fetchExpenditureUseCase->handle();
+
+        $categoryAmountCalculater = new CategoryAmountCalculater();
+
+        $categoryToAmountList = $categoryAmountCalculater->calculate($expenditureInfoList);
+
+        return [
+            'category_to_amount_list' => $categoryToAmountList
         ];
     }
 
