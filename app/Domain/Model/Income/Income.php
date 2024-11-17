@@ -79,18 +79,21 @@ final class Income
     /**
      * @param integer $id
      * @param string $name
+     * @param integer $categoryId
      * @param integer $amount
      * @return self
      */
     public static function reconstruct(
         int $id,
         string $name,
+        int $categoryId,
         int $amount
     ): self
     {
         return new self(
             $id,
             new IncomeName($name),
+            new IncomeCategoryId($categoryId),
             new IncomeAmount($amount)
         );
     }

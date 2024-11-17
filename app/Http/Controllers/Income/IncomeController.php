@@ -78,6 +78,7 @@ class IncomeController extends Controller
             new UpdateIncomeInputData(
                 $request->id,
                 $request->income_name,
+                (int)$request->income_category_id,
                 $request->income_amount
             )
         );
@@ -94,8 +95,6 @@ class IncomeController extends Controller
         $deleteIncomeUseCase->handle(
             new DeleteIncomeInputData(
                 $request->id,
-                $request->name,
-                $request->amount
             )
         );
     }

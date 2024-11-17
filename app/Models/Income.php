@@ -51,17 +51,20 @@ final class Income extends Model
     /**
      * @param integer $id
      * @param string $name
+     * @param integer $categoryId
      * @param integer $amount
      * @return void
      */
     public function updateById(
         int $id,
         string $name,
+        int $categoryId,
         int $amount
     ): void {
         $this->where('id', $id)->update(
             [
                 'name' => $name,
+                'category_id' => $categoryId,
                 'amount' => $amount
             ]
         );

@@ -30,6 +30,7 @@ final class DeleteIncomeUseCase
         $income = Income::reconstruct(
             $inputData->id,
             $incomeInfoList['name'],
+            $incomeInfoList['category_id'],
             $incomeInfoList['amount']
         );
         

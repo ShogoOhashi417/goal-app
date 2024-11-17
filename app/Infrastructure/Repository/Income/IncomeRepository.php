@@ -49,6 +49,7 @@ final class IncomeRepository implements IncomeRepositoryInterface
         $this->incomeModel->updateById(
             $income->getId(),
             $income->getName()->getValue(),
+            $income->getCategoryId()->getValue(),
             $income->getAmount()->getValue()
         );
     }
