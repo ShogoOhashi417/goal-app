@@ -46,6 +46,10 @@ Route::get('/category', function () {
     return Inertia::render('Category/Index');
 })->middleware(['auth', 'verified'])->name('category');
 
+Route::get('/report', function () {
+    return Inertia::render('Report/Index');
+})->middleware(['auth', 'verified'])->name('report');
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
