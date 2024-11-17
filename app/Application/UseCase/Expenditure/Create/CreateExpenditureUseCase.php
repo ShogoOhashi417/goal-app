@@ -26,6 +26,7 @@ final class CreateExpenditureUseCase
     {
         $expenditure = Expenditure::create(
             $inputData->name,
+            $inputData->categoryId,
             $inputData->amount
         );
 

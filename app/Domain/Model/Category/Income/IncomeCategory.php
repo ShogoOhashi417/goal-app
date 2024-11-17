@@ -2,6 +2,8 @@
 
 namespace App\Domain\Model\Category\Income;
 
+use App\Domain\Model\Category\Income\IncomeCategoryName;
+
 final class IncomeCategory
 {
     private readonly IncomeCategoryName $name;

@@ -300,12 +300,13 @@ export default function Income({ auth }) {
                                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                                 name=""
                                 id=""
+                                value={incomeCategoryId}
                                 onChange={changeIncomeCategoryId}
                             >
                                 <option value="">選択してください</option>
                                 {incomeCategoryInfoList.map((item, index) => (
                                     <React.Fragment key={index}>
-                                        <option value={item.id} selected={item.id === incomeCategoryId}>{item.name}</option>
+                                        <option value={item.id}>{item.name}</option>
                                     </React.Fragment>
                                 ))}
                             </select>
