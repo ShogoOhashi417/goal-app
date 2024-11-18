@@ -24,7 +24,7 @@ final class CreateExpenditureCategoryUseCase
      */
     public function handle(CreateExpenditureCategoryInputData $inputData): void
     {
-        $expenditureCategory = new ExpenditureCategory(
+        $expenditureCategory = ExpenditureCategory::create(
             new ExpenditureCategoryName($inputData->name)
         );
 

@@ -17,6 +17,15 @@ final class ExpenditureCategoryRepository implements ExpenditureCategoryReposito
     }
 
     /**
+     * @param integer $id
+     * @return array
+     */
+    public function fetchById(int $id): array
+    {
+        return $this->expenditureCategoryModel->fetchById($id);
+    }
+
+    /**
      * @param ExpenditureCategory $expenditureCategory
      * @return void
      */
@@ -24,6 +33,17 @@ final class ExpenditureCategoryRepository implements ExpenditureCategoryReposito
     {
         $this->expenditureCategoryModel->createExpenditureCategory(
             $expenditureCategory->getName()->value()
+        );
+    }
+
+    /**
+     * @param ExpenditureCategory $expenditureCategory
+     * @return void
+     */
+    public function remove(ExpenditureCategory $expenditureCategory): void
+    {
+        $this->expenditureCategoryModel->deleteById(
+            $expenditureCategory->getId()
         );
     }
 }

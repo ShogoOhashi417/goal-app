@@ -8,7 +8,9 @@ use App\Http\Controllers\Controller;
 use App\Infrastructure\Repository\Category\Income\IncomeCategoryRepository;
 use App\Application\UseCase\Category\Income\Fetch\FetchIncomeCategoryUseCase;
 use App\Application\UseCase\Category\Income\Create\CreateIncomeCategoryUseCase;
+use App\Application\UseCase\Category\Income\Delete\DeleteIncomeCategoryUseCase;
 use App\Application\UseCase\Category\Income\Create\CreateIncomeCategoryInputData;
+use App\Application\UseCase\Category\Income\Delete\DeleteIncomeCategoryInputData;
 
 class IncomeCategoryController extends Controller
 {
@@ -81,8 +83,18 @@ class IncomeCategoryController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function delete(Request $request)
     {
-        //
+        $deleteIncomeCategoryUseCase = new DeleteIncomeCategoryUseCase(
+            new IncomeCategoryRepository(
+                new IncomeCategory()
+            )
+        );
+
+        $deleteIncomeCategoryUseCase->handle(
+            new DeleteIncomeCategoryInputData(
+                (int)$request->id
+            )
+        );
     }
 }
