@@ -61,7 +61,6 @@ export default function Income({ auth }) {
 
     const [incomeCategoryName, setIncomeCategoryName] = useState('');
 
-    const [expenditureCategoryId, setExpenditureCategoryId] = useState(0);
     const [expenditureCategoryName, setExpenditureCategoryName] = useState('');
 
     const changeIncomeCaterogyName = (event) => {
@@ -97,7 +96,7 @@ export default function Income({ auth }) {
     }
 
     const deleteExpenditureCategory = (expenditureCategoryId) => {
-        if (!confirm('a')) {
+        if (!confirm('この支出カテゴリーを削除します。本当によろしいですか？')) {
             return;
         }
 
@@ -107,9 +106,24 @@ export default function Income({ auth }) {
         .then(response => {
             closeModal();
 
-            setExpenditureCategoryId(0);
             setExpenditureCategoryName('');
             getExpenditureCategory();
+        });
+    }
+
+    const deleteIncomeCategory = (incomeCategoryId) => {
+        if (!confirm('この収入カテゴリーを削除します。本当によろしいですか？')) {
+            return;
+        }
+
+        axios.post('/income_category/delete', {
+            'id' : incomeCategoryId,
+        })
+        .then(response => {
+            closeModal();
+
+            setIncomeCategoryName('');
+            getIncomeCategory();
         });
     }
 
@@ -168,7 +182,10 @@ export default function Income({ auth }) {
                                                             <button className='mx-auto'>
                                                                 <FontAwesomeIcon icon={faPenToSquare} />
                                                             </button>
-                                                            <button className='mx-auto'>
+                                                            <button
+                                                                className='mx-auto'
+                                                                onClick={() => deleteIncomeCategory(item.id)}
+                                                            >
                                                                 <FontAwesomeIcon icon={faCircleXmark} />
                                                             </button>
                                                         </div>

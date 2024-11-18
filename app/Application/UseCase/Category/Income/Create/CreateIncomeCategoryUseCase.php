@@ -19,7 +19,7 @@ final class CreateIncomeCategoryUseCase
 
     public function handle(CreateIncomeCategoryInputData $inputData)
     {
-        $incomeCategory = new IncomeCategory(
+        $incomeCategory = IncomeCategory::create(
             new IncomeCategoryName($inputData->name)
         );
 
