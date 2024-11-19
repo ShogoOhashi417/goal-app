@@ -10,18 +10,21 @@ final class Income
     private readonly IncomeName $name;
     private readonly IncomeCategoryId $categoryId;
     private readonly IncomeAmount $amount;
+    private readonly CalendarDate $calendarDate;
 
     private function __construct(
         int $id,
         IncomeName $name,
         IncomeCategoryId $categoryId,
-        IncomeAmount $amount
+        IncomeAmount $amount,
+        CalendarDate $calendarDate
     )
     {
         $this->id = $id;
         $this->name = $name;
         $this->categoryId = $categoryId;
         $this->amount = $amount;
+        $this->calendarDate = $calendarDate;
     }
 
     /**
@@ -57,6 +60,14 @@ final class Income
     }
 
     /**
+     * @return CalendarDate
+     */
+    public function getCalendarDate(): CalendarDate
+    {
+        return $this->calendarDate;
+    }
+
+    /**
      * @param string $name
      * @param integer $categoryId
      * @param integer $amount
@@ -65,14 +76,16 @@ final class Income
     public static function create(
         string $name,
         int $categoryId,
-        int $amount
+        int $amount,
+        string $calendarDate
     ): self
     {
         return new self(
             0,
             new IncomeName($name),
             new IncomeCategoryId($categoryId),
-            new IncomeAmount($amount)
+            new IncomeAmount($amount),
+            new CalendarDate($calendarDate)
         );
     }
 
@@ -87,14 +100,16 @@ final class Income
         int $id,
         string $name,
         int $categoryId,
-        int $amount
+        int $amount,
+        string $calendarDate
     ): self
     {
         return new self(
             $id,
             new IncomeName($name),
             new IncomeCategoryId($categoryId),
-            new IncomeAmount($amount)
+            new IncomeAmount($amount),
+            new CalendarDate($calendarDate)
         );
     }
 }

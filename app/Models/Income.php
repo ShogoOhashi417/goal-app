@@ -9,7 +9,7 @@ final class Income extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'category_id', 'amount'];
+    protected $fillable = ['name', 'category_id', 'amount', 'calendar_date'];
 
     /**
      * @return array
@@ -30,20 +30,24 @@ final class Income extends Model
 
     /**
      * @param string $name
+     * @param integer $categoryId
      * @param integer $amount
+     * @param string $calendarDate
      * @return void
      */
     public function createIncome(
         string $name,
         int $categoryId,
-        int $amount
+        int $amount,
+        string $calendarDate
     ): void
     {
         $this->create(
             [
                 'name' => $name,
                 'category_id' => $categoryId,
-                'amount' => $amount
+                'amount' => $amount,
+                'calendar_date' => $calendarDate
             ]
         );
     }
@@ -59,13 +63,15 @@ final class Income extends Model
         int $id,
         string $name,
         int $categoryId,
-        int $amount
+        int $amount,
+        string $calendarDate
     ): void {
         $this->where('id', $id)->update(
             [
                 'name' => $name,
                 'category_id' => $categoryId,
-                'amount' => $amount
+                'amount' => $amount,
+                'calendar_date' => $calendarDate
             ]
         );
     }

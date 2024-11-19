@@ -31,7 +31,8 @@ final class DeleteIncomeUseCase
             $inputData->id,
             $incomeInfoList['name'],
             $incomeInfoList['category_id'],
-            $incomeInfoList['amount']
+            $incomeInfoList['amount'],
+            $incomeInfoList['calendar_date']
         );
         
         $this->incomeRepository->remove($income);

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Income;
 
+use DateTime;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Income AS IncomeModel;
@@ -61,7 +62,8 @@ class IncomeController extends Controller
             new CreateIncomeInputData(
                 $request->income_name,
                 (int)$request->income_category_id,
-                $request->income_amount
+                $request->income_amount,
+                (new DateTime($request->calendar_date))->format('Y-m-d')
             )
         );
     }
@@ -79,7 +81,8 @@ class IncomeController extends Controller
                 $request->id,
                 $request->income_name,
                 (int)$request->income_category_id,
-                $request->income_amount
+                $request->income_amount,
+                (new DateTime($request->calendar_date))->format('Y-m-d')
             )
         );
     }

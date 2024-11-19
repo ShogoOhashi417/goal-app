@@ -24,7 +24,8 @@ final class UpdateIncomeUseCase
             $inputData->id,
             $inputData->name,
             $inputData->categoryId,
-            $inputData->amount
+            $inputData->amount,
+            $inputData->calendarDate
         );
 
         $this->incomeRepository->update($income);
