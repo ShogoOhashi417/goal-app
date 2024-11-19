@@ -27,7 +27,8 @@ final class CreateExpenditureUseCase
         $expenditure = Expenditure::create(
             $inputData->name,
             $inputData->categoryId,
-            $inputData->amount
+            $inputData->amount,
+            $inputData->calendarDate
         );
 
         $this->expenditureRepository->create($expenditure);

@@ -72,6 +72,7 @@ export default function Income({ auth }) {
         });
 
         setIncomeName('');
+        setIncomeCategoryId(0);
         setIncomeAmount(0);
     }
 

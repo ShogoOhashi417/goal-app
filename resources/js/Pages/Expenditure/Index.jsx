@@ -6,6 +6,7 @@ import React, { useEffect } from "react"
 import { useRef, useState } from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
+import Datepicker from "react-tailwindcss-datepicker";
 
 export default function Expenditure({ auth }) {
     const [expenditureInfoList, setExpenditureInfoList] = useState([]);
@@ -34,11 +35,12 @@ export default function Expenditure({ auth }) {
         addExpenditureRef.current.classList.remove('hidden');
     }
 
-    const openUpdateModal = (expenditureId, expenditureName, expenditureCategoryId, expenditureAmount) => {
+    const openUpdateModal = (expenditureId, expenditureName, expenditureCategoryId, expenditureAmount, expenditureCalendarDate) => {
         setExpenditureId(expenditureId);
         setExpenditureName(expenditureName);
         setExpenditureCategoryId(expenditureCategoryId);
         setExpenditureAmount(expenditureAmount);
+        setCalendarDate({ startDate: expenditureCalendarDate, endDate: expenditureCalendarDate });
         updateExpenditureRef.current.classList.remove('hidden');
     }
 
@@ -58,10 +60,12 @@ export default function Expenditure({ auth }) {
     }, []);
 
     const addExpenditure = () => {
+        const localCalendarDate = new Date(calendarDate.startDate).toLocaleString('sv-SE', { timeZone: 'Asia/Tokyo' });
         axios.post('/expenditure/add', {
             'expenditure_name' : expenditureName,
             'expenditure_category_id' : expenditureCategoryId,
             'expenditure_amount': expenditureAmount,
+            'calendar_date' : localCalendarDate
         })
         .then(response => {
             getInfo();
@@ -71,14 +75,17 @@ export default function Expenditure({ auth }) {
         setExpenditureName('');
         setExpenditureCategoryId(0);
         setExpenditureAmount(0);
+        setCalendarDate({ startDate : null, endDate:null });
     }
 
     const updateExpenditure = () => {
+        const localCalendarDate = new Date(calendarDate.startDate).toLocaleString('sv-SE', { timeZone: 'Asia/Tokyo' });
         axios.post('/expenditure/update', {
             'id' : expenditureId,
             'expenditure_name' : expenditureName,
             'expenditure_category_id' : expenditureCategoryId,
             'expenditure_amount': expenditureAmount,
+            'calendar_date' : localCalendarDate
         })
         .then(response => {
             getInfo();
@@ -112,6 +119,11 @@ export default function Expenditure({ auth }) {
         const response = await axios.get('/expenditure_category/get');
         setExpenditureCategoryInfoList(response.data.expenditure_category_info_list);
     }
+
+    const [calendarDate, setCalendarDate] = useState({ 
+        startDate: null, 
+        endDate: null
+    });
 
     return (
         <>
@@ -158,7 +170,7 @@ export default function Expenditure({ auth }) {
                                                     
                                                     <td>
                                                         <div className="flex justify-center items-center gap-1">
-                                                            <button className='mx-auto' onClick={() => openUpdateModal(item.id, item.name, item.category_id, item.amount)}>
+                                                            <button className='mx-auto' onClick={() => openUpdateModal(item.id, item.name, item.category_id, item.amount, item.calendar_date)}>
                                                                 <FontAwesomeIcon icon={faPenToSquare} />
                                                             </button>
                                                             <button className='mx-auto' onClick={() => deleteExpenditure(item.id)}>
@@ -246,6 +258,18 @@ export default function Expenditure({ auth }) {
                                 min="1"
                             />
                         </div>
+                        <div className="col-span-2">
+                            <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900">
+                                日時
+                            </label>
+                            <Datepicker
+                                inputClassName="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                                inputName="target_date"
+                                asSingle={true}
+                                value={calendarDate}
+                                onChange={newValue => setCalendarDate(newValue)}
+                            />
+                        </div>
                     </div>
                     <button
                         onClick={addExpenditure}
@@ -324,6 +348,18 @@ export default function Expenditure({ auth }) {
                                 onChange={changeExpenditureAmount}
                                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                                 min="1"
+                            />
+                        </div>
+                        <div className="col-span-2">
+                            <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900">
+                                日時
+                            </label>
+                            <Datepicker
+                                inputClassName="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                                inputName="target_date"
+                                asSingle={true}
+                                value={calendarDate}
+                                onChange={newValue => setCalendarDate(newValue)}
                             />
                         </div>
                     </div>

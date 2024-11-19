@@ -9,7 +9,7 @@ final class Expenditure extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'category_id', 'amount'];
+    protected $fillable = ['name', 'category_id', 'amount', 'calendar_date'];
 
     public function fetchAll(): array
     {
@@ -37,14 +37,16 @@ final class Expenditure extends Model
     public function createExpenditure(
         string $name,
         int $categoryId,
-        int $amount
+        int $amount,
+        string $calendarDate
     ): void
     {
         $this->create(
             [
                 'name' => $name,
                 'category_id' => $categoryId,
-                'amount' => $amount
+                'amount' => $amount,
+                'calendar_date' => $calendarDate
             ]
         );
     }
@@ -60,13 +62,15 @@ final class Expenditure extends Model
         int $id,
         string $name,
         int $categoryId,
-        int $amount
+        int $amount,
+        string $calendarDate
     ): void {
         $this->where('id', $id)->update(
             [
                 'name' => $name,
                 'category_id' => $categoryId,
-                'amount' => $amount
+                'amount' => $amount,
+                'calendar_date' => $calendarDate
             ]
         );
     }

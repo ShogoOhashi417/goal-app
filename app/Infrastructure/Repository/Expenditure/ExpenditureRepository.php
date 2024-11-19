@@ -36,7 +36,8 @@ final class ExpenditureRepository implements ExpenditureRepositoryInterface
         $this->expenditureModel->createExpenditure(
             $expenditure->getName()->getValue(),
             $expenditure->getCategoryId()->getValue(),
-            $expenditure->getAmount()->getValue()
+            $expenditure->getAmount()->getValue(),
+            $expenditure->getCalendarDate()->getValue(),
         );
     }
 
@@ -50,7 +51,8 @@ final class ExpenditureRepository implements ExpenditureRepositoryInterface
             $expenditure->getId(),
             $expenditure->getName()->getValue(),
             $expenditure->getCategoryId()->getValue(),
-            $expenditure->getAmount()->getValue()
+            $expenditure->getAmount()->getValue(),
+            $expenditure->getCalendarDate()->getValue()
         );
     }
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Expenditure;
 
+use DateTime;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Expenditure AS ExpenditureModel;
@@ -81,7 +82,8 @@ class ExpenditureController extends Controller
             new CreateExpenditureInputData(
                 $request->expenditure_name,
                 (int)$request->expenditure_category_id,
-                $request->expenditure_amount
+                $request->expenditure_amount,
+                (new DateTime($request->calendar_date))->format('Y-m-d')
             )
         );
     }
@@ -99,7 +101,8 @@ class ExpenditureController extends Controller
                 $request->id,
                 $request->expenditure_name,
                 (int)$request->expenditure_category_id,
-                $request->expenditure_amount
+                $request->expenditure_amount,
+                (new DateTime($request->calendar_date))->format('Y-m-d')
             )
         );
     }
