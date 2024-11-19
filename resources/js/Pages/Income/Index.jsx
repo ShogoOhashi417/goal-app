@@ -6,6 +6,7 @@ import React, { useEffect } from "react"
 import { useRef, useState } from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
+import Datepicker from "react-tailwindcss-datepicker";
 
 export default function Income({ auth }) {
     const [incomeInfoList, setincomeInfoList] = useState([]);
@@ -34,11 +35,12 @@ export default function Income({ auth }) {
         addIncomeRef.current.classList.remove('hidden');
     }
 
-    const openUpdateModal = (incomeId, incomeName, incomeCategoryId, incomeAmount) => {
+    const openUpdateModal = (incomeId, incomeName, incomeCategoryId, incomeAmount, incomeCalendarDate) => {
         setIncomeId(incomeId);
         setIncomeName(incomeName);
         setIncomeCategoryId(incomeCategoryId);
         setIncomeAmount(incomeAmount);
+        setCalendarDate({ startDate : incomeCalendarDate, endDate:incomeCalendarDate });
         updateIncomeRef.current.classList.remove('hidden');
     }
 
@@ -62,6 +64,7 @@ export default function Income({ auth }) {
             'income_name': incomeName,
             'income_category_id' : incomeCategoryId,
             'income_amount': incomeAmount,
+            'calendar_date' : calendarDate.startDate
         })
         .then(response => {
             getInfo();
@@ -69,15 +72,18 @@ export default function Income({ auth }) {
         });
 
         setIncomeName('');
+        setIncomeCategoryId(0);
         setIncomeAmount(0);
     }
 
     const updateIncome = () => {
+        const localDate = new Date(calendarDate.startDate).toLocaleString('sv-SE', { timeZone: 'Asia/Tokyo' });
         axios.post('/income/update', {
             'id' : incomeId,
             'income_name': incomeName,
             'income_category_id' : incomeCategoryId,
             'income_amount': incomeAmount,
+            'calendar_date' : localDate
         })
         .then(response => {
             getInfo();
@@ -112,6 +118,11 @@ export default function Income({ auth }) {
         setIncomeCategoryInfoList(response.data.income_category_info_list);
     }
 
+    const [calendarDate, setCalendarDate] = useState({ 
+        startDate: null, 
+        endDate: null
+    });
+
     return (
         <>
             <AuthenticatedLayout
@@ -119,7 +130,7 @@ export default function Income({ auth }) {
                 header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">収入管理</h2>}
             >
                 <Head title="収入管理" />
-
+                <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
                 <div className='flex flex-col min-h-screen'>
                     <div className=" w-5/6 mx-auto my-3 flex-1 relative sm:justify-center bg-dots-darker bg-center bg-gray-100 selection:text-white">
                         <div className='container'>
@@ -156,7 +167,7 @@ export default function Income({ auth }) {
                                                     
                                                     <td>
                                                         <div className="flex justify-center items-center gap-1">
-                                                            <button className='mx-auto' onClick={() => openUpdateModal(item.id, item.name, item.category_id, item.amount)}>
+                                                            <button className='mx-auto' onClick={() => openUpdateModal(item.id, item.name, item.category_id, item.amount, item.calendar_date)}>
                                                                 <FontAwesomeIcon icon={faPenToSquare} />
                                                             </button>
                                                             <button className='mx-auto' onClick={() => deleteIncome(item.id)}>
@@ -244,6 +255,18 @@ export default function Income({ auth }) {
                                 min="1"
                             />
                         </div>
+                        <div className="col-span-2">
+                            <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900">
+                                日時
+                            </label>
+                            <Datepicker
+                                inputClassName="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                                inputName="target_date"
+                                asSingle={true}
+                                value={calendarDate}
+                                onChange={newValue => setCalendarDate(newValue)}
+                            />
+                        </div>
                     </div>
                     <button
                         onClick={addIncome}
@@ -322,6 +345,18 @@ export default function Income({ auth }) {
                                 onChange={changeIncomeAmount}
                                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                                 min="1"
+                            />
+                        </div>
+                        <div className="col-span-2">
+                            <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900">
+                                日時
+                            </label>
+                            <Datepicker
+                                inputClassName="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                                inputName="target_date"
+                                asSingle={true}
+                                value={calendarDate}
+                                onChange={newValue => setCalendarDate(newValue)}
                             />
                         </div>
                     </div>

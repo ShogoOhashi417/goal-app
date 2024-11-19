@@ -24,7 +24,8 @@ final class UpdateExpenditureUseCase
             $inputData->id,
             $inputData->name,
             $inputData->categoryId,
-            $inputData->amount
+            $inputData->amount,
+            $inputData->calendarDate
         );
 
         $this->expenditureRepository->update($expenditure);
