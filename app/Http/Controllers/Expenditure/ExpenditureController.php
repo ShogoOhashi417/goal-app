@@ -8,6 +8,7 @@ use DateTime;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Expenditure AS ExpenditureModel;
+use App\Infrastructure\Adaptor\Date\DateConverter;
 use App\Infrastructure\Query\Expenditure\ExpenditureQueryService;
 use App\Infrastructure\Adaptor\Calculation\CategoryAmountCalculater;
 use App\Infrastructure\Repository\Expenditure\ExpenditureRepository;
@@ -61,7 +62,9 @@ class ExpenditureController extends Controller
 
         $expenditureInfoList = $fetchExpenditureUseCase->handle();
 
-        $categoryAmountCalculater = new CategoryAmountCalculater();
+        $categoryAmountCalculater = new CategoryAmountCalculater(
+            new DateConverter()
+        );
 
         $categoryToAmountList = $categoryAmountCalculater->calculate($expenditureInfoList);
 
