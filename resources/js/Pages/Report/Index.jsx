@@ -6,6 +6,7 @@ import HighchartsReact from 'highcharts-react-official';
 
 export default function Report({ auth }) {
     const [seriesList, setSeriesList] = useState([]);
+    const [dateList, setDateList] = useState(['2024-11', '2024-12']);
 
     const [expenditureInfoList, setExpenditureInfoList] = useState([]);
 
@@ -20,12 +21,17 @@ export default function Report({ auth }) {
 
     useEffect(() => {
         const data = [];
-        Object.entries(expenditureInfoList).forEach(([name, amount]) => {
-            const amountData = {
-                name: name,
-                data: [amount]
-            };
-            data.push(amountData);
+        Object.entries(expenditureInfoList).forEach(([categoryName, dateToAmountList]) => {
+            const amountList = [];
+            dateList.forEach((date) => {
+                const amount = dateToAmountList[date] ?? 0;
+                amountList.push(amount);
+            });
+
+            data.push({
+                name: categoryName,
+                data: amountList
+            });
         });
         setSeriesList(data);
     }, [expenditureInfoList]); 
@@ -38,7 +44,7 @@ export default function Report({ auth }) {
             text: '月別支出額'
         },
         xAxis: {
-            categories: ['2024/11']
+            categories: dateList
         },
         yAxis: {
             title: {
