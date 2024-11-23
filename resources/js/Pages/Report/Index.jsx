@@ -3,10 +3,41 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
+import YearSelectBox from "@/Components/YearSelectBox";
 
 export default function Report({ auth }) {
     const [seriesList, setSeriesList] = useState([]);
-    const [dateList, setDateList] = useState(['2024-11', '2024-12']);
+
+    const thisYear = new Date().getFullYear();
+    const [dateList, setDateList] = useState(
+        [
+            thisYear + '-01',
+            thisYear + '-02',
+            thisYear + '-03',
+            thisYear + '-04',
+            thisYear + '-05',
+            thisYear + '-06',
+            thisYear + '-07',
+            thisYear + '-08',
+            thisYear + '-09',
+            thisYear + '-10',
+            thisYear + '-11',
+            thisYear + '-12',
+        ]
+    );
+
+    const changeYear = (event) => {
+        const year = event.target.value;
+
+        const YearMonthList = [];
+        let month = 1;
+        while (month <= 12) {
+            YearMonthList.push(year + "-" + month)
+            month++;
+        }
+
+        setDateList(YearMonthList);
+    }
 
     const [expenditureInfoList, setExpenditureInfoList] = useState([]);
 
@@ -34,7 +65,7 @@ export default function Report({ auth }) {
             });
         });
         setSeriesList(data);
-    }, [expenditureInfoList]); 
+    }, [expenditureInfoList, dateList]); 
 
     const chartOptions = {
         chart: {
@@ -79,8 +110,12 @@ export default function Report({ auth }) {
                 <Head title="レポート" />
 
                 <div className='flex flex-col min-h-screen'>
-                    <div className=" w-5/6 mx-auto my-3 flex-1 relative sm:justify-center bg-dots-darker bg-center bg-gray-100 dark:bg-dots-lighter dark:bg-gray-900 selection:text-white">
+                    <div className="w-5/6 mx-auto my-3 flex-1 relative sm:justify-center bg-dots-darker bg-center bg-gray-100 dark:bg-dots-lighter dark:bg-gray-900 selection:text-white">
                         <div className='container'>
+                            <YearSelectBox
+                                onChange={changeYear}
+                            >
+                            </YearSelectBox>
                             <div className="mx-auto mt-3">
                                 <HighchartsReact
                                     highcharts={Highcharts}
