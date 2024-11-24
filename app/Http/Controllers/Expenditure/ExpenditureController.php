@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Expenditure;
 
+use App\Application\UseCase\CSV\Export\ExportSampleExpenditureCsvUseCase;
 use DateTime;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use App\Models\Expenditure AS ExpenditureModel;
+use App\Models\Expenditure as ExpenditureModel;
 use App\Infrastructure\Adaptor\Date\DateConverter;
 use App\Infrastructure\Query\Expenditure\ExpenditureQueryService;
 use App\Infrastructure\Adaptor\Calculation\CategoryAmountCalculater;
@@ -125,5 +127,12 @@ class ExpenditureController extends Controller
                 $request->amount
             )
         );
+    }
+
+    public function export()
+    {
+        $exportSampleExpenditureCsvUseCase = new ExportSampleExpenditureCsvUseCase();
+        
+        return $exportSampleExpenditureCsvUseCase->handle();
     }
 }
