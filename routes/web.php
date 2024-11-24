@@ -50,6 +50,10 @@ Route::get('/report', function () {
     return Inertia::render('Report/Index');
 })->middleware(['auth', 'verified'])->name('report');
 
+Route::get('/bulk_operation', function () {
+    return Inertia::render('BulkOperation/Index');
+})->middleware(['auth', 'verified'])->name('bulk_operation');
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -74,5 +78,7 @@ Route::post('/income_category/delete', [IncomeCategoryController::class, 'delete
 Route::get('/expenditure_category/get', [ExpenditureCategoryController::class, 'get']);
 Route::post('/expenditure_category/add', [ExpenditureCategoryController::class, 'store']);
 Route::post('/expenditure_category/delete', [ExpenditureCategoryController::class, 'delete']);
+
+Route::get('/expenditure/export', [ExpenditureController::class, 'export']);
 
 require __DIR__.'/auth.php';

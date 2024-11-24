@@ -49,6 +49,12 @@ export default function Authenticated({ user, header, children }) {
                                     レポート
                                 </NavLink>
                             </div>
+
+                            <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                                <NavLink href={route('bulk_operation')} active={route().current('bulk_operation')}>
+                                    CSV一括登録
+                                </NavLink>
+                            </div>
                         </div>
 
                         <div className="hidden sm:flex sm:items-center sm:ms-6">
