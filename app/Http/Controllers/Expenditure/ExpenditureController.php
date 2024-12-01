@@ -4,23 +4,26 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Expenditure;
 
-use App\Application\UseCase\CSV\Export\ExportSampleExpenditureCsvUseCase;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Models\ExpenditureCategory;
 use App\Http\Controllers\Controller;
 use App\Models\Expenditure as ExpenditureModel;
 use App\Infrastructure\Adaptor\Date\DateConverter;
 use App\Infrastructure\Query\Expenditure\ExpenditureQueryService;
+use App\Application\UseCase\CSV\Import\ImportExpendtureCsvUseCase;
 use App\Infrastructure\Adaptor\Calculation\CategoryAmountCalculater;
 use App\Infrastructure\Repository\Expenditure\ExpenditureRepository;
 use App\Application\UseCase\Expenditure\Fetch\FetchExpenditureUseCase;
 use App\Application\UseCase\Expenditure\Create\CreateExpenditureUseCase;
 use App\Application\UseCase\Expenditure\Delete\DeleteExpenditureUseCase;
 use App\Application\UseCase\Expenditure\Update\UpdateExpenditureUseCase;
+use App\Application\UseCase\CSV\Export\ExportSampleExpenditureCsvUseCase;
 use App\Application\UseCase\Expenditure\Create\CreateExpenditureInputData;
 use App\Application\UseCase\Expenditure\Delete\DeleteExpenditureInputData;
 use App\Application\UseCase\Expenditure\Update\UpdateExpenditureInputData;
+use App\Application\UseCase\Category\Expenditure\Fetch\FetchExpenditureCategoryUseCase;
 
 class ExpenditureController extends Controller
 {
@@ -134,5 +137,22 @@ class ExpenditureController extends Controller
         $exportSampleExpenditureCsvUseCase = new ExportSampleExpenditureCsvUseCase();
         
         return $exportSampleExpenditureCsvUseCase->handle();
+    }
+
+    public function import_csv(Request $request)
+    {
+        $file_path = $request->file('csv')->path();
+
+        $importExpenditureCsvUseCase = new ImportExpendtureCsvUseCase(
+            new ExpenditureRepository(
+                new ExpenditureModel()
+            ),
+            new DateConverter(),
+            new FetchExpenditureCategoryUseCase(
+                new ExpenditureCategory()
+            )
+        );
+
+        $importExpenditureCsvUseCase->handle($file_path);
     }
 }
