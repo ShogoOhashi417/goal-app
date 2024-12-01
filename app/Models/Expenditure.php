@@ -52,6 +52,16 @@ final class Expenditure extends Model
     }
 
     /**
+     * @param array $saveDataList
+     * @return void
+     */
+    public function saveBulk(
+        array $saveDataList
+    ): void {
+        $this->upsert($saveDataList, ['id']);
+    }
+
+    /**
      * @param integer $id
      * @param string $name
      * @param integer $categoryId

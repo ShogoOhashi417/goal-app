@@ -8,6 +8,8 @@ interface ExpenditureRepositoryInterface
 {
     public function create(Expenditure $income): void;
 
+    public function saveBulk(ExpenditureHolder $expenditureHolder): void;
+
     public function update(Expenditure $income): void;
 
     public function remove(Expenditure $income): void;

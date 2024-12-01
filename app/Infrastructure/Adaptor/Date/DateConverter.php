@@ -17,4 +17,15 @@ final readonly class DateConverter implements DateConverterInterface
 
         return $dateTime->format('Y-m');
     }
+
+    /**
+     * @param string $date
+     * @return string
+     */
+    public function toYearMonthDay(string $date): string
+    {
+        $dateTime = new DateTime($date);
+
+        return $dateTime->format('Y-m-d');
+    }
 }

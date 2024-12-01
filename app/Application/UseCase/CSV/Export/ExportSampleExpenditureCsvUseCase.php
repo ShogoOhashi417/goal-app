@@ -16,7 +16,7 @@ final readonly class ExportSampleExpenditureCsvUseCase
             'Expires' => '0',
         ];
 
-        $callback = function() 
+        $callback = function()
         {
             $createCsvFile = fopen('php://output', 'w');
             
@@ -28,7 +28,7 @@ final readonly class ExportSampleExpenditureCsvUseCase
             ];
 
             mb_convert_variables('SJIS-win', 'UTF-8', $columns);
-    
+
             fputcsv($createCsvFile, $columns);
                 $csv = [
                     '2024/11/1',
