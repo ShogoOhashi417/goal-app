@@ -12,7 +12,6 @@ final readonly class ExpenditureCategoryId
         int $categoryId
     )
     {
-        $this->assertEmpty($categoryId);
         $this->categoryId = $categoryId;
     }
 
@@ -22,16 +21,5 @@ final readonly class ExpenditureCategoryId
     public function getValue(): int
     {
         return $this->categoryId;
-    }
-
-    /**
-     * @param integer $categoryId
-     * @return void
-     */
-    private function assertEmpty(int $categoryId): void
-    {
-        if (!$categoryId) {
-            throw new Exception();
-        }
     }
 }
