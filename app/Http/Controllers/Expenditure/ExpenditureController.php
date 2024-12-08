@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Expenditure;
 
 use DateTime;
+use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\ExpenditureCategory;
@@ -37,9 +38,18 @@ class ExpenditureController extends Controller
 
         $expenditureInfoList = $fetchExpenditureUseCase->handle();
 
-        return view('view.expenditure.index', [
-            'expenditure_info_list' => $expenditureInfoList
-        ]);
+        $fetchExpenditureCategoryUseCase = new FetchExpenditureCategoryUseCase(
+            new ExpenditureCategory()
+        );
+
+        $expenditureCategoryInfoList = $fetchExpenditureCategoryUseCase->handle();
+
+        return Inertia::render('Expenditure/Index',
+            [
+                'expenditure_info_list' => $expenditureInfoList,
+                'expenditure_category_info_list' => $expenditureCategoryInfoList
+            ]
+        );
     }
 
     public function get()
@@ -106,7 +116,7 @@ class ExpenditureController extends Controller
 
         $updateExpenditureUseCase->handle(
             new UpdateExpenditureInputData(
-                $request->id,
+                (int)$request->id,
                 $request->expenditure_name,
                 (int)$request->expenditure_category_id,
                 $request->expenditure_amount,
