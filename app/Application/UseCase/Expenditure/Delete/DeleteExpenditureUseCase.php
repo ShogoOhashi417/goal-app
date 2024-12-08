@@ -29,7 +29,9 @@ final class DeleteExpenditureUseCase
         $expenditure = Expenditure::reconstruct(
             $inputData->id,
             $expenditureInfoList['name'],
-            $expenditureInfoList['amount']
+            $expenditureInfoList['category_id'],
+            $expenditureInfoList['amount'],
+            $expenditureInfoList['calendar_date'],
         );
         
         $this->expenditureRepository->remove($expenditure);

@@ -38,9 +38,7 @@ Route::get('/income', function () {
     return Inertia::render('Income/Index');
 })->middleware(['auth', 'verified'])->name('income');
 
-Route::get('/expenditure', function () {
-    return Inertia::render('Expenditure/Index');
-})->middleware(['auth', 'verified'])->name('expenditure');
+Route::get('/expenditure', [ExpenditureController::class, 'index'])->middleware(['auth', 'verified'])->name('expenditure');
 
 Route::get('/category', function () {
     return Inertia::render('Category/Index');

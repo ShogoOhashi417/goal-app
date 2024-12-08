@@ -7,9 +7,15 @@ import { useRef, useState } from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
 import Datepicker from "react-tailwindcss-datepicker";
+import {
+    createColumnHelper,
+    useReactTable,
+    getCoreRowModel,
+    getSortedRowModel,
+} from "@tanstack/react-table";
 
-export default function Expenditure({ auth }) {
-    const [expenditureInfoList, setExpenditureInfoList] = useState([]);
+export default function Expenditure({ auth, expenditure_info_list, expenditure_category_info_list }) {
+    const [expenditureInfoList, setExpenditureInfoList] = useState(expenditure_info_list);
 
     const [expenditureId, setExpenditureId] = useState(0);
     const [expenditureName, setExpenditureName] = useState('');
@@ -49,15 +55,14 @@ export default function Expenditure({ auth }) {
         updateExpenditureRef.current.classList.add('hidden');
     }
 
-    const getInfo = async () => {
-        const response = await axios.get('/expenditure/get');
-        setExpenditureInfoList(response.data.expenditure_info_list);
+    const getInfo = () => {
+        axios.get('/expenditure/get')
+            .then(response => {
+                setExpenditureInfoList(response.data.expenditure_info_list);
+            })
+            .catch(error => {
+            });
     }
-
-    useEffect(() => {
-        getInfo();
-        getExpenditureCategory()
-    }, []);
 
     const addExpenditure = () => {
         const localCalendarDate = new Date(calendarDate.startDate).toLocaleString('sv-SE', { timeZone: 'Asia/Tokyo' });
@@ -113,16 +118,51 @@ export default function Expenditure({ auth }) {
         });
     }
 
-    const [expenditureCategoryInfoList, setExpenditureCategoryInfoList] = useState([]);
-
-    const getExpenditureCategory = async () => {
-        const response = await axios.get('/expenditure_category/get');
-        setExpenditureCategoryInfoList(response.data.expenditure_category_info_list);
-    }
+    const [expenditureCategoryInfoList, setExpenditureCategoryInfoList] = useState(expenditure_category_info_list);
 
     const [calendarDate, setCalendarDate] = useState({ 
         startDate: null, 
         endDate: null
+    });
+
+    const columnHelper = createColumnHelper();
+
+    const data = React.useMemo(
+        () => expenditureInfoList,
+        [expenditureInfoList]
+    );
+
+    const columns = React.useMemo(
+        () => [
+        columnHelper.accessor("name", {
+            header: "支出名",
+            cell: (info) => info.getValue(),
+        }),
+        columnHelper.accessor("amount", {
+            header: "金額",
+            cell: (info) => info.getValue(),
+            sortingFn: "basic",
+        }),
+        columnHelper.accessor("category_name", {
+            header: "カテゴリー",
+            cell: (info) => info.getValue(),
+            sortingFn: "basic",
+        }),
+        ],
+        []
+    );
+
+    const [sorting, setSorting] = React.useState([]);
+
+    const table = useReactTable({
+        data,
+        columns,
+        state: {
+        sorting,
+        },
+        onSortingChange: setSorting,
+        getCoreRowModel: getCoreRowModel(),
+        getSortedRowModel: getSortedRowModel(),
     });
 
     return (
@@ -133,7 +173,7 @@ export default function Expenditure({ auth }) {
             >
 
                 <Head title="支出管理" />
-                
+
                 <div className='flex flex-col min-h-screen'>
                     <div className=" w-5/6 mx-auto my-3 flex-1 relative sm:justify-center bg-dots-darker bg-center bg-gray-100 selection:text-white">
                         <div className='container'>
@@ -141,46 +181,53 @@ export default function Expenditure({ auth }) {
                                 <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
                                     <table className="w-full text-sm text-left rtl:text-right text-gray-500">
                                         <thead className="text-xs text-gray-700 uppercase bg-gray-50">
-                                            <tr>
-                                                <th scope="col" className="px-6 py-3">
-                                                    支出名
-                                                </th>
-                                                <th scope="col" className="px-6 py-3">
-                                                    金額
-                                                </th>
-                                                <th className='w-10'>
-                                                    <div className="flex justify-center items-center">
-                                                        <button onClick={openAddModal}>
-                                                            <FontAwesomeIcon icon={faCirclePlus} size="lg" />
-                                                        </button>
-                                                    </div>
-                                                </th>
-                                            </tr>
+                                            {table.getHeaderGroups().map((headerGroup) => (
+                                                <tr key={headerGroup.id}>
+                                                    {headerGroup.headers.map((header) => (
+                                                        <th
+                                                            key={header.id}
+                                                            onClick={header.column.getToggleSortingHandler()}
+                                                            className="cursor-pointer border px-4 py-2"
+                                                        >
+                                                            {header.isPlaceholder
+                                                            ? null
+                                                            : header.column.columnDef.header}
+                                                            {{
+                                                                asc: " ↑",
+                                                                desc: " ↓",
+                                                            }[header.column.getIsSorted()] ?? null}
+                                                        </th>
+                                                    ))}
+                                                    <th className='w-10'>
+                                                        <div className="flex justify-center items-center">
+                                                            <button onClick={openAddModal}>
+                                                                <FontAwesomeIcon icon={faCirclePlus} size="lg" />
+                                                            </button>
+                                                        </div>
+                                                    </th>
+                                                </tr>
+                                            ))}
                                         </thead>
                                         <tbody>
-                                            {expenditureInfoList.map((item, index) => (
-                                                <React.Fragment key={index}>
-                                                <tr className="bg-white border-b hover:bg-gray-50">
-                                                    <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                                                        {item.name}
-                                                    </th>
-                                                    <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                                                        {item.amount}
-                                                    </td>
-                                                    
+                                            {table.getRowModel().rows.map((row) => (
+                                                <tr key={row.id}  className="bg-white border-b hover:bg-gray-50">
+                                                    {row.getVisibleCells().map((cell) => (
+                                                        <td key={cell.id} className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                                                            {cell.getValue()} 
+                                                        </td>
+                                                    ))}
                                                     <td>
                                                         <div className="flex justify-center items-center gap-1">
-                                                            <button className='mx-auto' onClick={() => openUpdateModal(item.id, item.name, item.category_id, item.amount, item.calendar_date)}>
+                                                            <button className='mx-auto' onClick={() => openUpdateModal(row.original.id, row.getValue('name'), row.original.category_id, row.getValue('amount'), row.original.calendar_date)}>
                                                                 <FontAwesomeIcon icon={faPenToSquare} />
                                                             </button>
-                                                            <button className='mx-auto' onClick={() => deleteExpenditure(item.id)}>
+                                                            <button className='mx-auto' onClick={() => deleteExpenditure(row.id)}>
                                                                 <FontAwesomeIcon icon={faCircleXmark} />
                                                             </button>
                                                         </div>
                                                     </td>
                                                 </tr>
-                                                </React.Fragment>
-                                                ))}
+                                            ))}
                                         </tbody>
                                     </table>
                                 </div>
