@@ -34,10 +34,11 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get('/income', function () {
-    return Inertia::render('Income/Index');
-})->middleware(['auth', 'verified'])->name('income');
+// Route::get('/income', function () {
+//     return Inertia::render('Income/Index');
+// })->middleware(['auth', 'verified'])->name('income');
 
+Route::get('/income', [IncomeController::class, 'index'])->middleware(['auth', 'verified'])->name('income');
 Route::get('/expenditure', [ExpenditureController::class, 'index'])->middleware(['auth', 'verified'])->name('expenditure');
 
 Route::get('/category', function () {

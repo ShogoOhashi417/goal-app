@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Income;
 
 use DateTime;
+use Inertia\Inertia;
 use Illuminate\Http\Request;
+use App\Models\IncomeCategory;
+use App\Models\Income as IncomeModel;
 use App\Http\Controllers\Controller;
-use App\Models\Income AS IncomeModel;
 use App\Infrastructure\Query\Income\IncomeQueryService;
 use App\Infrastructure\Repository\Income\IncomeRepository;
 use App\Application\UseCase\Income\Fetch\FetchIncomeUseCase;
@@ -17,6 +19,7 @@ use App\Application\UseCase\Income\Update\UpdateIncomeUseCase;
 use App\Application\UseCase\Income\Create\CreateIncomeInputData;
 use App\Application\UseCase\Income\Delete\DeleteIncomeInputData;
 use App\Application\UseCase\Income\Update\UpdateIncomeInputData;
+use App\Application\UseCase\Category\Income\Fetch\FetchIncomeCategoryUseCase;
 
 class IncomeController extends Controller
 {
@@ -30,9 +33,18 @@ class IncomeController extends Controller
 
         $incomeInfoList = $fetchIncomeUseCase->handle();
 
-        return view('view.income.index', [
-            'income_info_list' => $incomeInfoList
-        ]);
+        $fetchIncomeCategoryUseCase = new FetchIncomeCategoryUseCase(
+            new IncomeCategory()
+        );
+
+        $incomeCategoryInfoList = $fetchIncomeCategoryUseCase->handle();
+        
+        return Inertia::render('Income/Index',
+            [
+                'incomeDataList' => $incomeInfoList,
+                'IncomeCategoryDataList' => $incomeCategoryInfoList
+            ]
+        );
     }
 
     public function get()
@@ -97,7 +109,7 @@ class IncomeController extends Controller
 
         $deleteIncomeUseCase->handle(
             new DeleteIncomeInputData(
-                $request->id,
+                (int)$request->id,
             )
         );
     }

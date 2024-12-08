@@ -16,7 +16,10 @@ final class Income extends Model
      */
     public function fetchAll(): array
     {
-        return $this->all()->toArray();
+        return $this->join('income_categories', 'incomes.category_id', '=', 'income_categories.id')
+                    ->select('incomes.*', 'income_categories.name as category_name')
+                    ->get()
+                    ->toArray();
     }
 
     /**
