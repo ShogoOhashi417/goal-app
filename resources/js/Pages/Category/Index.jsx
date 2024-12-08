@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
 import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
-import React, { useEffect } from "react"
+import React from "react"
 import { useRef, useState } from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
@@ -13,26 +13,21 @@ import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
 import TextInput from '@/Components/TextInput';
 
-export default function Income({ auth }) {
-    const [incomeCategoryInfoList, setIncomeCategoryInfoList] = useState([]);
+export default function Income({ auth, incomeCategoryDataList, expenditureCategoryDataList }) {
+    const [incomeCategoryInfoList, setIncomeCategoryInfoList] = useState(incomeCategoryDataList);
     
     const getIncomeCategory = async () => {
         const response = await axios.get('/income_category/get');
         setIncomeCategoryInfoList(response.data.income_category_info_list);
     }
 
-    const [expenditureCategoryInfoList, setExpenditureCategoryInfoList] = useState([]);
+    const [expenditureCategoryInfoList, setExpenditureCategoryInfoList] = useState(expenditureCategoryDataList);
 
     const getExpenditureCategory = async () => {
         const response = await axios.get('/expenditure_category/get');
         setExpenditureCategoryInfoList(response.data.expenditure_category_info_list);
     }
 
-    useEffect(() => {
-        getIncomeCategory();
-        getExpenditureCategory();
-    }, []);
-    
     const [activeTab, setActiveTab] = useState('income');
 
     const changeActiveTab = (tab) => {

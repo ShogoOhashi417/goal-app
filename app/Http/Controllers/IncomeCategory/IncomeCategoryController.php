@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\IncomeCategory;
 
+use Inertia\Inertia;
 use Illuminate\Http\Request;
 use App\Models\IncomeCategory;
+use App\Models\ExpenditureCategory;
 use App\Http\Controllers\Controller;
 use App\Infrastructure\Repository\Category\Income\IncomeCategoryRepository;
 use App\Application\UseCase\Category\Income\Fetch\FetchIncomeCategoryUseCase;
@@ -11,9 +13,31 @@ use App\Application\UseCase\Category\Income\Create\CreateIncomeCategoryUseCase;
 use App\Application\UseCase\Category\Income\Delete\DeleteIncomeCategoryUseCase;
 use App\Application\UseCase\Category\Income\Create\CreateIncomeCategoryInputData;
 use App\Application\UseCase\Category\Income\Delete\DeleteIncomeCategoryInputData;
+use App\Application\UseCase\Category\Expenditure\Fetch\FetchExpenditureCategoryUseCase;
 
 class IncomeCategoryController extends Controller
 {
+    public function index()
+    {
+        $fetchIncomeCategoryUseCase = new FetchIncomeCategoryUseCase(
+            new IncomeCategory()
+        );
+
+        $incomeCategoryInfoList = $fetchIncomeCategoryUseCase->handle();
+
+        $fetchExpenditureCategoryUseCase = new FetchExpenditureCategoryUseCase(
+            new ExpenditureCategory()
+        );
+
+        $expenditureCategoryInfoList = $fetchExpenditureCategoryUseCase->handle();
+
+        return Inertia::render('Category/Index',
+            [
+                'incomeCategoryDataList' => $incomeCategoryInfoList,
+                'expenditureCategoryDataList' => $expenditureCategoryInfoList
+            ]
+        );
+    }
     /**
      * Display a listing of the resource.
      */

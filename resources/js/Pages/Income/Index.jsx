@@ -7,9 +7,15 @@ import { useRef, useState } from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
 import Datepicker from "react-tailwindcss-datepicker";
+import {
+    createColumnHelper,
+    useReactTable,
+    getCoreRowModel,
+    getSortedRowModel,
+} from "@tanstack/react-table";
 
-export default function Income({ auth }) {
-    const [incomeInfoList, setincomeInfoList] = useState([]);
+export default function Income({ auth, incomeDataList, IncomeCategoryDataList }) {
+    const [incomeInfoList, setincomeInfoList] = useState(incomeDataList);
 
     const [incomeId, setIncomeId] = useState(0);
     const [incomeName, setIncomeName] = useState('');
@@ -49,15 +55,14 @@ export default function Income({ auth }) {
         updateIncomeRef.current.classList.add('hidden');
     }
 
-    const getInfo = async () => {
-        const response = await axios.get('/income/get');
-        setincomeInfoList(response.data.income_info_list);
+    const getInfo = () => {
+        axios.get('/income/get')
+            .then(response => {
+                setincomeInfoList(response.data.income_info_list);
+            })
+            .catch(error => {
+            });
     }
-
-    useEffect(() => {
-        getInfo();
-        getIncomeCategory()
-    }, []);
 
     const addIncome = () => {
         axios.post('/income/add', {
@@ -97,7 +102,7 @@ export default function Income({ auth }) {
     }
 
     const deleteIncome = (incomeId) => {
-        if (!confirm('本当にこの生命保険を削除しますか？')) {
+        if (!confirm('本当に収入を削除しますか？')) {
             return;
         }
         
@@ -111,16 +116,51 @@ export default function Income({ auth }) {
         });
     }
 
-    const [incomeCategoryInfoList, setIncomeCategoryInfoList] = useState([]);
-    
-    const getIncomeCategory = async () => {
-        const response = await axios.get('/income_category/get');
-        setIncomeCategoryInfoList(response.data.income_category_info_list);
-    }
+    const [incomeCategoryInfoList, setIncomeCategoryInfoList] = useState(IncomeCategoryDataList);
 
     const [calendarDate, setCalendarDate] = useState({ 
         startDate: null, 
         endDate: null
+    });
+
+    const columnHelper = createColumnHelper();
+
+    const data = React.useMemo(
+        () => incomeInfoList,
+        [incomeInfoList]
+    );
+
+    const columns = React.useMemo(
+        () => [
+        columnHelper.accessor("name", {
+            header: "収入名",
+            cell: (info) => info.getValue(),
+        }),
+        columnHelper.accessor("amount", {
+            header: "金額",
+            cell: (info) => info.getValue(),
+            sortingFn: "basic",
+        }),
+        columnHelper.accessor("category_name", {
+            header: "カテゴリー",
+            cell: (info) => info.getValue(),
+            sortingFn: "basic",
+        }),
+        ],
+        []
+    );
+
+    const [sorting, setSorting] = React.useState([]);
+
+    const table = useReactTable({
+        data,
+        columns,
+        state: {
+        sorting,
+        },
+        onSortingChange: setSorting,
+        getCoreRowModel: getCoreRowModel(),
+        getSortedRowModel: getSortedRowModel(),
     });
 
     return (
@@ -138,45 +178,52 @@ export default function Income({ auth }) {
                                 <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
                                     <table className="w-full text-sm text-left rtl:text-right text-gray-500">
                                         <thead className="text-xs text-gray-700 uppercase bg-gray-50">
-                                            <tr>
-                                                <th scope="col" className="px-6 py-3">
-                                                    収入名
-                                                </th>
-                                                <th scope="col" className="px-6 py-3">
-                                                    金額
-                                                </th>
-                                                <th className='w-10'>
-                                                    <div className="flex justify-center items-center">
-                                                        <button onClick={openAddModal}>
-                                                            <FontAwesomeIcon icon={faCirclePlus} size="lg" />
-                                                        </button>
-                                                    </div>
-                                                </th>
-                                            </tr>
+                                        {table.getHeaderGroups().map((headerGroup) => (
+                                                <tr key={headerGroup.id}>
+                                                    {headerGroup.headers.map((header) => (
+                                                        <th
+                                                            key={header.id}
+                                                            onClick={header.column.getToggleSortingHandler()}
+                                                            className="cursor-pointer border px-4 py-2"
+                                                        >
+                                                            {header.isPlaceholder
+                                                            ? null
+                                                            : header.column.columnDef.header}
+                                                            {{
+                                                                asc: " ↑",
+                                                                desc: " ↓",
+                                                            }[header.column.getIsSorted()] ?? null}
+                                                        </th>
+                                                    ))}
+                                                    <th className='w-10'>
+                                                        <div className="flex justify-center items-center">
+                                                            <button onClick={openAddModal}>
+                                                                <FontAwesomeIcon icon={faCirclePlus} size="lg" />
+                                                            </button>
+                                                        </div>
+                                                    </th>
+                                                </tr>
+                                            ))}
                                         </thead>
                                         <tbody>
-                                            {incomeInfoList.map((item, index) => (
-                                                <React.Fragment key={index}>
-                                                <tr className="bg-white border-b hover:bg-gray-50">
-                                                    <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                                                        {item.name}
-                                                    </th>
-                                                    <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                                                        {item.amount}
-                                                    </td>
-                                                    
+                                            {table.getRowModel().rows.map((row) => (
+                                                <tr key={row.id}  className="bg-white border-b hover:bg-gray-50">
+                                                    {row.getVisibleCells().map((cell) => (
+                                                        <td key={cell.id} className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                                                            {cell.getValue()} 
+                                                        </td>
+                                                    ))}
                                                     <td>
                                                         <div className="flex justify-center items-center gap-1">
-                                                            <button className='mx-auto' onClick={() => openUpdateModal(item.id, item.name, item.category_id, item.amount, item.calendar_date)}>
+                                                            <button className='mx-auto' onClick={() => openUpdateModal(row.original.id, row.getValue('name'), row.original.category_id, row.getValue('amount'), row.original.calendar_date)}>
                                                                 <FontAwesomeIcon icon={faPenToSquare} />
                                                             </button>
-                                                            <button className='mx-auto' onClick={() => deleteIncome(item.id)}>
+                                                            <button className='mx-auto' onClick={() => deleteIncome(row.original.id)}>
                                                                 <FontAwesomeIcon icon={faCircleXmark} />
                                                             </button>
                                                         </div>
                                                     </td>
                                                 </tr>
-                                                </React.Fragment>
                                             ))}
                                         </tbody>
                                     </table>
