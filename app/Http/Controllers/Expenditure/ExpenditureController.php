@@ -25,6 +25,10 @@ use App\Application\UseCase\Expenditure\Create\CreateExpenditureInputData;
 use App\Application\UseCase\Expenditure\Delete\DeleteExpenditureInputData;
 use App\Application\UseCase\Expenditure\Update\UpdateExpenditureInputData;
 use App\Application\UseCase\Category\Expenditure\Fetch\FetchExpenditureCategoryUseCase;
+use App\Application\UseCase\Expenditure\Create\BulkCreateExpenditureInputData;
+use App\Application\UseCase\Expenditure\Create\BulkCreateExpenditureUseCase;
+use App\Infrastructure\Repository\PresetExpenditureItem\PresetExpenditureItemRepository;
+use App\Models\PresetExpenditureItem;
 
 class ExpenditureController extends Controller
 {
@@ -154,15 +158,62 @@ class ExpenditureController extends Controller
         $file_path = $request->file('csv')->path();
 
         $importExpenditureCsvUseCase = new ImportExpendtureCsvUseCase(
-            new ExpenditureRepository(
-                new ExpenditureModel()
-            ),
             new DateConverter(),
             new FetchExpenditureCategoryUseCase(
                 new ExpenditureCategory()
             )
         );
 
-        $importExpenditureCsvUseCase->handle($file_path);
+        $expenditureList = $importExpenditureCsvUseCase->handle($file_path);
+
+        $result = [];
+
+        $presetExpenditureItemModel = new PresetExpenditureItem();
+        $presetExpenditureItemInfoList = $presetExpenditureItemModel->where('category_id', '!=', 0)->get()->toArray();
+
+        $expenditureNameToCategoryIdMapList = array_column($presetExpenditureItemInfoList, 'category_id', 'name');
+
+        foreach ($expenditureList as $expenditure) {
+            $expenditureName = $expenditure->getName()->getValue();
+            $categoryId = $expenditure->getCategoryId()->getValue();
+            $amount = $expenditure->getAmount()->getValue();
+            $date = $expenditure->getCalendarDate()->getValue();
+
+            foreach ($expenditureNameToCategoryIdMapList as $presetName => $presetCategoryId) {
+                if (str_contains($expenditureName, $presetName)) {
+                    $categoryId = $presetCategoryId;
+                    break;
+                }
+            }
+
+            $result[$expenditureName] = [
+                "name" => $expenditureName,
+                "category_id" => $categoryId,
+                "amount" => $amount,
+                "date" => $date
+            ];
+        }
+
+        return [
+            'uploadDataList' => json_encode($result)
+        ];
+    }
+
+    public function bulkCreate(Request $request)
+    {
+        $bulkCreateExpenditureUseCase = new BulkCreateExpenditureUseCase(
+            new ExpenditureRepository(
+                new ExpenditureModel()
+            ),
+            new PresetExpenditureItemRepository(
+                new PresetExpenditureItem()
+            )
+        );
+
+        $bulkCreateExpenditureUseCase->handle(
+            new BulkCreateExpenditureInputData(
+                $request->items
+            )
+        );
     }
 }

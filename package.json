@@ -28,10 +28,13 @@
         "@fortawesome/free-regular-svg-icons": "^6.5.1",
         "@fortawesome/free-solid-svg-icons": "^6.5.1",
         "@fortawesome/react-fontawesome": "^0.2.0",
+        "@inertiajs/inertia": "^0.11.1",
+        "@inertiajs/inertia-react": "^0.8.1",
         "@tanstack/react-table": "^8.20.5",
         "esbuild": "^0.19.9",
         "highcharts": "^11.4.8",
         "highcharts-react-official": "^3.2.1",
+        "react-router-dom": "^7.0.2",
         "react-tailwindcss-datepicker": "^1.7.2",
         "tailwind-datepicker-react": "^1.4.3"
     }

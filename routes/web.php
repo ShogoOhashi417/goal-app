@@ -5,7 +5,6 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Income\IncomeController;
-use App\Domain\Model\Category\Income\IncomeCategory;
 use App\Http\Controllers\ExpenditureCategoryController;
 use App\Http\Controllers\Expenditure\ExpenditureController;
 use App\Http\Controllers\IncomeCategory\IncomeCategoryController;
@@ -73,5 +72,11 @@ Route::post('/expenditure_category/delete', [ExpenditureCategoryController::clas
 
 Route::get('/expenditure/export', [ExpenditureController::class, 'export']);
 Route::post('/expenditure/import_csv', [ExpenditureController::class, 'import_csv']);
+
+Route::post('/expenditure/bulk_create', [ExpenditureController::class, 'bulkCreate']);
+
+Route::post('/preset_expenditure_item/confirm', function () {
+    return Inertia::render('BulkOperation/Confirm');
+});
 
 require __DIR__.'/auth.php';

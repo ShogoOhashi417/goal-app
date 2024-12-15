@@ -7,6 +7,7 @@ use App\Domain\Model\Expenditure\ExpenditureHolder;
 use App\Application\Port\Date\DateConverterInterface;
 use App\Domain\Model\Expenditure\ExpenditureRepositoryInterface;
 use App\Application\UseCase\Category\Expenditure\Fetch\FetchExpenditureCategoryUseCase;
+use App\Models\PresetExpenditureItem;
 
 final readonly class ImportExpendtureCsvUseCase 
 {
@@ -15,26 +16,23 @@ final readonly class ImportExpendtureCsvUseCase
     private const AMOUNT_COLUMN = 2;
     private const CATEGORY_COLUMN = 3;
 
-    private ExpenditureRepositoryInterface $repository;
     private DateConverterInterface $dateConverter;
     private FetchExpenditureCategoryUseCase $fetchExpenditureCategoryUseCase;
 
     public function __construct(
-        ExpenditureRepositoryInterface $repository,
         DateConverterInterface $dateConverter,
         FetchExpenditureCategoryUseCase $fetchExpenditureCategoryUseCase
     )
     {
-        $this->repository = $repository;
         $this->dateConverter = $dateConverter;
         $this->fetchExpenditureCategoryUseCase = $fetchExpenditureCategoryUseCase;
     }
 
     /**
      * @param string $file_path
-     * @return void
+     * @return 
      */
-    public function handle(string $file_path): void
+    public function handle(string $file_path)
     {
         $file = new \SplFileObject($file_path);
 
@@ -53,6 +51,11 @@ final readonly class ImportExpendtureCsvUseCase
 
         $expenditureHolder = new ExpenditureHolder();
 
+        $presetExpenditureItemModel = new PresetExpenditureItem();
+        $presetExpenditureItemInfoList = $presetExpenditureItemModel->where('category_id', '!=', 0)->get()->toArray();
+
+        $expenditureNameToCategoryIdMapList = array_column($presetExpenditureItemInfoList, 'category_id', 'name');
+
         foreach ($targetLineList as $line) {
 
             $line = array_map(function($value) {
@@ -60,16 +63,28 @@ final readonly class ImportExpendtureCsvUseCase
             }, $line);
 
             $date = $this->dateConverter->toYearMonthDay($line[0]);
+            
+            $name = $line[self::NAME_COLUMN];
+
+            $categoryId = $category_name_to_id_map_list[$line[self::CATEGORY_COLUMN]] ?? 0;
+            $amount = (int)$line[self::AMOUNT_COLUMN];
+
+            foreach ($expenditureNameToCategoryIdMapList as $presetName => $presetCategoryId) {
+                if (str_contains($name, $presetName)) {
+                    $categoryId = $presetCategoryId;
+                }
+            }
 
             $expenditureHolder->appendExpenditure(
                 Expenditure::create(
-                    $line[self::NAME_COLUMN],
-                    $category_name_to_id_map_list[$line[self::CATEGORY_COLUMN]] ?? 0,
-                    (int)$line[self::AMOUNT_COLUMN],
+                    $name,
+                    $categoryId,
+                    $amount,
                     $date
                 )
             );
         }
-        $this->repository->saveBulk($expenditureHolder);
+
+        return $expenditureHolder->getExpenditureList();
     }
 }
