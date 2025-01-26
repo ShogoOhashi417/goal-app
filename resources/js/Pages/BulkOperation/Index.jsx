@@ -6,7 +6,7 @@ import PrimaryButton from '@/Components/PrimaryButton'
 import SecondaryButton from '@/Components/SecondaryButton'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
-import { useForm } from '@inertiajs/react';
+import Datepicker from "react-tailwindcss-datepicker";
 
 export default function BulkOperation({ auth }) {
     const exportSampleCsv = () => {
@@ -75,7 +75,7 @@ export default function BulkOperation({ auth }) {
             const selectedCategory = categorySelect.options[categorySelect.selectedIndex].value;
             const amount = row.querySelector('input[name="amount"]').value;
             const calendarDate = row.querySelector('input[name="calendar_date"]').value;
-            
+
             formData.append(`items[${index}][name]`, itemName);
             formData.append(`items[${index}][category_id]`, selectedCategory);
             formData.append(`items[${index}][amount]`, amount);
@@ -102,16 +102,6 @@ export default function BulkOperation({ auth }) {
         addExpenditureRef.current.classList.add('hidden');
     }
 
-    const { data, setData, post, processing, errors } = useForm({
-        email: '',
-        password: '',
-    });
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        post('/preset_expenditure_item/confirm');
-    };
-
     return (
         <>
             <AuthenticatedLayout
@@ -132,14 +122,12 @@ export default function BulkOperation({ auth }) {
                             </div>
                             
                             <div className="my-3">
-                                {/* <form onSubmit={handleSubmit}> */}
-                                    <input type="file" name="csv"  onChange={(e) => setData('uploadFile', e.target.value)}/>
-                                    <PrimaryButton
-                                        onClick={uploadCsv}
-                                    >
-                                        アップロード
-                                    </PrimaryButton>
-                                {/* </form> */}
+                                <input type="file" name="csv"/>
+                                <PrimaryButton
+                                    onClick={uploadCsv}
+                                >
+                                    アップロード
+                                </PrimaryButton>
                             </div>
                         </div>
                     </div>
@@ -194,11 +182,16 @@ export default function BulkOperation({ auth }) {
                                                 <input
                                                     type="text"
                                                     name="category_name"
-                                                    value={itemName}
+                                                    value={csvPreviewList[itemName].name}
                                                     className="text-right bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                                                     onChange={(e) => {
-                                                        // Handle the change event, e.g., update state
-                                                        // setCsvPreviewList(prev => ({ ...prev, [itemName]: { ...prev[itemName], name: e.target.value } }));
+                                                        setCsvPreviewList(prev => ({
+                                                            ...prev,
+                                                            [itemName]: {
+                                                                ...prev[itemName],
+                                                                name: e.target.value
+                                                            }
+                                                        }));
                                                     }}
                                                 />
                                             </td>
@@ -208,7 +201,15 @@ export default function BulkOperation({ auth }) {
                                                     name="amount"
                                                     value={csvPreviewList[itemName].amount}
                                                     className="text-right bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-                                                    disabled
+                                                    onChange={(e) => {
+                                                        setCsvPreviewList(prev => ({
+                                                            ...prev,
+                                                            [itemName]: {
+                                                                ...prev[itemName],
+                                                                amount: e.target.value
+                                                            }
+                                                        }));
+                                                    }}
                                                 />
                                             </td>
                                             <td className="px-3 py-4 font-medium text-gray-900 whitespace-nowrap">
@@ -218,8 +219,13 @@ export default function BulkOperation({ auth }) {
                                                     value={ csvPreviewList[itemName].category_id }
                                                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                                                     onChange={(e) => {
-                                                        // Handle the change event, e.g., update state
-                                                        // setCsvPreviewList(prev => ({ ...prev, [itemName]: { ...prev[itemName], name: e.target.value } }));
+                                                        setCsvPreviewList(prev => ({
+                                                            ...prev,
+                                                            [itemName]: {
+                                                                ...prev[itemName],
+                                                                category_id: e.target.value
+                                                            }
+                                                        }));
                                                     }}
                                                 >
                                                     {expenditureCategoryInfoList.map((categoryInfo, index) => (
@@ -234,14 +240,23 @@ export default function BulkOperation({ auth }) {
                                                 </select>
                                             </td>
                                             <td className="px-3 py-4 font-medium text-gray-900 whitespace-nowrap">
-                                                <input
-                                                    type="text"
-                                                    name="calendar_date"
-                                                    value={csvPreviewList[itemName].date}
-                                                    className="text-right bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                                                <Datepicker
+                                                    inputClassName="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 w-full p-2.5"
+                                                    inputName="calendar_date"
+                                                    asSingle={true}
+                                                    value={{
+                                                        startDate: csvPreviewList[itemName].date, 
+                                                        endDate: csvPreviewList[itemName].date
+                                                    }}
                                                     onChange={(e) => {
-                                                        // Handle the change event, e.g., update state
-                                                        // setCsvPreviewList(prev => ({ ...prev, [itemName]: { ...prev[itemName], name: e.target.value } }));
+                                                        const localCalendarDate = new Date(e.startDate).toLocaleString('sv-SE', { timeZone: 'Asia/Tokyo' });
+                                                        setCsvPreviewList(prev => ({
+                                                            ...prev,
+                                                            [itemName]: {
+                                                                ...prev[itemName],
+                                                                date: localCalendarDate
+                                                            }
+                                                        }));
                                                     }}
                                                 />
                                             </td>
