@@ -6,6 +6,7 @@ import PrimaryButton from '@/Components/PrimaryButton'
 import SecondaryButton from '@/Components/SecondaryButton'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
+import { faUpload } from "@fortawesome/free-solid-svg-icons";
 import Datepicker from "react-tailwindcss-datepicker";
 
 export default function BulkOperation({ auth }) {
@@ -102,6 +103,15 @@ export default function BulkOperation({ auth }) {
         addExpenditureRef.current.classList.add('hidden');
     }
 
+    const [fileName, setFileName] = useState('ファイルを選択してください');
+    const [isUploading, setIsUploading] = useState(false);
+
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        setFileName(file ? file.name : 'ファイルを選択してください');
+        setIsUploading(true);
+    }
+
     return (
         <>
             <AuthenticatedLayout
@@ -109,25 +119,55 @@ export default function BulkOperation({ auth }) {
                 header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">CSV一括処理</h2>}
             >
                 <Head title="レポート" />
-
-                <div className='flex flex-col min-h-screen bg-white'>
+                <div className='flex flex-col min-h-screen'>
                     <div className="w-5/6 mx-auto my-3 flex-1 relative sm:justify-center bg-dots-darker bg-center dark:bg-dots-lighter dark:bg-gray-900 selection:text-white">
                         <div className='container'>
-                            <div>
-                                <SecondaryButton
-                                    onClick={exportSampleCsv}
-                                >
-                                    サンプルCSVダウンロード
-                                </SecondaryButton>
-                            </div>
-                            
-                            <div className="my-3">
-                                <input type="file" name="csv"/>
-                                <PrimaryButton
-                                    onClick={uploadCsv}
-                                >
-                                    アップロード
-                                </PrimaryButton>
+                            <div className="bg-white p-3 rounded-lg">
+                                <h3 className="text-lg font-semibold text-gray-900 mb-3">STEP.1 サンプルCSVファイルをダウンロードする</h3>
+
+                                <p className="text-gray-600 text-sm mb-2">サンプルCSVをダウンロードする</p>
+                                
+                                <div className="my-3">
+                                    <div>
+                                        <SecondaryButton
+                                            onClick={exportSampleCsv}
+                                        >
+                                            サンプルCSVダウンロード
+                                        </SecondaryButton>
+                                    </div>
+                                </div>
+
+                                <hr className="my-5" />
+
+                                <h3 className="text-lg font-semibold text-gray-900 mb-3">STEP.2 CSVファイルをアップロードする</h3>
+                                
+                                <p className="text-gray-600 text-sm mb-2">CSVファイルをアップロードする</p>
+                                
+                                <div className="my-3 flex items-center">
+                                    <label className="block mb-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 rounded-lg py-2 px-4 cursor-pointer" htmlFor="csv-upload">
+                                        CSVファイルを選択
+                                    </label>
+                                    <input 
+                                        type="file"
+                                        name="csv"
+                                        id="csv-upload"
+                                        className="hidden"
+                                        accept=".csv"
+                                        onChange={handleFileChange}
+                                    />
+                                    <span id="file-name" className="w-48 ml-3 text-sm text-gray-600">
+                                        {fileName}
+                                    </span>
+                                    
+                                    <PrimaryButton
+                                        onClick={uploadCsv}
+                                        disabled={isUploading ? false : true}
+                                        className="ml-3"
+                                    >
+                                        <FontAwesomeIcon icon={faUpload} className="mr-3" />
+                                        アップロード
+                                    </PrimaryButton>
+                                </div>
                             </div>
                         </div>
                     </div>
