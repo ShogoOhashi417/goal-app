@@ -29,17 +29,13 @@ Route::get('/', function () {
     ]);
 });
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
 Route::get('/income', [IncomeController::class, 'index'])->middleware(['auth', 'verified'])->name('income');
 Route::get('/expenditure', [ExpenditureController::class, 'index'])->middleware(['auth', 'verified'])->name('expenditure');
 Route::get('/category', [IncomeCategoryController::class, 'index'])->middleware(['auth', 'verified'])->name('category');
 
-Route::get('/report', function () {
+Route::get('/top', function () {
     return Inertia::render('Report/Index');
-})->middleware(['auth', 'verified'])->name('report');
+})->middleware(['auth', 'verified'])->name('top');
 
 Route::get('/bulk_operation', function () {
     return Inertia::render('BulkOperation/Index');
