@@ -2,15 +2,15 @@
 
 namespace App\Infrastructure\Adaptor\Calculation;
 
-use App\Infrastructure\Adaptor\Date\DateConverter;
+use App\Application\Port\Date\DateConverterInterface;
 use App\Application\Port\Calculation\CategoryAmountCalculaterInterface;
 
 final readonly class CategoryAmountCalculater implements CategoryAmountCalculaterInterface
 {
-    private DateConverter $dateConverter;
+    private DateConverterInterface $dateConverter;
 
     public function __construct(
-        DateConverter $dateConverter
+        DateConverterInterface $dateConverter
     ){
         $this->dateConverter = $dateConverter;
     }
