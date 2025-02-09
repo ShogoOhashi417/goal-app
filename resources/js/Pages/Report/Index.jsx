@@ -6,6 +6,18 @@ import HighchartsReact from 'highcharts-react-official';
 import YearSelectBox from "@/Components/YearSelectBox";
 
 export default function Report({ auth }) {
+    const getMonth = (year, month, period) => {
+        const MONTHS_PER_YEAR = 12;
+
+        const resultMonth = month - period;
+        
+        if (resultMonth > 0) {
+            return year + "-" + String(resultMonth).padStart(2, '0');
+        }
+
+        return (year - 1) + "-" + String(resultMonth + MONTHS_PER_YEAR).padStart(2, '0');
+    }
+
     const [totalChartOptions, setTotalChartOptions] = useState([]);
     const [chartOptionsList, setChartOptionsList] = useState([]);
 
@@ -15,18 +27,9 @@ export default function Report({ auth }) {
 
     const [dateList, setDateList] = useState(
         [
-            thisYear + '-01',
-            thisYear + '-02',
-            thisYear + '-03',
-            thisYear + '-04',
-            thisYear + '-05',
-            thisYear + '-06',
-            thisYear + '-07',
-            thisYear + '-08',
-            thisYear + '-09',
-            thisYear + '-10',
-            thisYear + '-11',
-            thisYear + '-12',
+            getMonth(thisYear, thisMonth, 2),
+            getMonth(thisYear, thisMonth, 1),
+            getMonth(thisYear, thisMonth, 0),
         ]
     );
 
@@ -106,18 +109,6 @@ export default function Report({ auth }) {
 
             return;
         }
-    }
-
-    const getMonth = (year, month, period) => {
-        const MONTHS_PER_YEAR = 12;
-
-        const resultMonth = month - period;
-        
-        if (resultMonth > 0) {
-            return year + "-" + String(resultMonth).padStart(2, '0');
-        }
-
-        return (year - 1) + "-" + String(resultMonth + MONTHS_PER_YEAR).padStart(2, '0');
     }
 
     const [expenditureInfoList, setExpenditureInfoList] = useState([]);
@@ -245,7 +236,7 @@ export default function Report({ auth }) {
                                 >
                                     {Array.from(relativePeriodList.entries()).map(([value, period], index) => (
                                         <React.Fragment key={value}>
-                                            <option value={value}>{ period }</option>
+                                            <option value={value} selected={value == THREE_MONTHS_PERIOD}>{ period }</option>
                                         </React.Fragment>
                                     ))}
                                 </select>
