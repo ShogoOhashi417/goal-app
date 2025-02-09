@@ -37,11 +37,11 @@ export default function BulkOperation({ auth }) {
         const formData = new FormData();
 
         if (fileInput.files.length > 0) {
-            formData.append('csv', fileInput.files[0]); // ファイルをFormDataに追加
+            formData.append('csv', fileInput.files[0]);
         }
         axios.post('/expenditure/import_csv', formData, {
             headers: {
-                'Content-Type': 'multipart/form-data' // ヘッダーを設定
+                'Content-Type': 'multipart/form-data'
             }
         })
         .then(response => {
@@ -58,9 +58,9 @@ export default function BulkOperation({ auth }) {
         setExpenditureCategoryInfoList(response.data.expenditure_category_info_list);
     }
 
-    const deleteExpenditureCategory = (itemName) => {
+    const deleteExpenditureCategory = (itemIndex) => {
         setCsvPreviewList(Object.fromEntries(
-            Object.entries(csvPreviewList).filter(([name, value]) => name !== itemName)
+            Object.entries(csvPreviewList).filter(([index, value]) => index !== itemIndex)
         ));
     }
 
@@ -216,19 +216,19 @@ export default function BulkOperation({ auth }) {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                    {Object.keys(csvPreviewList).map(itemName => (
-                                        <tr key={itemName} className="bg-white border-b hover:bg-gray-50">
+                                    {Object.keys(csvPreviewList).map(index => (
+                                        <tr key={index} className="bg-white border-b hover:bg-gray-50">
                                             <td className="px-3 py-4 font-medium text-gray-900 whitespace-nowrap">
                                                 <input
                                                     type="text"
                                                     name="category_name"
-                                                    value={csvPreviewList[itemName].name}
+                                                    value={csvPreviewList[index].name}
                                                     className="text-right bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                                                     onChange={(e) => {
                                                         setCsvPreviewList(prev => ({
                                                             ...prev,
-                                                            [itemName]: {
-                                                                ...prev[itemName],
+                                                            [index]: {
+                                                                ...prev[index],
                                                                 name: e.target.value
                                                             }
                                                         }));
@@ -239,13 +239,13 @@ export default function BulkOperation({ auth }) {
                                                 <input
                                                     type="text"
                                                     name="amount"
-                                                    value={csvPreviewList[itemName].amount}
+                                                    value={csvPreviewList[index].amount}
                                                     className="text-right bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                                                     onChange={(e) => {
                                                         setCsvPreviewList(prev => ({
                                                             ...prev,
-                                                            [itemName]: {
-                                                                ...prev[itemName],
+                                                            [index]: {
+                                                                ...prev[index],
                                                                 amount: e.target.value
                                                             }
                                                         }));
@@ -256,13 +256,13 @@ export default function BulkOperation({ auth }) {
                                                 <select
                                                     name="category_id"
                                                     id=""
-                                                    value={ csvPreviewList[itemName].category_id }
+                                                    value={ csvPreviewList[index].category_id }
                                                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                                                     onChange={(e) => {
                                                         setCsvPreviewList(prev => ({
                                                             ...prev,
-                                                            [itemName]: {
-                                                                ...prev[itemName],
+                                                            [index]: {
+                                                                ...prev[index],
                                                                 category_id: e.target.value
                                                             }
                                                         }));
@@ -285,15 +285,15 @@ export default function BulkOperation({ auth }) {
                                                     inputName="calendar_date"
                                                     asSingle={true}
                                                     value={{
-                                                        startDate: csvPreviewList[itemName].date, 
-                                                        endDate: csvPreviewList[itemName].date
+                                                        startDate: csvPreviewList[index].date, 
+                                                        endDate: csvPreviewList[index].date
                                                     }}
                                                     onChange={(e) => {
                                                         const localCalendarDate = new Date(e.startDate).toLocaleString('sv-SE', { timeZone: 'Asia/Tokyo' });
                                                         setCsvPreviewList(prev => ({
                                                             ...prev,
-                                                            [itemName]: {
-                                                                ...prev[itemName],
+                                                            [index]: {
+                                                                ...prev[index],
                                                                 date: localCalendarDate
                                                             }
                                                         }));
@@ -303,7 +303,7 @@ export default function BulkOperation({ auth }) {
                                             <td className="px-3 py-4 font-medium text-gray-900 whitespace-nowrap">
                                                 <button
                                                     className='mx-auto'
-                                                    onClick={() => deleteExpenditureCategory(itemName)}
+                                                    onClick={() => deleteExpenditureCategory(index)}
                                                 >
                                                     <FontAwesomeIcon icon={faCircleXmark} />
                                                 </button>

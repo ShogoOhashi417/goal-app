@@ -186,7 +186,7 @@ class ExpenditureController extends Controller
                 }
             }
 
-            $result[$expenditureName] = [
+            $result[] = [
                 "name" => $expenditureName,
                 "category_id" => $categoryId,
                 "amount" => $amount,
