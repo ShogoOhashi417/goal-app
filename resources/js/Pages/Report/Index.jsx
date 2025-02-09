@@ -6,7 +6,8 @@ import HighchartsReact from 'highcharts-react-official';
 import YearSelectBox from "@/Components/YearSelectBox";
 
 export default function Report({ auth }) {
-    const [seriesList, setSeriesList] = useState([]);
+    const [totalChartOptions, setTotalChartOptions] = useState([]);
+    const [chartOptionsList, setChartOptionsList] = useState([]);
 
     const thisDate = new Date();
     const thisYear = thisDate.getFullYear();
@@ -131,7 +132,9 @@ export default function Report({ auth }) {
     }, []);
 
     useEffect(() => {
-        const data = [];
+        const totalDataList = [];
+        const optionsList = [];
+
         Object.entries(expenditureInfoList).forEach(([categoryName, dateToAmountList]) => {
             const amountList = [];
             dateList.forEach((date) => {
@@ -139,47 +142,86 @@ export default function Report({ auth }) {
                 amountList.push(amount);
             });
 
-            data.push({
+            totalDataList.push({
                 name: categoryName,
                 data: amountList
             });
-        });
-        setSeriesList(data);
-    }, [expenditureInfoList, dateList]); 
 
-    const chartOptions = {
-        chart: {
-            type: 'column'
-        },
-        title: {
-            text: '月別支出額'
-        },
-        xAxis: {
-            categories: dateList
-        },
-        yAxis: {
-            title: {
-                text: '支出額 (万)'
+            optionsList.push({
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: `${categoryName}の月別支出額`
+                },
+                xAxis: {
+                    categories: dateList
+                },
+                yAxis: {
+                    title: {
+                        text: '支出額 (万)'
+                    },
+                    labels: {
+                        formatter: function() {
+                            return this.value / 10000 + '万';
+                        }
+                    }
+                },
+                legend: {
+                    reversed: true
+                },
+                plotOptions: {
+                    series: {
+                        stacking: 'normal',
+                        dataLabels: {
+                            enabled: true
+                        }
+                    }
+                },
+                series: [{
+                    name: categoryName,
+                    data: amountList
+                }]
+            });
+        });
+
+        const totalChartOptions = {
+            chart: {
+                type: 'column'
             },
-            labels: {
-                formatter: function() {
-                    return this.value / 10000 + '万';
+            title: {
+                text: '合計支出額'
+            },
+            xAxis: {
+                categories: dateList
+            },
+            yAxis: {
+                title: {
+                    text: '支出額 (万)'
+                },
+                labels: {
+                    formatter: function() {
+                        return this.value / 10000 + '万';
+                    }
                 }
-            }
-        },
-        legend: {
-            reversed: true
-        },
-        plotOptions: {
-            series: {
-                stacking: 'normal',
-                dataLabels: {
-                    enabled: true
+            },
+            legend: {
+                reversed: true
+            },
+            plotOptions: {
+                series: {
+                    stacking: 'normal',
+                    dataLabels: {
+                        enabled: true
+                    }
                 }
-            }
-        },
-        series: seriesList
-    };
+            },
+            series: totalDataList
+        };
+
+        setChartOptionsList(optionsList);
+        setTotalChartOptions(totalChartOptions);
+    }, [expenditureInfoList, dateList]); 
 
     return (
         <>
@@ -211,8 +253,17 @@ export default function Report({ auth }) {
                             <div className="mx-auto mt-3">
                                 <HighchartsReact
                                     highcharts={Highcharts}
-                                    options={chartOptions}
+                                    options={totalChartOptions}
                                 />
+
+                                {chartOptionsList.map((options, index) => (
+                                    <div key={index} className="mt-3">
+                                        <HighchartsReact
+                                            highcharts={Highcharts}
+                                            options={options}
+                                        />
+                                    </div>
+                                ))}
                             </div>
                         </div>
                     </div>
