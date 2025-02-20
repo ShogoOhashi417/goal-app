@@ -39,11 +39,11 @@ Route::prefix('v1')
         Route::put('/expenditure/{id}', [ExpenditureController::class, 'update']);
         Route::delete('/expenditure/{id}', [ExpenditureController::class, 'delete']);
 
-        Route::get('/income_category', [IncomeCategoryController::class, 'index']);
+        Route::get('/income_category', [IncomeCategoryController::class, 'get']);
         Route::post('/income_category', [IncomeCategoryController::class, 'store']);
         Route::delete('/income_category/{id}', [IncomeCategoryController::class, 'delete']);
 
-        Route::get('/expenditure_category', [ExpenditureCategoryController::class, 'index']);
+        Route::get('/expenditure_category', [ExpenditureCategoryController::class, 'get']);
         Route::post('/expenditure_category', [ExpenditureCategoryController::class, 'store']);
         Route::delete('/expenditure_category/{id}', [ExpenditureCategoryController::class, 'delete']);
     });
