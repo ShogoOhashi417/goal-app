@@ -45,5 +45,6 @@ Route::prefix('v1')
 
         Route::get('/expenditure_category', [ExpenditureCategoryController::class, 'get']);
         Route::post('/expenditure_category', [ExpenditureCategoryController::class, 'store']);
+        Route::put('/expenditure_category/{id}', [ExpenditureCategoryController::class, 'update']);
         Route::delete('/expenditure_category/{id}', [ExpenditureCategoryController::class, 'delete']);
     });
