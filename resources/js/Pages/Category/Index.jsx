@@ -50,7 +50,11 @@ export default function Income({ auth, incomeCategoryDataList, expenditureCatego
         setAddExpenditureCategory(true);
     }
 
-    const showEditExpenditureCategoryModal = (expenditureCategoryName) => {
+    const [expenditureCategoryId, setExpenditureCategoryId] = useState(0);
+    const [expenditureCategoryName, setExpenditureCategoryName] = useState('');
+
+    const showEditExpenditureCategoryModal = (expenditureCategoryId,expenditureCategoryName) => {
+        setExpenditureCategoryId(expenditureCategoryId);
         setExpenditureCategoryName(expenditureCategoryName);
         setEditExpenditureCategory(true);
     }
@@ -62,8 +66,6 @@ export default function Income({ auth, incomeCategoryDataList, expenditureCatego
     };
 
     const [incomeCategoryName, setIncomeCategoryName] = useState('');
-
-    const [expenditureCategoryName, setExpenditureCategoryName] = useState('');
 
     const changeIncomeCaterogyName = (event) => {
         setIncomeCategoryName(event.target.value);
@@ -95,6 +97,16 @@ export default function Income({ auth, incomeCategoryDataList, expenditureCatego
 
         setIncomeCategoryName('');
         getExpenditureCategory();
+    }
+
+    const updateExpenditureCategory = () => {
+        axios.put(`/expenditure_category/update/${expenditureCategoryId}`, {
+            'expenditureCategoryName' : expenditureCategoryName,
+        })
+        .then(response => {
+            closeModal();
+            getExpenditureCategory();
+        });
     }
 
     const deleteExpenditureCategory = (expenditureCategoryId) => {
@@ -222,9 +234,9 @@ export default function Income({ auth, incomeCategoryDataList, expenditureCatego
                                                         <div className="flex justify-center items-center gap-1">
                                                             <button
                                                                 className='mx-auto'
-                                                                onClick={() => showEditExpenditureCategoryModal(item.name)}
+                                                                onClick={() => showEditExpenditureCategoryModal(item.id, item.name)}
                                                             >
-                                                            <FontAwesomeIcon icon={faPenToSquare} />
+                                                                <FontAwesomeIcon icon={faPenToSquare} />
                                                             </button>
                                                             <button
                                                                 className='mx-auto'
@@ -358,7 +370,7 @@ export default function Income({ auth, incomeCategoryDataList, expenditureCatego
 
                         <PrimaryButton
                             className="ms-3"
-                            onClick={saveExpenditureCategory}
+                            onClick={updateExpenditureCategory}
                         >
                             支出カテゴリーを更新する
                         </PrimaryButton>
