@@ -40,6 +40,18 @@ final class ExpenditureCategoryRepository implements ExpenditureCategoryReposito
      * @param ExpenditureCategory $expenditureCategory
      * @return void
      */
+    public function edit(ExpenditureCategory $expenditureCategory): void
+    {
+        $this->expenditureCategoryModel->updateById(
+            $expenditureCategory->getId(),
+            $expenditureCategory->getName()->value()
+        );
+    }
+
+    /**
+     * @param ExpenditureCategory $expenditureCategory
+     * @return void
+     */
     public function remove(ExpenditureCategory $expenditureCategory): void
     {
         $this->expenditureCategoryModel->deleteById(
