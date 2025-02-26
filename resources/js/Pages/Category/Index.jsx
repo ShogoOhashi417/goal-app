@@ -44,19 +44,28 @@ export default function Income({ auth, incomeCategoryDataList, expenditureCatego
     }
 
     const [addExpenditureCategory, setAddExpenditureCategory] = useState(false);
+    const [editExpenditureCategory, setEditExpenditureCategory] = useState(false);
 
     const showExpenditureCategoryModal = () => {
         setAddExpenditureCategory(true);
     }
 
+    const [expenditureCategoryId, setExpenditureCategoryId] = useState(0);
+    const [expenditureCategoryName, setExpenditureCategoryName] = useState('');
+
+    const showEditExpenditureCategoryModal = (expenditureCategoryId,expenditureCategoryName) => {
+        setExpenditureCategoryId(expenditureCategoryId);
+        setExpenditureCategoryName(expenditureCategoryName);
+        setEditExpenditureCategory(true);
+    }
+
     const closeModal = () => {
         setAddCategory(false);
         setAddExpenditureCategory(false);
+        setEditExpenditureCategory(false);
     };
 
     const [incomeCategoryName, setIncomeCategoryName] = useState('');
-
-    const [expenditureCategoryName, setExpenditureCategoryName] = useState('');
 
     const changeIncomeCaterogyName = (event) => {
         setIncomeCategoryName(event.target.value);
@@ -88,6 +97,16 @@ export default function Income({ auth, incomeCategoryDataList, expenditureCatego
 
         setIncomeCategoryName('');
         getExpenditureCategory();
+    }
+
+    const updateExpenditureCategory = () => {
+        axios.put(`/expenditure_category/update/${expenditureCategoryId}`, {
+            'expenditureCategoryName' : expenditureCategoryName,
+        })
+        .then(response => {
+            closeModal();
+            getExpenditureCategory();
+        });
     }
 
     const deleteExpenditureCategory = (expenditureCategoryId) => {
@@ -213,7 +232,10 @@ export default function Income({ auth, incomeCategoryDataList, expenditureCatego
                                                         <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">{item.name}</td>
                                                     <td>
                                                         <div className="flex justify-center items-center gap-1">
-                                                            <button className='mx-auto'>
+                                                            <button
+                                                                className='mx-auto'
+                                                                onClick={() => showEditExpenditureCategoryModal(item.id, item.name)}
+                                                            >
                                                                 <FontAwesomeIcon icon={faPenToSquare} />
                                                             </button>
                                                             <button
@@ -311,6 +333,46 @@ export default function Income({ auth, incomeCategoryDataList, expenditureCatego
                             onClick={saveExpenditureCategory}
                         >
                             支出カテゴリーを追加する
+                        </PrimaryButton>
+                    </div>
+                </div>
+            </Modal>
+
+            <Modal show={editExpenditureCategory} onClose={closeModal}>
+                <div className="p-6">
+                    <h2 className="text-lg font-medium text-gray-900">
+                        支出カテゴリーを編集
+                    </h2>
+
+                    <p className="mt-1 text-sm text-gray-600">
+                        支出カテゴリーを編集してください
+                    </p>
+
+                    <div className="mt-6">
+                        <InputLabel htmlFor="expenditure_category" className="sr-only" />
+
+                        <TextInput
+                            id="expenditure_category"
+                            type="text"
+                            name="expenditure_category"
+                            className="mt-1 block w-3/4"
+                            isFocused
+                            placeholder="支出カテゴリー"
+                            value={expenditureCategoryName}
+                            onChange={changeExpenditureCaterogyName}
+                        />
+
+                        <InputError className="mt-2" />
+                    </div>
+
+                    <div className="mt-6 flex justify-end">
+                        <SecondaryButton onClick={closeModal}>キャンセル</SecondaryButton>
+
+                        <PrimaryButton
+                            className="ms-3"
+                            onClick={updateExpenditureCategory}
+                        >
+                            支出カテゴリーを更新する
                         </PrimaryButton>
                     </div>
                 </div>
