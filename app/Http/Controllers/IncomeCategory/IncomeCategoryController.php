@@ -11,8 +11,10 @@ use App\Infrastructure\Repository\Category\Income\IncomeCategoryRepository;
 use App\Application\UseCase\Category\Income\Fetch\FetchIncomeCategoryUseCase;
 use App\Application\UseCase\Category\Income\Create\CreateIncomeCategoryUseCase;
 use App\Application\UseCase\Category\Income\Delete\DeleteIncomeCategoryUseCase;
+use App\Application\UseCase\Category\Income\Update\UpdateIncomeCategoryUseCase;
 use App\Application\UseCase\Category\Income\Create\CreateIncomeCategoryInputData;
 use App\Application\UseCase\Category\Income\Delete\DeleteIncomeCategoryInputData;
+use App\Application\UseCase\Category\Income\Update\UpdateIncomeCategoryInputData;
 use App\Application\UseCase\Category\Expenditure\Fetch\FetchExpenditureCategoryUseCase;
 
 class IncomeCategoryController extends Controller
@@ -101,7 +103,18 @@ class IncomeCategoryController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $inputData = new UpdateIncomeCategoryInputData(
+            id: $id,
+            name: $request->incomeCategoryName
+        );
+
+        $updateIncomeCategoryUseCase = new UpdateIncomeCategoryUseCase(
+            new IncomeCategoryRepository(
+                new IncomeCategory()
+            )
+        );
+
+        $updateIncomeCategoryUseCase->handle($inputData);
     }
 
     /**
