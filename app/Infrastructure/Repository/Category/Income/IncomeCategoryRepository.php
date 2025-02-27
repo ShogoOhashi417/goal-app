@@ -40,6 +40,18 @@ final class IncomeCategoryRepository implements IncomeCategoryRepositoryInterfac
      * @param IncomeCategory $incomeCategory
      * @return void
      */
+    public function edit(IncomeCategory $incomeCategory): void
+    {
+        $this->incomeCategoryModel->updateIncomeCategory(
+            $incomeCategory->getId(),
+            $incomeCategory->getName()->value()
+        );
+    }
+
+    /**
+     * @param IncomeCategory $incomeCategory
+     * @return void
+     */
     public function remove(IncomeCategory $incomeCategory): void
     {
         $this->incomeCategoryModel->deleteById(
