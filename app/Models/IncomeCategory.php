@@ -49,4 +49,14 @@ class IncomeCategory extends Model
     {
         $this->where('id', $id)->delete();
     }
+
+    /**
+     * @param integer $id
+     * @param string $name
+     * @return void
+     */
+    public function updateIncomeCategory(int $id, string $name): void
+    {
+        $this->where('id', $id)->update(['name' => $name]);
+    }
 }

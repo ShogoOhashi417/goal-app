@@ -10,6 +10,8 @@ use App\Application\UseCase\Category\Expenditure\Create\CreateExpenditureCategor
 use App\Application\UseCase\Category\Expenditure\Delete\DeleteExpenditureCategoryUseCase;
 use App\Application\UseCase\Category\Expenditure\Create\CreateExpenditureCategoryInputData;
 use App\Application\UseCase\Category\Expenditure\Delete\DeleteExpenditureCategoryInputData;
+use App\Application\UseCase\Category\Expenditure\Update\UpdateExpenditureCategoryUseCase;
+use App\Application\UseCase\Category\Expenditure\Update\UpdateExpenditureCategoryInputData;
 
 class ExpenditureCategoryController extends Controller
 {
@@ -74,9 +76,20 @@ class ExpenditureCategoryController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
+        $inputData = new UpdateExpenditureCategoryInputData(
+            id: $id,
+            name: $request->expenditureCategoryName
+        );
+
+        $updateExpenditureCategoryUseCase = new UpdateExpenditureCategoryUseCase(
+            new ExpenditureCategoryRepository(
+                new ExpenditureCategory()
+            )
+        );
+
+        $updateExpenditureCategoryUseCase->handle($inputData);
     }
 
     public function delete(Request $request)

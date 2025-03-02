@@ -8,5 +8,6 @@ interface ExpenditureCategoryRepositoryInterface
 {
     public function fetchById(int $id): array;
     public function save(ExpenditureCategory $expenditureCategory): void;
+    public function edit(ExpenditureCategory $expenditureCategory): void;
     public function remove(ExpenditureCategory $expenditureCategory): void;
 }

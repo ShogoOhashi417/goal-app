@@ -60,10 +60,12 @@ Route::post('/expenditure/delete', [ExpenditureController::class, 'delete']);
 
 Route::get('/income_category/get', [IncomeCategoryController::class, 'get']);
 Route::post('/income_category/add', [IncomeCategoryController::class, 'store']);
+Route::put('/income_category/update/{id}', [IncomeCategoryController::class, 'update']);
 Route::post('/income_category/delete', [IncomeCategoryController::class, 'delete']);
 
 Route::get('/expenditure_category/get', [ExpenditureCategoryController::class, 'get']);
 Route::post('/expenditure_category/add', [ExpenditureCategoryController::class, 'store']);
+Route::put('/expenditure_category/update/{id}', [ExpenditureCategoryController::class, 'update']);
 Route::post('/expenditure_category/delete', [ExpenditureCategoryController::class, 'delete']);
 
 Route::get('/expenditure/export', [ExpenditureController::class, 'export']);

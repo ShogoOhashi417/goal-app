@@ -6,7 +6,20 @@ import HighchartsReact from 'highcharts-react-official';
 import YearSelectBox from "@/Components/YearSelectBox";
 
 export default function Report({ auth }) {
-    const [seriesList, setSeriesList] = useState([]);
+    const getMonth = (year, month, period) => {
+        const MONTHS_PER_YEAR = 12;
+
+        const resultMonth = month - period;
+        
+        if (resultMonth > 0) {
+            return year + "-" + String(resultMonth).padStart(2, '0');
+        }
+
+        return (year - 1) + "-" + String(resultMonth + MONTHS_PER_YEAR).padStart(2, '0');
+    }
+
+    const [totalChartOptions, setTotalChartOptions] = useState([]);
+    const [chartOptionsList, setChartOptionsList] = useState([]);
 
     const thisDate = new Date();
     const thisYear = thisDate.getFullYear();
@@ -14,18 +27,9 @@ export default function Report({ auth }) {
 
     const [dateList, setDateList] = useState(
         [
-            thisYear + '-01',
-            thisYear + '-02',
-            thisYear + '-03',
-            thisYear + '-04',
-            thisYear + '-05',
-            thisYear + '-06',
-            thisYear + '-07',
-            thisYear + '-08',
-            thisYear + '-09',
-            thisYear + '-10',
-            thisYear + '-11',
-            thisYear + '-12',
+            getMonth(thisYear, thisMonth, 2),
+            getMonth(thisYear, thisMonth, 1),
+            getMonth(thisYear, thisMonth, 0),
         ]
     );
 
@@ -107,18 +111,6 @@ export default function Report({ auth }) {
         }
     }
 
-    const getMonth = (year, month, period) => {
-        const MONTHS_PER_YEAR = 12;
-
-        const resultMonth = month - period;
-        
-        if (resultMonth > 0) {
-            return year + "-" + String(resultMonth).padStart(2, '0');
-        }
-
-        return (year - 1) + "-" + String(resultMonth + MONTHS_PER_YEAR).padStart(2, '0');
-    }
-
     const [expenditureInfoList, setExpenditureInfoList] = useState([]);
 
     const getIncomeCategory = async () => {
@@ -131,7 +123,9 @@ export default function Report({ auth }) {
     }, []);
 
     useEffect(() => {
-        const data = [];
+        const totalDataList = [];
+        const optionsList = [];
+
         Object.entries(expenditureInfoList).forEach(([categoryName, dateToAmountList]) => {
             const amountList = [];
             dateList.forEach((date) => {
@@ -139,47 +133,86 @@ export default function Report({ auth }) {
                 amountList.push(amount);
             });
 
-            data.push({
+            totalDataList.push({
                 name: categoryName,
                 data: amountList
             });
-        });
-        setSeriesList(data);
-    }, [expenditureInfoList, dateList]); 
 
-    const chartOptions = {
-        chart: {
-            type: 'column'
-        },
-        title: {
-            text: '月別支出額'
-        },
-        xAxis: {
-            categories: dateList
-        },
-        yAxis: {
-            title: {
-                text: '支出額 (万)'
+            optionsList.push({
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: `${categoryName}の月別支出額`
+                },
+                xAxis: {
+                    categories: dateList
+                },
+                yAxis: {
+                    title: {
+                        text: '支出額 (万)'
+                    },
+                    labels: {
+                        formatter: function() {
+                            return this.value / 10000 + '万';
+                        }
+                    }
+                },
+                legend: {
+                    reversed: true
+                },
+                plotOptions: {
+                    series: {
+                        stacking: 'normal',
+                        dataLabels: {
+                            enabled: true
+                        }
+                    }
+                },
+                series: [{
+                    name: categoryName,
+                    data: amountList
+                }]
+            });
+        });
+
+        const totalChartOptions = {
+            chart: {
+                type: 'column'
             },
-            labels: {
-                formatter: function() {
-                    return this.value / 10000 + '万';
+            title: {
+                text: '合計支出額'
+            },
+            xAxis: {
+                categories: dateList
+            },
+            yAxis: {
+                title: {
+                    text: '支出額 (万)'
+                },
+                labels: {
+                    formatter: function() {
+                        return this.value / 10000 + '万';
+                    }
                 }
-            }
-        },
-        legend: {
-            reversed: true
-        },
-        plotOptions: {
-            series: {
-                stacking: 'normal',
-                dataLabels: {
-                    enabled: true
+            },
+            legend: {
+                reversed: true
+            },
+            plotOptions: {
+                series: {
+                    stacking: 'normal',
+                    dataLabels: {
+                        enabled: true
+                    }
                 }
-            }
-        },
-        series: seriesList
-    };
+            },
+            series: totalDataList
+        };
+
+        setChartOptionsList(optionsList);
+        setTotalChartOptions(totalChartOptions);
+    }, [expenditureInfoList, dateList]); 
 
     return (
         <>
@@ -203,7 +236,7 @@ export default function Report({ auth }) {
                                 >
                                     {Array.from(relativePeriodList.entries()).map(([value, period], index) => (
                                         <React.Fragment key={value}>
-                                            <option value={value}>{ period }</option>
+                                            <option value={value} selected={value == THREE_MONTHS_PERIOD}>{ period }</option>
                                         </React.Fragment>
                                     ))}
                                 </select>
@@ -211,8 +244,17 @@ export default function Report({ auth }) {
                             <div className="mx-auto mt-3">
                                 <HighchartsReact
                                     highcharts={Highcharts}
-                                    options={chartOptions}
+                                    options={totalChartOptions}
                                 />
+
+                                {chartOptionsList.map((options, index) => (
+                                    <div key={index} className="mt-3">
+                                        <HighchartsReact
+                                            highcharts={Highcharts}
+                                            options={options}
+                                        />
+                                    </div>
+                                ))}
                             </div>
                         </div>
                     </div>
