@@ -85,8 +85,7 @@ export default function Expenditure({ auth, expenditure_info_list, expenditure_c
 
     const updateExpenditure = () => {
         const localCalendarDate = new Date(calendarDate.startDate).toLocaleString('sv-SE', { timeZone: 'Asia/Tokyo' });
-        axios.post('/expenditure/update', {
-            'id' : expenditureId,
+        axios.put(`/expenditure/update/${expenditureId}`, {
             'expenditure_name' : expenditureName,
             'expenditure_category_id' : expenditureCategoryId,
             'expenditure_amount': expenditureAmount,
