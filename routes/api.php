@@ -31,7 +31,7 @@ Route::prefix('v1')
         
         Route::get('/income', [IncomeController::class, 'get']);
         Route::post('/income', [IncomeController::class, 'create']);
-        Route::put('/income/{id}', [IncomeController::class, 'update']);
+        Route::put('/income/update/{id}', [IncomeController::class, 'update']);
         Route::delete('/income/{id}', [IncomeController::class, 'delete']);
 
         Route::get('/expenditure', [ExpenditureController::class, 'get']);

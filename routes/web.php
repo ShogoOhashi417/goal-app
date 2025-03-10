@@ -49,7 +49,7 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/income/get', [IncomeController::class, 'get']);
 Route::post('/income/add', [IncomeController::class, 'create']);
-Route::post('/income/update', [IncomeController::class, 'update']);
+Route::put('/income/update/{id}', [IncomeController::class, 'update']);
 Route::post('/income/delete', [IncomeController::class, 'delete']);
 
 Route::get('/expenditure/get', [ExpenditureController::class, 'get']);
