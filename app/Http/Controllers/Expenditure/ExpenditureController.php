@@ -104,7 +104,7 @@ class ExpenditureController extends Controller
             new CreateExpenditureInputData(
                 $request->expenditure_name,
                 (int)$request->expenditure_category_id,
-                $request->expenditure_amount,
+                (int)$request->expenditure_amount,
                 (new DateTime($request->calendar_date))->format('Y-m-d')
             )
         );
