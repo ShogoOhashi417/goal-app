@@ -74,7 +74,7 @@ class IncomeController extends Controller
             new CreateIncomeInputData(
                 $request->income_name,
                 (int)$request->income_category_id,
-                $request->income_amount,
+                (int)$request->income_amount,
                 (new DateTime($request->calendar_date))->format('Y-m-d')
             )
         );
