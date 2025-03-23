@@ -77,12 +77,23 @@ export default function BulkOperation({ auth }) {
 
     const [csvPreviewList, setCsvPreviewList] = useState([]);
 
+    const [fileName, setFileName] = useState("ファイルを選択してください");
+    const [isUploading, setIsUploading] = useState(false);
+    const [uploadMode, setUploadMode] = useState("add");
+
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        setFileName(file ? file.name : "ファイルを選択してください");
+        setIsUploading(true);
+    };
+
     const uploadCsv = () => {
         const fileInput = document.querySelector('input[name="csv"]');
         const formData = new FormData();
 
         if (fileInput.files.length > 0) {
             formData.append("csv", fileInput.files[0]);
+            formData.append("mode", uploadMode);
         }
         axios
             .post("/expenditure/import_csv", formData, {
@@ -164,15 +175,6 @@ export default function BulkOperation({ auth }) {
         addExpenditureRef.current.classList.add("hidden");
     };
 
-    const [fileName, setFileName] = useState("ファイルを選択してください");
-    const [isUploading, setIsUploading] = useState(false);
-
-    const handleFileChange = (e) => {
-        const file = e.target.files[0];
-        setFileName(file ? file.name : "ファイルを選択してください");
-        setIsUploading(true);
-    };
-
     return (
         <>
             <AuthenticatedLayout
@@ -183,7 +185,7 @@ export default function BulkOperation({ auth }) {
                     </h2>
                 }
             >
-                <Head title="レポート" />
+                <Head title="一括処理" />
                 <div className="flex flex-col min-h-screen">
                     <div className="w-5/6 mx-auto my-3 flex-1 relative sm:justify-center bg-dots-darker bg-center dark:bg-dots-lighter dark:bg-gray-900 selection:text-white">
                         <div className="container">
@@ -254,12 +256,132 @@ export default function BulkOperation({ auth }) {
                                     <hr className="my-5" />
 
                                     <h3 className="text-lg font-semibold text-gray-900 mb-3">
-                                        STEP.2 CSVファイルをアップロードする
+                                        STEP.2 アップロード方式の選択
                                     </h3>
 
                                     <p className="text-gray-600 text-sm mb-2">
-                                        CSVファイルをアップロードする
+                                        処理方式を選択してください。
                                     </p>
+
+                                    <div className="my-3 mb-4">
+                                        <table className="w-full border-collapse rounded-lg overflow-hidden">
+                                            <thead className="bg-gray-100">
+                                                <tr>
+                                                    <th className="w-16 p-2 border border-gray-200"></th>
+                                                    <th className="p-2 border border-gray-200 text-left">
+                                                        処理方式
+                                                    </th>
+                                                    <th className="p-2 border border-gray-200 text-left">
+                                                        説明
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr className="bg-gray-50 border border-gray-200">
+                                                    <td
+                                                        className="p-3 border border-gray-200 w-16 text-center cursor-pointer"
+                                                        onClick={() =>
+                                                            setUploadMode("add")
+                                                        }
+                                                    >
+                                                        <input
+                                                            id="upload-mode-add"
+                                                            type="radio"
+                                                            name="upload-mode"
+                                                            value="add"
+                                                            checked={
+                                                                uploadMode ===
+                                                                "add"
+                                                            }
+                                                            onChange={() =>
+                                                                setUploadMode(
+                                                                    "add"
+                                                                )
+                                                            }
+                                                            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500"
+                                                        />
+                                                    </td>
+                                                    <td
+                                                        className="p-3 border border-gray-200 cursor-pointer"
+                                                        onClick={() =>
+                                                            setUploadMode("add")
+                                                        }
+                                                    >
+                                                        <label
+                                                            htmlFor="upload-mode-add"
+                                                            className="text-sm font-medium text-gray-900 cursor-pointer block"
+                                                        >
+                                                            新規追加
+                                                        </label>
+                                                    </td>
+                                                    <td
+                                                        className="p-3 border border-gray-200 cursor-pointer"
+                                                        onClick={() =>
+                                                            setUploadMode("add")
+                                                        }
+                                                    >
+                                                        <span className="text-sm text-gray-600">
+                                                            既存データを残したまま、新しいデータを追加します
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                                <tr className="bg-white border border-gray-200">
+                                                    <td
+                                                        className="p-3 border border-gray-200 w-16 text-center cursor-pointer"
+                                                        onClick={() =>
+                                                            setUploadMode(
+                                                                "overwrite"
+                                                            )
+                                                        }
+                                                    >
+                                                        <input
+                                                            id="upload-mode-overwrite"
+                                                            type="radio"
+                                                            name="upload-mode"
+                                                            value="overwrite"
+                                                            checked={
+                                                                uploadMode ===
+                                                                "overwrite"
+                                                            }
+                                                            onChange={() =>
+                                                                setUploadMode(
+                                                                    "overwrite"
+                                                                )
+                                                            }
+                                                            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500"
+                                                        />
+                                                    </td>
+                                                    <td
+                                                        className="p-3 border border-gray-200 cursor-pointer"
+                                                        onClick={() =>
+                                                            setUploadMode(
+                                                                "overwrite"
+                                                            )
+                                                        }
+                                                    >
+                                                        <label
+                                                            htmlFor="upload-mode-overwrite"
+                                                            className="text-sm font-medium text-gray-900 cursor-pointer block"
+                                                        >
+                                                            上書き
+                                                        </label>
+                                                    </td>
+                                                    <td
+                                                        className="p-3 border border-gray-200 cursor-pointer"
+                                                        onClick={() =>
+                                                            setUploadMode(
+                                                                "overwrite"
+                                                            )
+                                                        }
+                                                    >
+                                                        <span className="text-sm text-gray-600">
+                                                            既存データを削除し、アップロードデータで置き換えます
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
 
                                     <div className="my-3 flex items-center">
                                         <label
