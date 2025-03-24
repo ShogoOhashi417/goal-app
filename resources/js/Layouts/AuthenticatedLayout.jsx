@@ -93,12 +93,6 @@ export default function Authenticated({ user, header, children }) {
                                                 className={`inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium leading-4 rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150 ${
                                                     route().current(
                                                         "expenditure"
-                                                    ) ||
-                                                    route().current(
-                                                        "expenditure.fixed"
-                                                    ) ||
-                                                    route().current(
-                                                        "expenditure.temporary"
                                                     )
                                                         ? "border-b-2 border-indigo-400 text-gray-900"
                                                         : ""
@@ -129,14 +123,6 @@ export default function Authenticated({ user, header, children }) {
                                             )}
                                         >
                                             支出管理
-                                        </Dropdown.Link>
-                                        <Dropdown.Link
-                                            href={route("expenditure.fixed")}
-                                            active={route().current(
-                                                "expenditure.fixed"
-                                            )}
-                                        >
-                                            固定支出
                                         </Dropdown.Link>
                                     </Dropdown.Content>
                                 </Dropdown>
@@ -282,12 +268,6 @@ export default function Authenticated({ user, header, children }) {
                             active={route().current("expenditure")}
                         >
                             支出管理
-                        </ResponsiveNavLink>
-                        <ResponsiveNavLink
-                            href={route("expenditure.fixed")}
-                            active={route().current("expenditure.fixed")}
-                        >
-                            固定支出
                         </ResponsiveNavLink>
                         <ResponsiveNavLink
                             href={route("category")}

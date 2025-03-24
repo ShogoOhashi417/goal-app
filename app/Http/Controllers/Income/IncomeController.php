@@ -113,4 +113,28 @@ class IncomeController extends Controller
             )
         );
     }
+
+    public function fixed()
+    {
+        $fetchIncomeUseCase = new FetchIncomeUseCase(
+            new IncomeQueryService(
+                new IncomeModel()
+            )
+        );
+
+        $incomeInfoList = $fetchIncomeUseCase->handle();
+
+        $fetchIncomeCategoryUseCase = new FetchIncomeCategoryUseCase(
+            new IncomeCategory()
+        );
+
+        $incomeCategoryInfoList = $fetchIncomeCategoryUseCase->handle();
+        
+        return Inertia::render('Income/Fixed',
+            [
+                'incomeDataList' => $incomeInfoList,
+                'IncomeCategoryDataList' => $incomeCategoryInfoList
+            ]
+        );
+    }
 }
