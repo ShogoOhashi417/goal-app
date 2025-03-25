@@ -124,6 +124,14 @@ export default function Authenticated({ user, header, children }) {
                                         >
                                             支出管理
                                         </Dropdown.Link>
+                                        <Dropdown.Link
+                                            href={route("expenditure.fixed")}
+                                            active={route().current(
+                                                "expenditure.fixed"
+                                            )}
+                                        >
+                                            固定支出
+                                        </Dropdown.Link>
                                     </Dropdown.Content>
                                 </Dropdown>
                             </div>
@@ -268,6 +276,12 @@ export default function Authenticated({ user, header, children }) {
                             active={route().current("expenditure")}
                         >
                             支出管理
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            href={route("expenditure.fixed")}
+                            active={route().current("expenditure.fixed")}
+                        >
+                            固定支出
                         </ResponsiveNavLink>
                         <ResponsiveNavLink
                             href={route("category")}
