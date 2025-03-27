@@ -31,9 +31,11 @@
         "@inertiajs/inertia": "^0.11.1",
         "@inertiajs/inertia-react": "^0.8.1",
         "@tanstack/react-table": "^8.20.5",
+        "date-fns": "^4.1.0",
         "esbuild": "^0.19.9",
         "highcharts": "^11.4.8",
         "highcharts-react-official": "^3.2.1",
+        "react-datepicker": "^8.2.1",
         "react-router-dom": "^7.0.2",
         "react-tailwindcss-datepicker": "^1.7.2",
         "tailwind-datepicker-react": "^1.4.3"
