@@ -17,6 +17,12 @@ import {
     getSortedRowModel,
 } from "@tanstack/react-table";
 
+// DatePickerの幅を100%にするためのスタイル
+const globalStyles = `
+	.react-datepicker-wrapper {
+    width: 100% !important;
+}`;
+
 export default function Fixed({
     auth,
     expenditure_info_list,
@@ -232,6 +238,7 @@ export default function Fixed({
 
     return (
         <>
+            <style>{globalStyles}</style>
             <AuthenticatedLayout
                 user={auth.user}
                 header={
@@ -595,11 +602,11 @@ export default function Fixed({
                             <div className="w-5/12 ml-auto">
                                 <label
                                     htmlFor="name"
-                                    className="flex mb-2 text-sm font-medium text-gray-900 ml-4"
+                                    className="flex mb-2 text-sm font-medium text-gray-900"
                                 >
                                     終了
                                 </label>
-                                <div className="flex justify-end">
+                                <div className="">
                                     <DatePicker
                                         selected={periodEndDate}
                                         onChange={(date) =>

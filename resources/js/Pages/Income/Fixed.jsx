@@ -6,12 +6,22 @@ import React, { useEffect } from "react";
 import { useRef, useState } from "react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { format } from "date-fns";
+import ja from "date-fns/locale/ja";
 import {
     createColumnHelper,
     useReactTable,
     getCoreRowModel,
     getSortedRowModel,
 } from "@tanstack/react-table";
+
+// DatePickerの幅を100%にするためのスタイル
+const globalStyles = `
+	.react-datepicker-wrapper {
+    width: 100% !important;
+}`;
 
 export default function Fixed({
     auth,
@@ -24,6 +34,11 @@ export default function Fixed({
     const [incomeName, setIncomeName] = useState("");
     const [incomeCategoryId, setIncomeCategoryId] = useState(0);
     const [incomeAmount, setIncomeAmount] = useState(0);
+    const [periodStartDate, setPeriodStartDate] = useState(null);
+    const [periodEndDate, setPeriodEndDate] = useState(null);
+    const [periodType, setPeriodType] = useState("month");
+    const [paymentDay, setPaymentDay] = useState(1);
+    const [paymentMonth, setPaymentMonth] = useState(1);
 
     const changeIncomeName = (event) => {
         setIncomeName(event.target.value);
@@ -48,12 +63,22 @@ export default function Fixed({
         incomeId,
         incomeName,
         incomeCategoryId,
-        incomeAmount
+        incomeAmount,
+        periodStartDate,
+        periodEndDate,
+        periodType,
+        paymentDay,
+        paymentMonth
     ) => {
         setIncomeId(incomeId);
         setIncomeName(incomeName);
         setIncomeCategoryId(incomeCategoryId);
         setIncomeAmount(incomeAmount);
+        setPeriodStartDate(periodStartDate ? new Date(periodStartDate) : null);
+        setPeriodEndDate(periodEndDate ? new Date(periodEndDate) : null);
+        setPeriodType(periodType);
+        setPaymentDay(paymentDay);
+        setPaymentMonth(paymentMonth);
         updateIncomeRef.current.classList.remove("hidden");
     };
 
@@ -65,36 +90,76 @@ export default function Fixed({
     const getInfo = () => {};
 
     const addIncome = () => {
-        // axios
-        //     .post("/fixed-income/add", {
-        //         income_name: incomeName,
-        //         income_category_id: incomeCategoryId,
-        //         income_amount: incomeAmount,
-        //     })
-        //     .then((response) => {
-        //         getInfo();
-        //         closeModal();
-        //     });
-        // setIncomeName("");
-        // setIncomeCategoryId(0);
-        // setIncomeAmount(0);
+        const localPeriodStartDate = periodStartDate
+            ? format(
+                  periodStartDate,
+                  periodType === "month" ? "yyyy-MM-01" : "yyyy-01-01"
+              )
+            : null;
+        const localPeriodEndDate = periodEndDate
+            ? format(
+                  periodEndDate,
+                  periodType === "month" ? "yyyy-MM-01" : "yyyy-01-01"
+              )
+            : null;
+
+        axios
+            .post("/fixed-income/add", {
+                income_name: incomeName,
+                income_category_id: incomeCategoryId,
+                income_amount: incomeAmount,
+                period_start_date: localPeriodStartDate,
+                period_end_date: localPeriodEndDate,
+                payment_day: periodType === "month" ? paymentDay : null,
+                payment_month: periodType === "year" ? paymentMonth : null,
+            })
+            .then((response) => {
+                getInfo();
+                closeModal();
+            });
+
+        setIncomeName("");
+        setIncomeCategoryId(0);
+        setIncomeAmount(0);
+        setPeriodStartDate(null);
+        setPeriodEndDate(null);
     };
 
     const updateIncome = () => {
-        // axios
-        //     .put(`/fixed-income/update/${incomeId}`, {
-        //         income_name: incomeName,
-        //         income_category_id: incomeCategoryId,
-        //         income_amount: incomeAmount,
-        //     })
-        //     .then((response) => {
-        //         getInfo();
-        //         closeModal();
-        //     });
-        // setIncomeId(0);
-        // setIncomeName("");
-        // setIncomeCategoryId(0);
-        // setIncomeAmount(0);
+        const localPeriodStartDate = periodStartDate
+            ? format(
+                  periodStartDate,
+                  periodType === "month" ? "yyyy-MM-01" : "yyyy-01-01"
+              )
+            : null;
+        const localPeriodEndDate = periodEndDate
+            ? format(
+                  periodEndDate,
+                  periodType === "month" ? "yyyy-MM-01" : "yyyy-01-01"
+              )
+            : null;
+
+        axios
+            .put(`/fixed-income/update/${incomeId}`, {
+                income_name: incomeName,
+                income_category_id: incomeCategoryId,
+                income_amount: incomeAmount,
+                period_start_date: localPeriodStartDate,
+                period_end_date: localPeriodEndDate,
+                payment_day: periodType === "month" ? paymentDay : null,
+                payment_month: periodType === "year" ? paymentMonth : null,
+            })
+            .then((response) => {
+                getInfo();
+                closeModal();
+            });
+
+        setIncomeId(0);
+        setIncomeName("");
+        setIncomeCategoryId(0);
+        setIncomeAmount(0);
+        setPeriodStartDate(null);
+        setPeriodEndDate(null);
     };
 
     const deleteIncome = (incomeId) => {
@@ -155,6 +220,7 @@ export default function Fixed({
 
     return (
         <>
+            <style>{globalStyles}</style>
             <AuthenticatedLayout
                 user={auth.user}
                 header={
@@ -256,7 +322,22 @@ export default function Fixed({
                                                                                 .category_id,
                                                                             row.getValue(
                                                                                 "amount"
-                                                                            )
+                                                                            ),
+                                                                            row
+                                                                                .original
+                                                                                .period_start_date,
+                                                                            row
+                                                                                .original
+                                                                                .period_end_date,
+                                                                            row
+                                                                                .original
+                                                                                .period_type,
+                                                                            row
+                                                                                .original
+                                                                                .payment_day,
+                                                                            row
+                                                                                .original
+                                                                                .payment_month
                                                                         )
                                                                     }
                                                                 >
@@ -331,7 +412,7 @@ export default function Fixed({
                             </svg>
                         </button>
                     </div>
-                    <div className="grid gap-4 mb-4 grid-cols-2">
+                    <div className="grid gap-4 mb-4 grid-cols-2 mt-3">
                         <div className="col-span-2">
                             <label
                                 htmlFor="name"
@@ -386,6 +467,161 @@ export default function Fixed({
                                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                                 min="1"
                             />
+                        </div>
+                        <div className="col-span-2 gap-4">
+                            <label
+                                htmlFor="name"
+                                className="block mb-2 text-sm font-medium text-gray-900"
+                            >
+                                払込タイプ
+                            </label>
+                            <div className="flex items-center gap-4">
+                                <div className="flex items-center">
+                                    <input
+                                        type="radio"
+                                        id="period-type-month"
+                                        name="period-type"
+                                        value="month"
+                                        checked={periodType === "month"}
+                                        onChange={(e) => {
+                                            setPeriodType(e.target.value);
+                                            setPaymentDay(1);
+                                        }}
+                                        className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500"
+                                    />
+                                    <label
+                                        htmlFor="period-type-month"
+                                        className="ms-2 text-sm font-medium text-gray-900"
+                                    >
+                                        毎月
+                                    </label>
+                                </div>
+                                <div className="flex items-center">
+                                    <input
+                                        type="radio"
+                                        id="period-type-year"
+                                        name="period-type"
+                                        value="year"
+                                        checked={periodType === "year"}
+                                        onChange={(e) => {
+                                            setPeriodType(e.target.value);
+                                            setPaymentMonth(1);
+                                        }}
+                                        className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500"
+                                    />
+                                    <label
+                                        htmlFor="period-type-year"
+                                        className="ms-2 text-sm font-medium text-gray-900"
+                                    >
+                                        毎年
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        {periodType === "month" && (
+                            <div className="col-span-2">
+                                <label
+                                    htmlFor="payment_day"
+                                    className="block mb-2 text-sm font-medium text-gray-900"
+                                >
+                                    受け取り日
+                                </label>
+                                <select
+                                    id="payment_day"
+                                    value={paymentDay}
+                                    onChange={(e) =>
+                                        setPaymentDay(Number(e.target.value))
+                                    }
+                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                                >
+                                    {[...Array(31)].map((_, i) => (
+                                        <option key={i + 1} value={i + 1}>
+                                            {i + 1}日
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                        )}
+                        {periodType === "year" && (
+                            <div className="col-span-2">
+                                <label
+                                    htmlFor="payment_month"
+                                    className="block mb-2 text-sm font-medium text-gray-900"
+                                >
+                                    支払月
+                                </label>
+                                <select
+                                    id="payment_month"
+                                    value={paymentMonth}
+                                    onChange={(e) =>
+                                        setPaymentMonth(Number(e.target.value))
+                                    }
+                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                                >
+                                    {[...Array(12)].map((_, i) => (
+                                        <option key={i + 1} value={i + 1}>
+                                            {i + 1}月
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                        )}
+                        <div className="col-span-2 flex gap-4">
+                            <div className="w-5/12 mr-auto">
+                                <label
+                                    htmlFor="name"
+                                    className="block mb-2 text-sm font-medium text-gray-900"
+                                >
+                                    開始
+                                </label>
+                                <DatePicker
+                                    selected={periodStartDate}
+                                    onChange={(date) =>
+                                        setPeriodStartDate(date)
+                                    }
+                                    dateFormat={
+                                        periodType === "month"
+                                            ? "yyyy年MM月"
+                                            : "yyyy年"
+                                    }
+                                    showMonthYearPicker={periodType === "month"}
+                                    showYearPicker={periodType === "year"}
+                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                                    locale={ja}
+                                />
+                            </div>
+                            <div className="flex items-center mt-7">
+                                <span className="text-gray-900 text-lg">
+                                    〜
+                                </span>
+                            </div>
+                            <div className="w-5/12 ml-auto">
+                                <label
+                                    htmlFor="name"
+                                    className="flex mb-2 text-sm font-medium text-gray-900"
+                                >
+                                    終了
+                                </label>
+                                <div className="">
+                                    <DatePicker
+                                        selected={periodEndDate}
+                                        onChange={(date) =>
+                                            setPeriodEndDate(date)
+                                        }
+                                        dateFormat={
+                                            periodType === "month"
+                                                ? "yyyy年MM月"
+                                                : "yyyy年"
+                                        }
+                                        showMonthYearPicker={
+                                            periodType === "month"
+                                        }
+                                        showYearPicker={periodType === "year"}
+                                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 text-right"
+                                        locale={ja}
+                                    />
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <button
@@ -503,11 +739,154 @@ export default function Fixed({
                                 min="1"
                             />
                         </div>
+                        <div className="col-span-2 flex gap-4 mb-4">
+                            <div className="flex items-center gap-4">
+                                <div className="flex items-center">
+                                    <input
+                                        type="radio"
+                                        id="period-type-month-edit"
+                                        name="period-type-edit"
+                                        value="month"
+                                        checked={periodType === "month"}
+                                        onChange={(e) => {
+                                            setPeriodType(e.target.value);
+                                            setPaymentDay(1);
+                                        }}
+                                        className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500"
+                                    />
+                                    <label
+                                        htmlFor="period-type-month-edit"
+                                        className="ms-2 text-sm font-medium text-gray-900"
+                                    >
+                                        月払い
+                                    </label>
+                                </div>
+                                <div className="flex items-center">
+                                    <input
+                                        type="radio"
+                                        id="period-type-year-edit"
+                                        name="period-type-edit"
+                                        value="year"
+                                        checked={periodType === "year"}
+                                        onChange={(e) => {
+                                            setPeriodType(e.target.value);
+                                            setPaymentMonth(1);
+                                        }}
+                                        className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500"
+                                    />
+                                    <label
+                                        htmlFor="period-type-year-edit"
+                                        className="ms-2 text-sm font-medium text-gray-900"
+                                    >
+                                        年払い
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        {periodType === "month" && (
+                            <div className="col-span-2">
+                                <label
+                                    htmlFor="payment_day_edit"
+                                    className="block mb-2 text-sm font-medium text-gray-900"
+                                >
+                                    支払日
+                                </label>
+                                <select
+                                    id="payment_day_edit"
+                                    value={paymentDay}
+                                    onChange={(e) =>
+                                        setPaymentDay(Number(e.target.value))
+                                    }
+                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                                >
+                                    {[...Array(31)].map((_, i) => (
+                                        <option key={i + 1} value={i + 1}>
+                                            {i + 1}日
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                        )}
+                        {periodType === "year" && (
+                            <div className="col-span-2">
+                                <label
+                                    htmlFor="payment_month_edit"
+                                    className="block mb-2 text-sm font-medium text-gray-900"
+                                >
+                                    支払月
+                                </label>
+                                <select
+                                    id="payment_month_edit"
+                                    value={paymentMonth}
+                                    onChange={(e) =>
+                                        setPaymentMonth(Number(e.target.value))
+                                    }
+                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                                >
+                                    {[...Array(12)].map((_, i) => (
+                                        <option key={i + 1} value={i + 1}>
+                                            {i + 1}月
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                        )}
+                        <div className="col-span-2 flex gap-4">
+                            <div className="w-5/12">
+                                <label
+                                    htmlFor="name"
+                                    className="block mb-2 text-sm font-medium text-gray-900"
+                                >
+                                    開始
+                                </label>
+                                <DatePicker
+                                    selected={periodStartDate}
+                                    onChange={(date) =>
+                                        setPeriodStartDate(date)
+                                    }
+                                    dateFormat={
+                                        periodType === "month"
+                                            ? "yyyy年MM月"
+                                            : "yyyy年"
+                                    }
+                                    showMonthYearPicker={periodType === "month"}
+                                    showYearPicker={periodType === "year"}
+                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                                    locale={ja}
+                                />
+                            </div>
+                            <div className="flex items-center mt-7">
+                                <span className="text-gray-900 text-lg">
+                                    〜
+                                </span>
+                            </div>
+                            <div className="w-5/12 ml-auto">
+                                <label
+                                    htmlFor="name"
+                                    className="block mb-2 text-sm font-medium text-gray-900"
+                                >
+                                    終了
+                                </label>
+                                <DatePicker
+                                    selected={periodEndDate}
+                                    onChange={(date) => setPeriodEndDate(date)}
+                                    dateFormat={
+                                        periodType === "month"
+                                            ? "yyyy年MM月"
+                                            : "yyyy年"
+                                    }
+                                    showMonthYearPicker={periodType === "month"}
+                                    showYearPicker={periodType === "year"}
+                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 text-right"
+                                    locale={ja}
+                                />
+                            </div>
+                        </div>
                     </div>
                     <button
                         onClick={updateIncome}
                         type="submit"
-                        className="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                        className="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mt-8"
                     >
                         <svg
                             className="me-1 -ms-1 w-5 h-5"
