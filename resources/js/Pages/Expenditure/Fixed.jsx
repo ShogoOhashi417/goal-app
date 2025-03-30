@@ -442,6 +442,7 @@ export default function Fixed({
                                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                                 name=""
                                 id=""
+                                value={expenditureCategoryId}
                                 onChange={changeExpenditureCategoryId}
                             >
                                 <option value="">選択してください</option>
@@ -687,7 +688,7 @@ export default function Fixed({
                         </button>
                     </div>
                     <div className="grid gap-4 mb-4 grid-cols-2">
-                        <div className="col-span-2">
+                        <div className="col-span-2 mt-3">
                             <label
                                 htmlFor="name"
                                 className="block mb-2 text-sm font-medium text-gray-900"
@@ -746,58 +747,13 @@ export default function Fixed({
                                 min="1"
                             />
                         </div>
-                        <div className="col-span-2 flex gap-4">
-                            <div className="w-5/12">
-                                <label
-                                    htmlFor="name"
-                                    className="block mb-2 text-sm font-medium text-gray-900"
-                                >
-                                    開始
-                                </label>
-                                <DatePicker
-                                    selected={periodStartDate}
-                                    onChange={(date) =>
-                                        setPeriodStartDate(date)
-                                    }
-                                    dateFormat={
-                                        periodType === "month"
-                                            ? "yyyy年MM月"
-                                            : "yyyy年"
-                                    }
-                                    showMonthYearPicker={periodType === "month"}
-                                    showYearPicker={periodType === "year"}
-                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-                                    locale={ja}
-                                />
-                            </div>
-                            <div className="flex items-center mt-7">
-                                <span className="text-gray-900 text-lg">
-                                    〜
-                                </span>
-                            </div>
-                            <div className="w-5/12 ml-auto">
-                                <label
-                                    htmlFor="name"
-                                    className="block mb-2 text-sm font-medium text-gray-900"
-                                >
-                                    終了
-                                </label>
-                                <DatePicker
-                                    selected={periodEndDate}
-                                    onChange={(date) => setPeriodEndDate(date)}
-                                    dateFormat={
-                                        periodType === "month"
-                                            ? "yyyy年MM月"
-                                            : "yyyy年"
-                                    }
-                                    showMonthYearPicker={periodType === "month"}
-                                    showYearPicker={periodType === "year"}
-                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 text-right"
-                                    locale={ja}
-                                />
-                            </div>
-                        </div>
-                        <div className="col-span-2 flex gap-4 mb-4">
+                        <div className="col-span-2 gap-4">
+                            <label
+                                htmlFor="name"
+                                className="block mb-2 text-sm font-medium text-gray-900"
+                            >
+                                払込タイプ
+                            </label>
                             <div className="flex items-center gap-4">
                                 <div className="flex items-center">
                                     <input
@@ -889,6 +845,63 @@ export default function Fixed({
                                 </select>
                             </div>
                         )}
+                        <div className="col-span-2 flex gap-4">
+                            <div className="w-5/12 mr-auto">
+                                <label
+                                    htmlFor="name"
+                                    className="block mb-2 text-sm font-medium text-gray-900"
+                                >
+                                    開始
+                                </label>
+                                <DatePicker
+                                    selected={periodStartDate}
+                                    onChange={(date) =>
+                                        setPeriodStartDate(date)
+                                    }
+                                    dateFormat={
+                                        periodType === "month"
+                                            ? "yyyy年MM月"
+                                            : "yyyy年"
+                                    }
+                                    showMonthYearPicker={periodType === "month"}
+                                    showYearPicker={periodType === "year"}
+                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                                    locale={ja}
+                                />
+                            </div>
+                            <div className="flex items-center mt-7">
+                                <span className="text-gray-900 text-lg">
+                                    〜
+                                </span>
+                            </div>
+                            <div className="w-5/12 ml-auto">
+                                <label
+                                    htmlFor="name"
+                                    className="flex mb-2 text-sm font-medium text-gray-900"
+                                >
+                                    終了
+                                </label>
+                                <div className="">
+                                    <DatePicker
+                                        selected={periodEndDate}
+                                        onChange={(date) =>
+                                            setPeriodEndDate(date)
+                                        }
+                                        dateFormat={
+                                            periodType === "month"
+                                                ? "yyyy年MM月"
+                                                : "yyyy年"
+                                        }
+                                        showMonthYearPicker={
+                                            periodType === "month"
+                                        }
+                                        showYearPicker={periodType === "year"}
+                                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 text-right"
+                                        locale={ja}
+                                    />
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <button
                         onClick={updateExpenditure}
