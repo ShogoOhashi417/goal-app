@@ -104,13 +104,14 @@ export default function Fixed({
 
         axios
             .post("/expenditure/fixed/add", {
-                expenditure_name: expenditureName,
-                expenditure_category_id: expenditureCategoryId,
-                expenditure_amount: expenditureAmount,
-                period_start_date: localPeriodStartDate,
-                period_end_date: localPeriodEndDate,
+                name: expenditureName,
+                category_id: expenditureCategoryId,
+                amount: expenditureAmount,
+                cycle_unit: periodType,
                 payment_day: periodType === "month" ? paymentDay : null,
                 payment_month: periodType === "year" ? paymentMonth : null,
+                start_date: localPeriodStartDate,
+                end_date: localPeriodEndDate,
             })
             .then((response) => {
                 getInfo();
