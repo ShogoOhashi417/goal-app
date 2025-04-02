@@ -87,4 +87,12 @@ final class ExpenditureRepository implements ExpenditureRepositoryInterface
             $expenditure->getId(),
         );
     }
+
+    /**
+     * @return integer
+     */
+    public function getLastInsertId(): int
+    {
+        return $this->expenditureModel->getLastInsertId();
+    }
 }
