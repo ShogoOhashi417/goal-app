@@ -17,7 +17,6 @@ final class FixedExpenditure extends Model
         'payment_month', 
         'start_date', 
         'end_date', 
-        'payment_date'
     ];
 
     /**
@@ -35,7 +34,6 @@ final class FixedExpenditure extends Model
      * @param integer|null $paymentMonth
      * @param string $startDate
      * @param string|null $endDate
-     * @param string $paymentDate
      * @return void
      */
     public function createFixedExpenditure(
@@ -45,7 +43,6 @@ final class FixedExpenditure extends Model
         ?int $paymentMonth,
         string $startDate,
         ?string $endDate,
-        string $paymentDate
     ): void
     {
         $this->create([
@@ -55,7 +52,6 @@ final class FixedExpenditure extends Model
             'payment_month' => $paymentMonth,
             'start_date' => $startDate,
             'end_date' => $endDate,
-            'payment_date' => $paymentDate
         ]);
     }
 
