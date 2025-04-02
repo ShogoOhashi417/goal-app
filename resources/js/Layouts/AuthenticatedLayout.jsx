@@ -33,20 +33,17 @@ export default function Authenticated({ user, header, children }) {
                             <div className="hidden space-x-8 sm:ms-10 sm:flex items-center">
                                 <Dropdown>
                                     <Dropdown.Trigger>
-                                        <span className="inline-flex rounded-md">
+                                        <span
+                                            className={`inline-flex bg-indigo-50 ${
+                                                route().current("income") ||
+                                                route().current("income.fixed")
+                                                    ? "border-b-2 border-indigo-400 text-gray-900"
+                                                    : ""
+                                            }`}
+                                        >
                                             <button
                                                 type="button"
-                                                className={`inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium leading-4 rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150 ${
-                                                    route().current("income") ||
-                                                    route().current(
-                                                        "income.fixed"
-                                                    ) ||
-                                                    route().current(
-                                                        "income.temporary"
-                                                    )
-                                                        ? "border-b-2 border-indigo-400 text-gray-900"
-                                                        : ""
-                                                }`}
+                                                className="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium leading-4 rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150 border-b-2 border-indigo-400 text-gray-900"
                                             >
                                                 収入管理
                                                 <svg
@@ -87,7 +84,18 @@ export default function Authenticated({ user, header, children }) {
                             <div className="hidden space-x-8 sm:ms-10 sm:flex items-center">
                                 <Dropdown>
                                     <Dropdown.Trigger>
-                                        <span className="inline-flex rounded-md">
+                                        <span
+                                            className={`inline-flex bg-indigo-50 ${
+                                                route().current(
+                                                    "expenditure"
+                                                ) ||
+                                                route().current(
+                                                    "expenditure.fixed"
+                                                )
+                                                    ? "border-b-2 border-indigo-400 text-gray-900"
+                                                    : ""
+                                            }`}
+                                        >
                                             <button
                                                 type="button"
                                                 className={`inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium leading-4 rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150 ${
