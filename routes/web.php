@@ -7,6 +7,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Income\IncomeController;
 use App\Http\Controllers\ExpenditureCategoryController;
 use App\Http\Controllers\Expenditure\ExpenditureController;
+use App\Http\Controllers\Expenditure\FixedExpenditureController;
 use App\Http\Controllers\IncomeCategory\IncomeCategoryController;
 
 /*
@@ -60,6 +61,11 @@ Route::get('/expenditure/get_by_category', [ExpenditureController::class, 'fetch
 Route::post('/expenditure/add', [ExpenditureController::class, 'create']);
 Route::put('/expenditure/update/{id}', [ExpenditureController::class, 'update']);
 Route::post('/expenditure/delete', [ExpenditureController::class, 'delete']);
+
+Route::get('/expenditure/fixed/get', [FixedExpenditureController::class, 'get']);
+Route::post('/expenditure/fixed/add', [FixedExpenditureController::class, 'create']);
+Route::put('/expenditure/fixed/update/{id}', [FixedExpenditureController::class, 'update']);
+Route::post('/expenditure/fixed/delete', [FixedExpenditureController::class, 'delete']);
 
 Route::get('/income_category/get', [IncomeCategoryController::class, 'get']);
 Route::post('/income_category/add', [IncomeCategoryController::class, 'store']);

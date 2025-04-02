@@ -93,4 +93,12 @@ final class Expenditure extends Model
     {
         $this->where('id', $id)->delete();
     }
+
+    /**
+     * @return integer
+     */
+    public function getLastInsertId(): int
+    {
+        return $this->getConnection()->getPdo()->lastInsertId();
+    }
 }
