@@ -34,7 +34,7 @@ Route::get('/income', [IncomeController::class, 'index'])->middleware(['auth', '
 Route::get('/income/fixed', [IncomeController::class, 'fixed'])->middleware(['auth', 'verified'])->name('income.fixed');
 
 Route::get('/expenditure', [ExpenditureController::class, 'index'])->middleware(['auth', 'verified'])->name('expenditure');
-Route::get('/expenditure/fixed', [ExpenditureController::class, 'fixed'])->middleware(['auth', 'verified'])->name('expenditure.fixed');
+Route::get('/expenditure/fixed', [FixedExpenditureController::class, 'index'])->middleware(['auth', 'verified'])->name('expenditure.fixed');
 Route::get('/category', [IncomeCategoryController::class, 'index'])->middleware(['auth', 'verified'])->name('category');
 
 Route::get('/top', function () {
