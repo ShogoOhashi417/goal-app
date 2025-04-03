@@ -7,6 +7,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Income\IncomeController;
 use App\Http\Controllers\ExpenditureCategoryController;
 use App\Http\Controllers\Expenditure\ExpenditureController;
+use App\Http\Controllers\Expenditure\FixedExpenditureController;
 use App\Http\Controllers\IncomeCategory\IncomeCategoryController;
 
 /*
@@ -30,7 +31,10 @@ Route::get('/', function () {
 });
 
 Route::get('/income', [IncomeController::class, 'index'])->middleware(['auth', 'verified'])->name('income');
+Route::get('/income/fixed', [IncomeController::class, 'fixed'])->middleware(['auth', 'verified'])->name('income.fixed');
+
 Route::get('/expenditure', [ExpenditureController::class, 'index'])->middleware(['auth', 'verified'])->name('expenditure');
+Route::get('/expenditure/fixed', [FixedExpenditureController::class, 'index'])->middleware(['auth', 'verified'])->name('expenditure.fixed');
 Route::get('/category', [IncomeCategoryController::class, 'index'])->middleware(['auth', 'verified'])->name('category');
 
 Route::get('/top', function () {
@@ -49,14 +53,19 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/income/get', [IncomeController::class, 'get']);
 Route::post('/income/add', [IncomeController::class, 'create']);
-Route::post('/income/update', [IncomeController::class, 'update']);
+Route::put('/income/update/{id}', [IncomeController::class, 'update']);
 Route::post('/income/delete', [IncomeController::class, 'delete']);
 
 Route::get('/expenditure/get', [ExpenditureController::class, 'get']);
 Route::get('/expenditure/get_by_category', [ExpenditureController::class, 'fetchByCategory']);
 Route::post('/expenditure/add', [ExpenditureController::class, 'create']);
-Route::post('/expenditure/update', [ExpenditureController::class, 'update']);
+Route::put('/expenditure/update/{id}', [ExpenditureController::class, 'update']);
 Route::post('/expenditure/delete', [ExpenditureController::class, 'delete']);
+
+Route::get('/expenditure/fixed/get', [FixedExpenditureController::class, 'get']);
+Route::post('/expenditure/fixed/add', [FixedExpenditureController::class, 'create']);
+Route::put('/expenditure/fixed/update/{id}', [FixedExpenditureController::class, 'update']);
+Route::post('/expenditure/fixed/delete', [FixedExpenditureController::class, 'delete']);
 
 Route::get('/income_category/get', [IncomeCategoryController::class, 'get']);
 Route::post('/income_category/add', [IncomeCategoryController::class, 'store']);

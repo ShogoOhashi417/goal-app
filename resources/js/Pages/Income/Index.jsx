@@ -83,8 +83,7 @@ export default function Income({ auth, incomeDataList, IncomeCategoryDataList })
 
     const updateIncome = () => {
         const localDate = new Date(calendarDate.startDate).toLocaleString('sv-SE', { timeZone: 'Asia/Tokyo' });
-        axios.post('/income/update', {
-            'id' : incomeId,
+        axios.put(`/income/update/${incomeId}`, {
             'income_name': incomeName,
             'income_category_id' : incomeCategoryId,
             'income_amount': incomeAmount,

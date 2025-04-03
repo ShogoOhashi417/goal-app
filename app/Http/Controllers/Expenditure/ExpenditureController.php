@@ -104,13 +104,13 @@ class ExpenditureController extends Controller
             new CreateExpenditureInputData(
                 $request->expenditure_name,
                 (int)$request->expenditure_category_id,
-                $request->expenditure_amount,
+                (int)$request->expenditure_amount,
                 (new DateTime($request->calendar_date))->format('Y-m-d')
             )
         );
     }
 
-    public function update(Request $request)
+    public function update(Request $request, $id)
     {
         $updateExpenditureUseCase = new UpdateExpenditureUseCase(
             new ExpenditureRepository(
@@ -120,10 +120,10 @@ class ExpenditureController extends Controller
 
         $updateExpenditureUseCase->handle(
             new UpdateExpenditureInputData(
-                (int)$request->id,
+                (int)$id,
                 $request->expenditure_name,
                 (int)$request->expenditure_category_id,
-                $request->expenditure_amount,
+                (int)$request->expenditure_amount,
                 (new DateTime($request->calendar_date))->format('Y-m-d')
             )
         );

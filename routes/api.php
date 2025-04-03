@@ -31,12 +31,12 @@ Route::prefix('v1')
         
         Route::get('/income', [IncomeController::class, 'get']);
         Route::post('/income', [IncomeController::class, 'create']);
-        Route::put('/income/{id}', [IncomeController::class, 'update']);
+        Route::put('/income/update/{id}', [IncomeController::class, 'update']);
         Route::delete('/income/{id}', [IncomeController::class, 'delete']);
 
         Route::get('/expenditure', [ExpenditureController::class, 'get']);
         Route::post('/expenditure', [ExpenditureController::class, 'create']);
-        Route::put('/expenditure/{id}', [ExpenditureController::class, 'update']);
+        Route::put('/expenditure/update/{id}', [ExpenditureController::class, 'update']);
         Route::delete('/expenditure/{id}', [ExpenditureController::class, 'delete']);
 
         Route::get('/income_category', [IncomeCategoryController::class, 'get']);

@@ -74,13 +74,13 @@ class IncomeController extends Controller
             new CreateIncomeInputData(
                 $request->income_name,
                 (int)$request->income_category_id,
-                $request->income_amount,
+                (int)$request->income_amount,
                 (new DateTime($request->calendar_date))->format('Y-m-d')
             )
         );
     }
 
-    public function update(Request $request)
+    public function update(Request $request, $id)
     {
         $updateIncomeUseCase = new UpdateIncomeUseCase(
             new IncomeRepository(
@@ -90,10 +90,10 @@ class IncomeController extends Controller
 
         $updateIncomeUseCase->handle(
             new UpdateIncomeInputData(
-                $request->id,
+                (int)$id,
                 $request->income_name,
                 (int)$request->income_category_id,
-                $request->income_amount,
+                (int)$request->income_amount,
                 (new DateTime($request->calendar_date))->format('Y-m-d')
             )
         );
@@ -111,6 +111,30 @@ class IncomeController extends Controller
             new DeleteIncomeInputData(
                 (int)$request->id,
             )
+        );
+    }
+
+    public function fixed()
+    {
+        $fetchIncomeUseCase = new FetchIncomeUseCase(
+            new IncomeQueryService(
+                new IncomeModel()
+            )
+        );
+
+        $incomeInfoList = $fetchIncomeUseCase->handle();
+
+        $fetchIncomeCategoryUseCase = new FetchIncomeCategoryUseCase(
+            new IncomeCategory()
+        );
+
+        $incomeCategoryInfoList = $fetchIncomeCategoryUseCase->handle();
+        
+        return Inertia::render('Income/Fixed',
+            [
+                'incomeDataList' => $incomeInfoList,
+                'IncomeCategoryDataList' => $incomeCategoryInfoList
+            ]
         );
     }
 }
