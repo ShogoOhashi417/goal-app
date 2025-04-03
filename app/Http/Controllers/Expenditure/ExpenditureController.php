@@ -56,30 +56,6 @@ class ExpenditureController extends Controller
         );
     }
 
-    public function fixed()
-    {
-        $fetchExpenditureUseCase = new FetchExpenditureUseCase(
-            new ExpenditureQueryService(
-                new ExpenditureModel()
-            )
-        );
-
-        $expenditureInfoList = $fetchExpenditureUseCase->handle();
-
-        $fetchExpenditureCategoryUseCase = new FetchExpenditureCategoryUseCase(
-            new ExpenditureCategory()
-        );
-
-        $expenditureCategoryInfoList = $fetchExpenditureCategoryUseCase->handle();
-
-        return Inertia::render('Expenditure/Fixed',
-            [
-                'expenditure_info_list' => $expenditureInfoList,
-                'expenditure_category_info_list' => $expenditureCategoryInfoList
-            ]
-        );
-    }
-
     public function get()
     {
         $fetchExpenditureUseCase = new FetchExpenditureUseCase(
