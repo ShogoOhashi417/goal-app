@@ -90,15 +90,14 @@ export default function Fixed({
 
     const addExpenditure = () => {
         const localPeriodStartDate = periodStartDate
-            ? format(
-                  periodStartDate,
-                  cycleUnit == 1 ? "yyyy-MM-01" : "yyyy-01-01"
-              )
+            ? format(periodStartDate, "yyyy-MM-01")
             : null;
         const localPeriodEndDate = periodEndDate
             ? format(
                   periodEndDate,
-                  cycleUnit == 1 ? "yyyy-MM-01" : "yyyy-01-01"
+                  cycleUnit == 1
+                      ? "yyyy-MM-01"
+                      : `yyyy-${String(paymentMonth).padStart(2, "0")}-01`
               )
             : null;
 
@@ -108,7 +107,7 @@ export default function Fixed({
                 category_id: expenditureCategoryId,
                 amount: expenditureAmount,
                 cycle_unit: cycleUnit,
-                payment_day: cycleUnit == 1 ? paymentDay : null,
+                payment_day: cycleUnit == 1 ? paymentDay : 1,
                 payment_month: cycleUnit == 2 ? paymentMonth : null,
                 start_date: localPeriodStartDate,
                 end_date: localPeriodEndDate,
@@ -129,13 +128,17 @@ export default function Fixed({
         const localPeriodStartDate = periodStartDate
             ? format(
                   periodStartDate,
-                  cycleUnit == 1 ? "yyyy-MM-01" : "yyyy-01-01"
+                  cycleUnit == 1
+                      ? "yyyy-MM-01"
+                      : `yyyy-${String(paymentMonth).padStart(2, "0")}-01`
               )
             : null;
         const localPeriodEndDate = periodEndDate
             ? format(
                   periodEndDate,
-                  cycleUnit == 1 ? "yyyy-MM-01" : "yyyy-01-01"
+                  cycleUnit == 1
+                      ? "yyyy-MM-01"
+                      : `yyyy-${String(paymentMonth).padStart(2, "0")}-01`
               )
             : null;
 
@@ -198,39 +201,49 @@ export default function Fixed({
                 header: "金額",
                 cell: (info) => info.getValue(),
                 sortingFn: "basic",
+                formatValue: (value) => `${value.toLocaleString()}円`,
             }),
             columnHelper.accessor("cycle_unit_string", {
                 header: "払込タイプ",
-                cell: (info) => {
-                    return info.getValue() == 1 ? "月払い" : "年払い";
-                },
+                cell: (info) => info.getValue(),
                 sortingFn: "basic",
+                formatValue: (value) => value,
             }),
             columnHelper.accessor("payment_day", {
                 header: "支払時期",
-                cell: (info) => info.getValue() + "日",
+                cell: (info) => info.getValue(),
                 sortingFn: "basic",
+                formatValue: (value) => `${value} 日`,
             }),
             columnHelper.accessor("start_date", {
                 header: "開始",
                 cell: (info) => {
                     const date = new Date(info.getValue());
-                    return format(date, "yyyy年MM月");
+                    return format(date, "yyyy/MM");
                 },
                 sortingFn: "basic",
+                formatValue: (value) => {
+                    const date = new Date(value);
+                    return format(date, "yyyy/MM");
+                },
             }),
             columnHelper.accessor("end_date", {
                 header: "終了",
                 cell: (info) => {
                     const date = new Date(info.getValue());
-                    return format(date, "yyyy年MM月");
+                    return format(date, "yyyy/MM");
                 },
                 sortingFn: "basic",
+                formatValue: (value) => {
+                    const date = new Date(value);
+                    return format(date, "yyyy/MM");
+                },
             }),
             columnHelper.accessor("category_name", {
                 header: "カテゴリー",
                 cell: (info) => info.getValue(),
                 sortingFn: "basic",
+                formatValue: (value) => value,
             }),
         ],
         []
@@ -333,7 +346,13 @@ export default function Fixed({
                                                                     }
                                                                     className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
                                                                 >
-                                                                    {cell.getValue()}
+                                                                    {cell.column
+                                                                        .columnDef
+                                                                        .formatValue
+                                                                        ? cell.column.columnDef.formatValue(
+                                                                              cell.getValue()
+                                                                          )
+                                                                        : cell.getValue()}
                                                                 </td>
                                                             ))}
                                                         <td>
@@ -594,9 +613,15 @@ export default function Fixed({
                                 </label>
                                 <DatePicker
                                     selected={periodStartDate}
-                                    onChange={(date) =>
-                                        setPeriodStartDate(date)
-                                    }
+                                    onChange={(date) => {
+                                        if (cycleUnit == 2 && date) {
+                                            const newDate = new Date(date);
+                                            newDate.setMonth(paymentMonth - 1);
+                                            setPeriodStartDate(newDate);
+                                        } else {
+                                            setPeriodStartDate(date);
+                                        }
+                                    }}
                                     dateFormat={
                                         cycleUnit == 1 ? "yyyy年MM月" : "yyyy年"
                                     }
@@ -621,9 +646,17 @@ export default function Fixed({
                                 <div className="">
                                     <DatePicker
                                         selected={periodEndDate}
-                                        onChange={(date) =>
-                                            setPeriodEndDate(date)
-                                        }
+                                        onChange={(date) => {
+                                            if (cycleUnit == 2 && date) {
+                                                const newDate = new Date(date);
+                                                newDate.setMonth(
+                                                    paymentMonth - 1
+                                                );
+                                                setPeriodEndDate(newDate);
+                                            } else {
+                                                setPeriodEndDate(date);
+                                            }
+                                        }}
                                         dateFormat={
                                             cycleUnit == 1
                                                 ? "yyyy年MM月"
@@ -860,9 +893,16 @@ export default function Fixed({
                                 </label>
                                 <DatePicker
                                     selected={periodStartDate}
-                                    onChange={(date) =>
-                                        setPeriodStartDate(date)
-                                    }
+                                    onChange={(date) => {
+                                        if (cycleUnit == 2 && date) {
+                                            // For yearly payments, set the month to the selected payment month
+                                            const newDate = new Date(date);
+                                            newDate.setMonth(paymentMonth - 1); // JavaScript months are 0-indexed
+                                            setPeriodStartDate(newDate);
+                                        } else {
+                                            setPeriodStartDate(date);
+                                        }
+                                    }}
                                     dateFormat={
                                         cycleUnit == 1 ? "yyyy年MM月" : "yyyy年"
                                     }
@@ -887,9 +927,17 @@ export default function Fixed({
                                 <div className="">
                                     <DatePicker
                                         selected={periodEndDate}
-                                        onChange={(date) =>
-                                            setPeriodEndDate(date)
-                                        }
+                                        onChange={(date) => {
+                                            if (cycleUnit == 2 && date) {
+                                                const newDate = new Date(date);
+                                                newDate.setMonth(
+                                                    paymentMonth - 1
+                                                );
+                                                setPeriodEndDate(newDate);
+                                            } else {
+                                                setPeriodEndDate(date);
+                                            }
+                                        }}
                                         dateFormat={
                                             cycleUnit == 1
                                                 ? "yyyy年MM月"
