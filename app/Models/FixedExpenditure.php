@@ -29,7 +29,7 @@ final class FixedExpenditure extends Model
 
     /**
      * @param integer $expenditureId
-     * @param string $cycleUnit
+     * @param int $cycleUnit
      * @param integer $paymentDay
      * @param integer|null $paymentMonth
      * @param string $startDate
@@ -38,7 +38,7 @@ final class FixedExpenditure extends Model
      */
     public function createFixedExpenditure(
         int $expenditureId,
-        string $cycleUnit,
+        int $cycleUnit,
         int $paymentDay,
         ?int $paymentMonth,
         string $startDate,
@@ -84,7 +84,7 @@ final class FixedExpenditure extends Model
     /**
      * @param integer $id
      * @param integer $expenditureId
-     * @param string $cycleUnit
+     * @param integer $cycleUnit
      * @param integer $paymentDay
      * @param integer|null $paymentMonth
      * @param string $startDate
@@ -95,7 +95,7 @@ final class FixedExpenditure extends Model
     public function updateById(
         int $id,
         int $expenditureId,
-        string $cycleUnit,
+        int $cycleUnit,
         int $paymentDay,
         ?int $paymentMonth,
         string $startDate,

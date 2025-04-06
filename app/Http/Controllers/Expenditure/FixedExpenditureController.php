@@ -61,7 +61,7 @@ class FixedExpenditureController extends Controller
                 $request->name,
                 (int)$request->category_id,
                 (int)$request->amount,
-                $request->cycle_unit,
+                (int)$request->cycle_unit,
                 (int)$request->payment_day,
                 $request->payment_month ? (int)$request->payment_month : null,
                 (new DateTime($request->start_date))->format('Y-m-d'),
