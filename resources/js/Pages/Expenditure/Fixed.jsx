@@ -38,7 +38,7 @@ export default function Fixed({
     const [expenditureAmount, setExpenditureAmount] = useState(0);
     const [periodStartDate, setPeriodStartDate] = useState(null);
     const [periodEndDate, setPeriodEndDate] = useState(null);
-    const [periodType, setPeriodType] = useState("month");
+    const [cycleUnit, setCycleUnit] = useState(1);
     const [paymentDay, setPaymentDay] = useState(1);
     const [paymentMonth, setPaymentMonth] = useState(1);
 
@@ -92,13 +92,13 @@ export default function Fixed({
         const localPeriodStartDate = periodStartDate
             ? format(
                   periodStartDate,
-                  periodType === "month" ? "yyyy-MM-01" : "yyyy-01-01"
+                  cycleUnit == 1 ? "yyyy-MM-01" : "yyyy-01-01"
               )
             : null;
         const localPeriodEndDate = periodEndDate
             ? format(
                   periodEndDate,
-                  periodType === "month" ? "yyyy-MM-01" : "yyyy-01-01"
+                  cycleUnit == 1 ? "yyyy-MM-01" : "yyyy-01-01"
               )
             : null;
 
@@ -107,9 +107,9 @@ export default function Fixed({
                 name: expenditureName,
                 category_id: expenditureCategoryId,
                 amount: expenditureAmount,
-                cycle_unit: periodType,
-                payment_day: periodType === "month" ? paymentDay : null,
-                payment_month: periodType === "year" ? paymentMonth : null,
+                cycle_unit: cycleUnit,
+                payment_day: cycleUnit == 1 ? paymentDay : null,
+                payment_month: cycleUnit == 2 ? paymentMonth : null,
                 start_date: localPeriodStartDate,
                 end_date: localPeriodEndDate,
             })
@@ -129,13 +129,13 @@ export default function Fixed({
         const localPeriodStartDate = periodStartDate
             ? format(
                   periodStartDate,
-                  periodType === "month" ? "yyyy-MM-01" : "yyyy-01-01"
+                  cycleUnit == 1 ? "yyyy-MM-01" : "yyyy-01-01"
               )
             : null;
         const localPeriodEndDate = periodEndDate
             ? format(
                   periodEndDate,
-                  periodType === "month" ? "yyyy-MM-01" : "yyyy-01-01"
+                  cycleUnit == 1 ? "yyyy-MM-01" : "yyyy-01-01"
               )
             : null;
 
@@ -146,8 +146,8 @@ export default function Fixed({
                 expenditure_amount: expenditureAmount,
                 period_start_date: localPeriodStartDate,
                 period_end_date: localPeriodEndDate,
-                payment_day: periodType === "month" ? paymentDay : null,
-                payment_month: periodType === "year" ? paymentMonth : null,
+                payment_day: cycleUnit == 1 ? paymentDay : null,
+                payment_month: cycleUnit == 2 ? paymentMonth : null,
             })
             .then((response) => {
                 getInfo();
@@ -199,12 +199,19 @@ export default function Fixed({
                 cell: (info) => info.getValue(),
                 sortingFn: "basic",
             }),
-            columnHelper.accessor("category_name", {
-                header: "カテゴリー",
-                cell: (info) => info.getValue(),
+            columnHelper.accessor("cycle_unit", {
+                header: "払込タイプ",
+                cell: (info) => {
+                    return info.getValue() == 1 ? "月払い" : "年払い";
+                },
                 sortingFn: "basic",
             }),
-            columnHelper.accessor("period_start_date", {
+            columnHelper.accessor("payment_day", {
+                header: "支払時期",
+                cell: (info) => info.getValue() + "日",
+                sortingFn: "basic",
+            }),
+            columnHelper.accessor("start_date", {
                 header: "開始",
                 cell: (info) => {
                     const date = new Date(info.getValue());
@@ -212,12 +219,17 @@ export default function Fixed({
                 },
                 sortingFn: "basic",
             }),
-            columnHelper.accessor("period_end_date", {
+            columnHelper.accessor("end_date", {
                 header: "終了",
                 cell: (info) => {
                     const date = new Date(info.getValue());
                     return format(date, "yyyy年MM月");
                 },
+                sortingFn: "basic",
+            }),
+            columnHelper.accessor("category_name", {
+                header: "カテゴリー",
+                cell: (info) => info.getValue(),
                 sortingFn: "basic",
             }),
         ],
@@ -487,10 +499,10 @@ export default function Fixed({
                                         type="radio"
                                         id="period-type-month"
                                         name="period-type"
-                                        value="month"
-                                        checked={periodType === "month"}
+                                        value="1"
+                                        checked={cycleUnit == 1}
                                         onChange={(e) => {
-                                            setPeriodType(e.target.value);
+                                            setCycleUnit(1);
                                             setPaymentDay(1);
                                         }}
                                         className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500"
@@ -507,10 +519,10 @@ export default function Fixed({
                                         type="radio"
                                         id="period-type-year"
                                         name="period-type"
-                                        value="year"
-                                        checked={periodType === "year"}
+                                        value="2"
+                                        checked={cycleUnit == 2}
                                         onChange={(e) => {
-                                            setPeriodType(e.target.value);
+                                            setCycleUnit(2);
                                             setPaymentMonth(1);
                                         }}
                                         className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500"
@@ -524,7 +536,7 @@ export default function Fixed({
                                 </div>
                             </div>
                         </div>
-                        {periodType === "month" && (
+                        {cycleUnit == 1 && (
                             <div className="col-span-2">
                                 <label
                                     htmlFor="payment_day"
@@ -548,7 +560,7 @@ export default function Fixed({
                                 </select>
                             </div>
                         )}
-                        {periodType === "year" && (
+                        {cycleUnit == 2 && (
                             <div className="col-span-2">
                                 <label
                                     htmlFor="payment_month"
@@ -586,12 +598,10 @@ export default function Fixed({
                                         setPeriodStartDate(date)
                                     }
                                     dateFormat={
-                                        periodType === "month"
-                                            ? "yyyy年MM月"
-                                            : "yyyy年"
+                                        cycleUnit == 1 ? "yyyy年MM月" : "yyyy年"
                                     }
-                                    showMonthYearPicker={periodType === "month"}
-                                    showYearPicker={periodType === "year"}
+                                    showMonthYearPicker={cycleUnit == 1}
+                                    showYearPicker={cycleUnit == 2}
                                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                                     locale={ja}
                                 />
@@ -615,14 +625,12 @@ export default function Fixed({
                                             setPeriodEndDate(date)
                                         }
                                         dateFormat={
-                                            periodType === "month"
+                                            cycleUnit == 1
                                                 ? "yyyy年MM月"
                                                 : "yyyy年"
                                         }
-                                        showMonthYearPicker={
-                                            periodType === "month"
-                                        }
-                                        showYearPicker={periodType === "year"}
+                                        showMonthYearPicker={cycleUnit == 1}
+                                        showYearPicker={cycleUnit == 2}
                                         className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 text-right"
                                         locale={ja}
                                     />
@@ -761,10 +769,10 @@ export default function Fixed({
                                         type="radio"
                                         id="period-type-month-edit"
                                         name="period-type-edit"
-                                        value="month"
-                                        checked={periodType === "month"}
+                                        value="1"
+                                        checked={cycleUnit == 1}
                                         onChange={(e) => {
-                                            setPeriodType(e.target.value);
+                                            setCycleUnit(1);
                                             setPaymentDay(1);
                                         }}
                                         className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500"
@@ -781,10 +789,10 @@ export default function Fixed({
                                         type="radio"
                                         id="period-type-year-edit"
                                         name="period-type-edit"
-                                        value="year"
-                                        checked={periodType === "year"}
+                                        value="2"
+                                        checked={cycleUnit == 2}
                                         onChange={(e) => {
-                                            setPeriodType(e.target.value);
+                                            setCycleUnit(2);
                                             setPaymentMonth(1);
                                         }}
                                         className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500"
@@ -798,54 +806,50 @@ export default function Fixed({
                                 </div>
                             </div>
                         </div>
-                        {periodType === "month" && (
-                            <div className="col-span-2">
-                                <label
-                                    htmlFor="payment_day_edit"
-                                    className="block mb-2 text-sm font-medium text-gray-900"
-                                >
-                                    支払日
-                                </label>
-                                <select
-                                    id="payment_day_edit"
-                                    value={paymentDay}
-                                    onChange={(e) =>
-                                        setPaymentDay(Number(e.target.value))
-                                    }
-                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-                                >
-                                    {[...Array(31)].map((_, i) => (
-                                        <option key={i + 1} value={i + 1}>
-                                            {i + 1}日
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
-                        )}
-                        {periodType === "year" && (
-                            <div className="col-span-2">
-                                <label
-                                    htmlFor="payment_month_edit"
-                                    className="block mb-2 text-sm font-medium text-gray-900"
-                                >
-                                    支払月
-                                </label>
-                                <select
-                                    id="payment_month_edit"
-                                    value={paymentMonth}
-                                    onChange={(e) =>
-                                        setPaymentMonth(Number(e.target.value))
-                                    }
-                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-                                >
-                                    {[...Array(12)].map((_, i) => (
-                                        <option key={i + 1} value={i + 1}>
-                                            {i + 1}月
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
-                        )}
+                        <div className="col-span-2">
+                            <label
+                                htmlFor="payment_day_edit"
+                                className="block mb-2 text-sm font-medium text-gray-900"
+                            >
+                                支払日
+                            </label>
+                            <select
+                                id=""
+                                value={paymentDay}
+                                onChange={(e) =>
+                                    setPaymentDay(Number(e.target.value))
+                                }
+                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                            >
+                                {[...Array(31)].map((_, i) => (
+                                    <option key={i + 1} value={i + 1}>
+                                        {i + 1}日
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className="col-span-2">
+                            <label
+                                htmlFor="payment_month_edit"
+                                className="block mb-2 text-sm font-medium text-gray-900"
+                            >
+                                支払月
+                            </label>
+                            <select
+                                id="payment_month_edit"
+                                value={paymentMonth}
+                                onChange={(e) =>
+                                    setPaymentMonth(Number(e.target.value))
+                                }
+                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                            >
+                                {[...Array(12)].map((_, i) => (
+                                    <option key={i + 1} value={i + 1}>
+                                        {i + 1}月
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
                         <div className="col-span-2 flex gap-4">
                             <div className="w-5/12 mr-auto">
                                 <label
@@ -860,12 +864,10 @@ export default function Fixed({
                                         setPeriodStartDate(date)
                                     }
                                     dateFormat={
-                                        periodType === "month"
-                                            ? "yyyy年MM月"
-                                            : "yyyy年"
+                                        cycleUnit == 1 ? "yyyy年MM月" : "yyyy年"
                                     }
-                                    showMonthYearPicker={periodType === "month"}
-                                    showYearPicker={periodType === "year"}
+                                    showMonthYearPicker={cycleUnit == 1}
+                                    showYearPicker={cycleUnit == 2}
                                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                                     locale={ja}
                                 />
@@ -889,14 +891,12 @@ export default function Fixed({
                                             setPeriodEndDate(date)
                                         }
                                         dateFormat={
-                                            periodType === "month"
+                                            cycleUnit == 1
                                                 ? "yyyy年MM月"
                                                 : "yyyy年"
                                         }
-                                        showMonthYearPicker={
-                                            periodType === "month"
-                                        }
-                                        showYearPicker={periodType === "year"}
+                                        showMonthYearPicker={cycleUnit == 1}
+                                        showYearPicker={cycleUnit == 2}
                                         className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 text-right"
                                         locale={ja}
                                     />
