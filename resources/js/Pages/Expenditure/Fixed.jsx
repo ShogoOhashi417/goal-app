@@ -199,7 +199,7 @@ export default function Fixed({
                 cell: (info) => info.getValue(),
                 sortingFn: "basic",
             }),
-            columnHelper.accessor("cycle_unit", {
+            columnHelper.accessor("cycle_unit_string", {
                 header: "払込タイプ",
                 cell: (info) => {
                     return info.getValue() == 1 ? "月払い" : "年払い";
