@@ -36,7 +36,7 @@ final class FixedExpenditureRepository implements FixedExpenditureRepositoryInte
     {
         $this->fixedExpenditureModel->createFixedExpenditure(
             $fixedExpenditure->getExpenditureId(),
-            $fixedExpenditure->getCycleUnit()->getValue(),
+            $fixedExpenditure->getCycleUnit()->value,
             $fixedExpenditure->getPaymentDay()->getValue(),
             $fixedExpenditure->getPaymentMonth() ? $fixedExpenditure->getPaymentMonth()->getValue() : null,
             $fixedExpenditure->getStartDate()->getValue(),
@@ -53,7 +53,7 @@ final class FixedExpenditureRepository implements FixedExpenditureRepositoryInte
         $this->fixedExpenditureModel->updateById(
             $fixedExpenditure->getId(),
             $fixedExpenditure->getExpenditureId(),
-            $fixedExpenditure->getCycleUnit()->getValue(),
+            $fixedExpenditure->getCycleUnit()->value,
             $fixedExpenditure->getPaymentDay()->getValue(),
             $fixedExpenditure->getPaymentMonth() ? $fixedExpenditure->getPaymentMonth()->getValue() : null,
             $fixedExpenditure->getStartDate()->getValue(),
