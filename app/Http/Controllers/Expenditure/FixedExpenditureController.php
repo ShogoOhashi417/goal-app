@@ -17,6 +17,8 @@ use App\Application\UseCase\FixedExpenditure\Create\CreateFixedExpenditureUseCas
 use App\Application\UseCase\FixedExpenditure\Create\CreateFixedExpenditureInputData;
 use App\Application\UseCase\FixedExpenditure\Update\UpdateFixedExpenditureUseCase;
 use App\Application\UseCase\FixedExpenditure\Update\UpdateFixedExpenditureInputData;
+use App\Application\UseCase\FixedExpenditure\Delete\DeleteFixedExpenditureUseCase;
+use App\Application\UseCase\FixedExpenditure\Delete\DeleteFixedExpenditureInputData;
 use App\Infrastructure\Query\FixedExpenditure\FixedExpenditureQueryService;
 use App\Application\UseCase\FixedExpenditure\Fetch\FetchFixedExpenditureUseCase;
 use App\Application\UseCase\Category\Expenditure\Fetch\FetchExpenditureCategoryUseCase;
@@ -94,6 +96,24 @@ class FixedExpenditureController extends Controller
 				$request->payment_month ? (int)$request->payment_month : null,
 				$request->period_start_date ? (new DateTime($request->period_start_date))->format('Y-m-d') : (new DateTime())->format('Y-m-d'),
 				$request->period_end_date ? (new DateTime($request->period_end_date))->format('Y-m-d') : null,
+			)
+		);
+	}
+	
+	public function delete($id)
+	{
+		$deleteFixedExpenditureUseCase = new DeleteFixedExpenditureUseCase(
+			new FixedExpenditureRepository(
+				new FixedExpenditureModel()
+			),
+			new ExpenditureRepository(
+				new ExpenditureModel()
+			)
+		);
+
+		$deleteFixedExpenditureUseCase->handle(
+			new DeleteFixedExpenditureInputData(
+				(int)$id
 			)
 		);
 	}

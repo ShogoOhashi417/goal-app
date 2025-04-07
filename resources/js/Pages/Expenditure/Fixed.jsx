@@ -170,15 +170,9 @@ export default function Fixed({
             return;
         }
 
-        axios
-            .post("/expenditure/fixed/delete", {
-                id: expenditureId,
-                expenditure_name: expenditureName,
-                expenditure_amount: expenditureAmount,
-            })
-            .then((response) => {
-                getInfo();
-            });
+        axios.delete(`/expenditure/fixed/${expenditureId}`).then((response) => {
+            getInfo();
+        });
     };
 
     const [expenditureCategoryInfoList, setExpenditureCategoryInfoList] =
@@ -386,7 +380,9 @@ export default function Fixed({
                                                                     className="mx-auto"
                                                                     onClick={() =>
                                                                         deleteExpenditure(
-                                                                            row.id
+                                                                            row
+                                                                                .original
+                                                                                .expenditure_id
                                                                         )
                                                                     }
                                                                 >

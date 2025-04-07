@@ -101,4 +101,28 @@ final class Expenditure extends Model
     {
         return $this->getConnection()->getPdo()->lastInsertId();
     }
+
+    /**
+     * 
+     * @param integer $id
+     * @return array
+     */
+    public function fetchFixedExpenditureById(int $id): array
+    {
+        return $this->join('expenditure_categories', 'expenditures.category_id', '=', 'expenditure_categories.id')
+                    ->join('fixed_expenditures', 'expenditures.id', '=', 'fixed_expenditures.expenditure_id')
+                    ->select(
+                        'expenditures.*', 
+                        'expenditure_categories.name as category_name',
+                        'fixed_expenditures.id as fixed_expenditure_id',
+                        'fixed_expenditures.cycle_unit',
+                        'fixed_expenditures.payment_day',
+                        'fixed_expenditures.payment_month',
+                        'fixed_expenditures.start_date',
+                        'fixed_expenditures.end_date'
+                    )
+                    ->where('expenditures.id', $id)
+                    ->first()
+                    ->toArray();
+    }
 }

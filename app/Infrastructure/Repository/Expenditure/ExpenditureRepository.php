@@ -29,6 +29,11 @@ final class ExpenditureRepository implements ExpenditureRepositoryInterface
         return $this->expenditureModel->fetchById($id);
     }
 
+	public function fetchFixedExpenditureById(int $id): array
+	{
+		return $this->expenditureModel->fetchFixedExpenditureById($id);
+	}
+
     /**
      * @return void
      */
