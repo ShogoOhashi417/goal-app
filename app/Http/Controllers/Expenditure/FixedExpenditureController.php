@@ -15,6 +15,8 @@ use App\Infrastructure\Repository\FixedExpenditure\FixedExpenditureRepository;
 use App\Infrastructure\Repository\Expenditure\ExpenditureRepository;
 use App\Application\UseCase\FixedExpenditure\Create\CreateFixedExpenditureUseCase;
 use App\Application\UseCase\FixedExpenditure\Create\CreateFixedExpenditureInputData;
+use App\Application\UseCase\FixedExpenditure\Update\UpdateFixedExpenditureUseCase;
+use App\Application\UseCase\FixedExpenditure\Update\UpdateFixedExpenditureInputData;
 use App\Infrastructure\Query\FixedExpenditure\FixedExpenditureQueryService;
 use App\Application\UseCase\FixedExpenditure\Fetch\FetchFixedExpenditureUseCase;
 use App\Application\UseCase\Category\Expenditure\Fetch\FetchExpenditureCategoryUseCase;
@@ -69,7 +71,33 @@ class FixedExpenditureController extends Controller
             )
         );
     }
-
+	
+	public function update(Request $request, $id)
+	{
+		$updateFixedExpenditureUseCase = new UpdateFixedExpenditureUseCase(
+			new FixedExpenditureRepository(
+				new FixedExpenditureModel()
+			),
+			new ExpenditureRepository(
+				new ExpenditureModel()
+			)
+		);
+		
+		$updateFixedExpenditureUseCase->handle(
+			new UpdateFixedExpenditureInputData(
+				(int)$id,
+				$request->expenditure_name,
+				(int)$request->expenditure_category_id,
+				(int)$request->expenditure_amount,
+				$request->payment_day ? 1 : 2,
+				$request->payment_day ? (int)$request->payment_day : 1,
+				$request->payment_month ? (int)$request->payment_month : null,
+				$request->period_start_date ? (new DateTime($request->period_start_date))->format('Y-m-d') : (new DateTime())->format('Y-m-d'),
+				$request->period_end_date ? (new DateTime($request->period_end_date))->format('Y-m-d') : null,
+			)
+		);
+	}
+	
 	private function fetchFixedExpenditureInfoList()
 	{
 		$fetchFixedExpenditureUseCase = new FetchFixedExpenditureUseCase(
