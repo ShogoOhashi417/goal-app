@@ -58,7 +58,6 @@ final class FixedExpenditureRepository implements FixedExpenditureRepositoryInte
             $fixedExpenditure->getPaymentMonth() ? $fixedExpenditure->getPaymentMonth()->getValue() : null,
             $fixedExpenditure->getStartDate()->getValue(),
             $fixedExpenditure->getEndDate() ? $fixedExpenditure->getEndDate()->getValue() : null,
-            $fixedExpenditure->getStartDate()->getValue()
         );
     }
 

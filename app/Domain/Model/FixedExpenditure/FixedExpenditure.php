@@ -167,4 +167,43 @@ final class FixedExpenditure
             $expenditureId
         );
     }
+
+    /**
+     * @param int $id
+     * @param string $name
+     * @param int $categoryId
+     * @param int $amount
+     * @param int $cycleUnit
+     * @param int $paymentDay
+     * @param ?int $paymentMonth
+     * @param string $startDate
+     * @param ?string $endDate
+     * @param int $expenditureId
+     * @return FixedExpenditure
+     */
+    public static function reconstruct(
+        int $id,
+        string $name,
+        int $categoryId,
+        int $amount,
+        int $cycleUnit,
+        int $paymentDay,
+        ?int $paymentMonth,
+        string $startDate,
+        ?string $endDate,
+        int $expenditureId
+    ): self {
+        return new self(
+            $id,
+            new ExpenditureName($name),
+            new ExpenditureCategoryId($categoryId),
+            new ExpenditureAmount($amount),
+            CycleUnit::from($cycleUnit),
+            new PaymentDay($paymentDay),
+            $paymentMonth ? new PaymentMonth($paymentMonth) : null,
+            new StartDate($startDate),
+            $endDate ? new EndDate($endDate) : null,
+            $expenditureId
+        );
+    }
 } 
