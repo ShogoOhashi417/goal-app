@@ -65,7 +65,7 @@ Route::post('/expenditure/delete', [ExpenditureController::class, 'delete']);
 Route::get('/expenditure/fixed/get', [FixedExpenditureController::class, 'get']);
 Route::post('/expenditure/fixed/add', [FixedExpenditureController::class, 'create']);
 Route::put('/expenditure/fixed/update/{id}', [FixedExpenditureController::class, 'update']);
-Route::post('/expenditure/fixed/delete', [FixedExpenditureController::class, 'delete']);
+Route::delete('/expenditure/fixed/{id}', [FixedExpenditureController::class, 'delete']);
 
 Route::get('/income_category/get', [IncomeCategoryController::class, 'get']);
 Route::post('/income_category/add', [IncomeCategoryController::class, 'store']);
