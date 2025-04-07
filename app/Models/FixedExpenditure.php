@@ -89,7 +89,6 @@ final class FixedExpenditure extends Model
      * @param integer|null $paymentMonth
      * @param string $startDate
      * @param string|null $endDate
-     * @param string $paymentDate
      * @return void
      */
     public function updateById(
@@ -100,7 +99,6 @@ final class FixedExpenditure extends Model
         ?int $paymentMonth,
         string $startDate,
         ?string $endDate,
-        string $paymentDate
     ): void {
         $this->where('id', $id)->update([
             'expenditure_id' => $expenditureId,
@@ -109,7 +107,6 @@ final class FixedExpenditure extends Model
             'payment_month' => $paymentMonth,
             'start_date' => $startDate,
             'end_date' => $endDate,
-            'payment_date' => $paymentDate
         ]);
     }
 
