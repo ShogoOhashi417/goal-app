@@ -16,5 +16,7 @@ interface ExpenditureRepositoryInterface
 
     public function fetchById(int $id): array;
 
+	public function fetchFixedExpenditureById(int $id): array;
+
     public function getLastInsertId(): int;
 }
