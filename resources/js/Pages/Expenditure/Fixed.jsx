@@ -64,12 +64,20 @@ export default function Fixed({
         expenditureId,
         expenditureName,
         expenditureCategoryId,
-        expenditureAmount
+        expenditureAmount,
+        paymentDay,
+        paymentMonth,
+        startDate,
+        endDate
     ) => {
         setExpenditureId(expenditureId);
         setExpenditureName(expenditureName);
         setExpenditureCategoryId(expenditureCategoryId);
         setExpenditureAmount(expenditureAmount);
+        setPaymentDay(paymentDay);
+        setPaymentMonth(paymentMonth);
+        setPeriodStartDate(startDate);
+        setPeriodEndDate(endDate);
         updateExpenditureRef.current.classList.remove("hidden");
     };
 
@@ -202,8 +210,17 @@ export default function Fixed({
                 sortingFn: "basic",
                 formatValue: (value) => value,
             }),
+            columnHelper.accessor("payment_month", {
+                header: "支払月",
+                cell: (info) => {
+                    const row = info.row.original;
+                    return row.cycle_unit === 1 ? "-" : info.getValue();
+                },
+                sortingFn: "basic",
+                formatValue: (value) => (value ? `${value} 月` : "毎月"),
+            }),
             columnHelper.accessor("payment_day", {
-                header: "支払時期",
+                header: "支払日",
                 cell: (info) => info.getValue(),
                 sortingFn: "basic",
                 formatValue: (value) => `${value} 日`,
@@ -365,6 +382,18 @@ export default function Fixed({
                                                                                 .category_id,
                                                                             row.getValue(
                                                                                 "amount"
+                                                                            ),
+                                                                            row.getValue(
+                                                                                "payment_day"
+                                                                            ),
+                                                                            row.getValue(
+                                                                                "payment_month"
+                                                                            ),
+                                                                            row.getValue(
+                                                                                "start_date"
+                                                                            ),
+                                                                            row.getValue(
+                                                                                "end_date"
                                                                             )
                                                                         )
                                                                     }
