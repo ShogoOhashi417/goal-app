@@ -75,7 +75,8 @@ final class FixedExpenditure extends Model
                         'fixed_expenditures.*', 
                         'expenditures.name',
                         'expenditures.amount',
-                        'expenditure_categories.name as category_name'
+                        'expenditure_categories.name as category_name',
+						'expenditure_categories.id as category_id'
                     )
                     ->get()
                     ->toArray();
