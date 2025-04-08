@@ -57,6 +57,14 @@ export default function Fixed({
     const updateExpenditureRef = useRef(null);
 
     const openAddModal = () => {
+        setExpenditureName("");
+        setExpenditureCategoryId(0);
+        setExpenditureAmount(0);
+        setPeriodStartDate(null);
+        setPeriodEndDate(null);
+        setCycleUnit(1);
+        setPaymentDay(1);
+        setPaymentMonth(1);
         addExpenditureRef.current.classList.remove("hidden");
     };
 
