@@ -17,7 +17,6 @@ import {
     getSortedRowModel,
 } from "@tanstack/react-table";
 
-// DatePickerの幅を100%にするためのスタイル
 const globalStyles = `
 	.react-datepicker-wrapper {
     width: 100% !important;
