@@ -106,7 +106,7 @@ export default function Fixed({
                 category_id: expenditureCategoryId,
                 amount: expenditureAmount,
                 cycle_unit: cycleUnit,
-                payment_day: cycleUnit == 1 ? paymentDay : 1,
+                payment_day: paymentDay,
                 payment_month: cycleUnit == 2 ? paymentMonth : null,
                 start_date: localPeriodStartDate,
                 end_date: localPeriodEndDate,
@@ -148,7 +148,7 @@ export default function Fixed({
                 expenditure_amount: expenditureAmount,
                 period_start_date: localPeriodStartDate,
                 period_end_date: localPeriodEndDate,
-                payment_day: cycleUnit == 1 ? paymentDay : null,
+                payment_day: paymentDay,
                 payment_month: cycleUnit == 2 ? paymentMonth : null,
             })
             .then((response) => {
@@ -575,28 +575,56 @@ export default function Fixed({
                             </div>
                         )}
                         {cycleUnit == 2 && (
-                            <div className="col-span-2">
-                                <label
-                                    htmlFor="payment_month"
-                                    className="block mb-2 text-sm font-medium text-gray-900"
-                                >
-                                    支払月
-                                </label>
-                                <select
-                                    id="payment_month"
-                                    value={paymentMonth}
-                                    onChange={(e) =>
-                                        setPaymentMonth(Number(e.target.value))
-                                    }
-                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-                                >
-                                    {[...Array(12)].map((_, i) => (
-                                        <option key={i + 1} value={i + 1}>
-                                            {i + 1}月
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
+                            <>
+                                <div className="col-span-1">
+                                    <label
+                                        htmlFor="payment_month"
+                                        className="block mb-2 text-sm font-medium text-gray-900"
+                                    >
+                                        支払月
+                                    </label>
+                                    <select
+                                        id="payment_month"
+                                        value={paymentMonth}
+                                        onChange={(e) =>
+                                            setPaymentMonth(
+                                                Number(e.target.value)
+                                            )
+                                        }
+                                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                                    >
+                                        {[...Array(12)].map((_, i) => (
+                                            <option key={i + 1} value={i + 1}>
+                                                {i + 1}月
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div className="col-span-1">
+                                    <label
+                                        htmlFor="payment_day"
+                                        className="block mb-2 text-sm font-medium text-gray-900"
+                                    >
+                                        支払日
+                                    </label>
+                                    <select
+                                        id="payment_day"
+                                        value={paymentDay}
+                                        onChange={(e) =>
+                                            setPaymentDay(
+                                                Number(e.target.value)
+                                            )
+                                        }
+                                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                                    >
+                                        {[...Array(31)].map((_, i) => (
+                                            <option key={i + 1} value={i + 1}>
+                                                {i + 1}日
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </>
                         )}
                         <div className="col-span-2 flex gap-4">
                             <div className="w-5/12 mr-auto">
@@ -834,50 +862,81 @@ export default function Fixed({
                                 </div>
                             </div>
                         </div>
-                        <div className="col-span-2">
-                            <label
-                                htmlFor="payment_day_edit"
-                                className="block mb-2 text-sm font-medium text-gray-900"
-                            >
-                                支払日
-                            </label>
-                            <select
-                                id=""
-                                value={paymentDay}
-                                onChange={(e) =>
-                                    setPaymentDay(Number(e.target.value))
-                                }
-                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-                            >
-                                {[...Array(31)].map((_, i) => (
-                                    <option key={i + 1} value={i + 1}>
-                                        {i + 1}日
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-                        <div className="col-span-2">
-                            <label
-                                htmlFor="payment_month_edit"
-                                className="block mb-2 text-sm font-medium text-gray-900"
-                            >
-                                支払月
-                            </label>
-                            <select
-                                id="payment_month_edit"
-                                value={paymentMonth}
-                                onChange={(e) =>
-                                    setPaymentMonth(Number(e.target.value))
-                                }
-                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-                            >
-                                {[...Array(12)].map((_, i) => (
-                                    <option key={i + 1} value={i + 1}>
-                                        {i + 1}月
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
+                        {cycleUnit == 1 ? (
+                            <div className="col-span-2">
+                                <label
+                                    htmlFor="payment_day_edit"
+                                    className="block mb-2 text-sm font-medium text-gray-900"
+                                >
+                                    支払日
+                                </label>
+                                <select
+                                    id="payment_day_edit"
+                                    value={paymentDay}
+                                    onChange={(e) =>
+                                        setPaymentDay(Number(e.target.value))
+                                    }
+                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                                >
+                                    {[...Array(31)].map((_, i) => (
+                                        <option key={i + 1} value={i + 1}>
+                                            {i + 1}日
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                        ) : (
+                            <>
+                                <div className="col-span-1">
+                                    <label
+                                        htmlFor="payment_month_edit"
+                                        className="block mb-2 text-sm font-medium text-gray-900"
+                                    >
+                                        支払月
+                                    </label>
+                                    <select
+                                        id="payment_month_edit"
+                                        value={paymentMonth}
+                                        onChange={(e) =>
+                                            setPaymentMonth(
+                                                Number(e.target.value)
+                                            )
+                                        }
+                                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                                    >
+                                        {[...Array(12)].map((_, i) => (
+                                            <option key={i + 1} value={i + 1}>
+                                                {i + 1}月
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div className="col-span-1">
+                                    <label
+                                        htmlFor="payment_day_edit"
+                                        className="block mb-2 text-sm font-medium text-gray-900"
+                                    >
+                                        支払日
+                                    </label>
+                                    <select
+                                        id="payment_day_edit"
+                                        value={paymentDay}
+                                        onChange={(e) =>
+                                            setPaymentDay(
+                                                Number(e.target.value)
+                                            )
+                                        }
+                                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                                    >
+                                        {[...Array(31)].map((_, i) => (
+                                            <option key={i + 1} value={i + 1}>
+                                                {i + 1}日
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </>
+                        )}
                         <div className="col-span-2 flex gap-4">
                             <div className="w-5/12 mr-auto">
                                 <label
@@ -890,9 +949,8 @@ export default function Fixed({
                                     selected={periodStartDate}
                                     onChange={(date) => {
                                         if (cycleUnit == 2 && date) {
-                                            // For yearly payments, set the month to the selected payment month
                                             const newDate = new Date(date);
-                                            newDate.setMonth(paymentMonth - 1); // JavaScript months are 0-indexed
+                                            newDate.setMonth(paymentMonth - 1);
                                             setPeriodStartDate(newDate);
                                         } else {
                                             setPeriodStartDate(date);
