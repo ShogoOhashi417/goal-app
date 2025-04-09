@@ -36,7 +36,9 @@ export default function Authenticated({ user, header, children }) {
                                         <span
                                             className={`inline-flex bg-indigo-50 ${
                                                 route().current("income") ||
-                                                route().current("income.fixed")
+                                                route().current(
+                                                    "fixed-income.index"
+                                                )
                                                     ? "border-b-2 border-indigo-400 text-gray-900"
                                                     : ""
                                             }`}
@@ -70,9 +72,9 @@ export default function Authenticated({ user, header, children }) {
                                             収入管理
                                         </Dropdown.Link>
                                         <Dropdown.Link
-                                            href={route("income.fixed")}
+                                            href={route("fixed-income.index")}
                                             active={route().current(
-                                                "income.fixed"
+                                                "fixed-income.index"
                                             )}
                                         >
                                             固定収入

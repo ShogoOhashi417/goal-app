@@ -9,6 +9,7 @@ use App\Http\Controllers\ExpenditureCategoryController;
 use App\Http\Controllers\Expenditure\ExpenditureController;
 use App\Http\Controllers\Expenditure\FixedExpenditureController;
 use App\Http\Controllers\IncomeCategory\IncomeCategoryController;
+use App\Http\Controllers\FixedIncome\FixedIncomeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -49,6 +50,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/fixed-income', [FixedIncomeController::class, 'index'])->name('fixed-income.index');
+    Route::get('/fixed-income/get', [FixedIncomeController::class, 'get'])->name('fixed-income.get');
+    Route::post('/fixed-income/create', [FixedIncomeController::class, 'create'])->name('fixed-income.create');
+    Route::put('/fixed-income/update/{id}', [FixedIncomeController::class, 'update'])->name('fixed-income.update');
+    Route::delete('/fixed-income/{id}', [FixedIncomeController::class, 'delete'])->name('fixed-income.delete');
 });
 
 Route::get('/income/get', [IncomeController::class, 'get']);
