@@ -127,6 +127,9 @@ class FixedIncomeController extends Controller
     public function update(Request $request, int $id)
     {
         $updateFixedIncomeUseCase = new UpdateFixedIncomeUseCase(
+            new IncomeRepository(
+                new Income()
+            ),
             new FixedIncomeRepository(
                 new FixedIncomeModel()
             )
