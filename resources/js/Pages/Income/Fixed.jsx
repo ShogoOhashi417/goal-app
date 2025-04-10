@@ -100,10 +100,10 @@ export default function Fixed({
 
     const getInfo = () => {
         axios
-            .get("/fixed-income")
+            .get("/fixed-income/get")
             .then((response) => {
-                setIncomeInfoList(response.data.incomeDataList);
-                setCategoryInfoList(response.data.incomeCategoryDataList);
+                setIncomeInfoList(response.data.fixedIncomes);
+                setCategoryInfoList(response.data.incomeCategoryInfoList);
             })
             .catch((error) => {
                 console.error("データの取得に失敗しました", error);
@@ -219,8 +219,9 @@ export default function Fixed({
             }),
             columnHelper.accessor("period_type", {
                 header: "受け取りペース",
-                cell: (info) => (info.getValue() === "month" ? "毎月" : "毎年"),
+                cell: (info) => info.getValue(),
                 sortingFn: "basic",
+                formatValue: (value) => (value === "month" ? "毎月" : "毎年"),
             }),
             columnHelper.accessor("payment_month", {
                 header: "受け取り月",
