@@ -54,6 +54,15 @@ class FixedIncomeController extends Controller
 		]);
 	}
 
+    private function fetchIncomeCategoryInfoList(): array
+    {
+        $fetchIncomeCategoryUseCase = new FetchIncomeCategoryUseCase(
+            new IncomeCategory()
+        );
+
+        return $fetchIncomeCategoryUseCase->handle();
+    }
+
     /**
      * @return array
      */
@@ -119,7 +128,7 @@ class FixedIncomeController extends Controller
     {
         $updateFixedIncomeUseCase = new UpdateFixedIncomeUseCase(
             new FixedIncomeRepository(
-                new FixedIncome()
+                new FixedIncomeModel()
             )
         );
 
@@ -145,7 +154,7 @@ class FixedIncomeController extends Controller
     {
         $deleteFixedIncomeUseCase = new DeleteFixedIncomeUseCase(
             new FixedIncomeRepository(
-                new FixedIncome()
+                new FixedIncomeModel()
             )
         );
 
