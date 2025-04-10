@@ -29,6 +29,9 @@ export default function Fixed({
     IncomeCategoryDataList,
 }) {
     const [incomeInfoList, setIncomeInfoList] = useState(incomeDataList);
+    const [categoryInfoList, setCategoryInfoList] = useState(
+        IncomeCategoryDataList
+    );
 
     const [incomeId, setIncomeId] = useState(0);
     const [incomeName, setIncomeName] = useState("");
@@ -99,9 +102,12 @@ export default function Fixed({
         axios
             .get("/fixed-income")
             .then((response) => {
-                setIncomeInfoList(response.data.income_info_list);
+                setIncomeInfoList(response.data.incomeDataList);
+                setCategoryInfoList(response.data.incomeCategoryDataList);
             })
-            .catch((error) => {});
+            .catch((error) => {
+                console.error("データの取得に失敗しました", error);
+            });
     };
 
     const addIncome = () => {
@@ -194,10 +200,6 @@ export default function Fixed({
             getInfo();
         });
     };
-
-    const [incomeCategoryInfoList, setIncomeCategoryInfoList] = useState(
-        IncomeCategoryDataList
-    );
 
     const columnHelper = createColumnHelper();
 
@@ -519,7 +521,7 @@ export default function Fixed({
                                 onChange={changeIncomeCategoryId}
                             >
                                 <option value="">選択してください</option>
-                                {incomeCategoryInfoList.map((item, index) => (
+                                {categoryInfoList.map((item, index) => (
                                     <React.Fragment key={index}>
                                         <option value={item.id}>
                                             {item.name}
@@ -828,7 +830,7 @@ export default function Fixed({
                                 onChange={changeIncomeCategoryId}
                             >
                                 <option value="">選択してください</option>
-                                {incomeCategoryInfoList.map((item, index) => (
+                                {categoryInfoList.map((item, index) => (
                                     <React.Fragment key={index}>
                                         <option value={item.id}>
                                             {item.name}
