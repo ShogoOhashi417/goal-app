@@ -29,6 +29,9 @@ export default function Fixed({
     IncomeCategoryDataList,
 }) {
     const [incomeInfoList, setIncomeInfoList] = useState(incomeDataList);
+    const [categoryInfoList, setCategoryInfoList] = useState(
+        IncomeCategoryDataList
+    );
 
     const [incomeId, setIncomeId] = useState(0);
     const [incomeName, setIncomeName] = useState("");
@@ -97,11 +100,14 @@ export default function Fixed({
 
     const getInfo = () => {
         axios
-            .get("/fixed-income")
+            .get("/fixed-income/get")
             .then((response) => {
-                setIncomeInfoList(response.data.income_info_list);
+                setIncomeInfoList(response.data.fixedIncomes);
+                setCategoryInfoList(response.data.incomeCategoryInfoList);
             })
-            .catch((error) => {});
+            .catch((error) => {
+                console.error("データの取得に失敗しました", error);
+            });
     };
 
     const addIncome = () => {
@@ -195,10 +201,6 @@ export default function Fixed({
         });
     };
 
-    const [incomeCategoryInfoList, setIncomeCategoryInfoList] = useState(
-        IncomeCategoryDataList
-    );
-
     const columnHelper = createColumnHelper();
 
     const data = React.useMemo(() => incomeInfoList, [incomeInfoList]);
@@ -217,8 +219,9 @@ export default function Fixed({
             }),
             columnHelper.accessor("period_type", {
                 header: "受け取りペース",
-                cell: (info) => (info.getValue() === "month" ? "毎月" : "毎年"),
+                cell: (info) => info.getValue(),
                 sortingFn: "basic",
+                formatValue: (value) => (value === "month" ? "毎月" : "毎年"),
             }),
             columnHelper.accessor("payment_month", {
                 header: "受け取り月",
@@ -519,7 +522,7 @@ export default function Fixed({
                                 onChange={changeIncomeCategoryId}
                             >
                                 <option value="">選択してください</option>
-                                {incomeCategoryInfoList.map((item, index) => (
+                                {categoryInfoList.map((item, index) => (
                                     <React.Fragment key={index}>
                                         <option value={item.id}>
                                             {item.name}
@@ -828,7 +831,7 @@ export default function Fixed({
                                 onChange={changeIncomeCategoryId}
                             >
                                 <option value="">選択してください</option>
-                                {incomeCategoryInfoList.map((item, index) => (
+                                {categoryInfoList.map((item, index) => (
                                     <React.Fragment key={index}>
                                         <option value={item.id}>
                                             {item.name}
