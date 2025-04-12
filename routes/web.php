@@ -50,6 +50,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::get('/report/expenditure', function () {
+        return Inertia::render('Report/Expenditure/Index');
+    })->name('report.expenditure');
+
+    Route::get('/report/balance', function () {
+        return Inertia::render('Report/Balance/Index');
+    })->name('report.balance');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
