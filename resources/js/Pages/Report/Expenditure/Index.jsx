@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head } from '@inertiajs/react';
-import Highcharts from 'highcharts';
-import HighchartsReact from 'highcharts-react-official';
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
+import { Head } from "@inertiajs/react";
+import Highcharts from "highcharts";
+import HighchartsReact from "highcharts-react-official";
 import YearSelectBox from "@/Components/YearSelectBox";
 
 export default function Report({ auth }) {
@@ -10,13 +10,18 @@ export default function Report({ auth }) {
         const MONTHS_PER_YEAR = 12;
 
         const resultMonth = month - period;
-        
+
         if (resultMonth > 0) {
-            return year + "-" + String(resultMonth).padStart(2, '0');
+            return year + "-" + String(resultMonth).padStart(2, "0");
         }
 
-        return (year - 1) + "-" + String(resultMonth + MONTHS_PER_YEAR).padStart(2, '0');
-    }
+        return (
+            year -
+            1 +
+            "-" +
+            String(resultMonth + MONTHS_PER_YEAR).padStart(2, "0")
+        );
+    };
 
     const [totalChartOptions, setTotalChartOptions] = useState([]);
     const [chartOptionsList, setChartOptionsList] = useState([]);
@@ -25,13 +30,11 @@ export default function Report({ auth }) {
     const thisYear = thisDate.getFullYear();
     const thisMonth = thisDate.getMonth() + 1;
 
-    const [dateList, setDateList] = useState(
-        [
-            getMonth(thisYear, thisMonth, 2),
-            getMonth(thisYear, thisMonth, 1),
-            getMonth(thisYear, thisMonth, 0),
-        ]
-    );
+    const [dateList, setDateList] = useState([
+        getMonth(thisYear, thisMonth, 2),
+        getMonth(thisYear, thisMonth, 1),
+        getMonth(thisYear, thisMonth, 0),
+    ]);
 
     const changeYear = (event) => {
         const year = event.target.value;
@@ -39,12 +42,12 @@ export default function Report({ auth }) {
         const YearMonthList = [];
         let month = 1;
         while (month <= 12) {
-            YearMonthList.push(year + "-" + month)
+            YearMonthList.push(year + "-" + month);
             month++;
         }
 
         setDateList(YearMonthList);
-    }
+    };
 
     const THIS_MONTH_PERIOD = "1";
     const THREE_MONTHS_PERIOD = "2";
@@ -109,14 +112,14 @@ export default function Report({ auth }) {
 
             return;
         }
-    }
+    };
 
     const [expenditureInfoList, setExpenditureInfoList] = useState([]);
 
     const getIncomeCategory = async () => {
-        const response = await axios.get('/expenditure/get_by_category');
+        const response = await axios.get("/expenditure/get_by_category");
         setExpenditureInfoList(response.data.category_to_amount_list);
-    }
+    };
 
     useEffect(() => {
         getIncomeCategory();
@@ -126,117 +129,133 @@ export default function Report({ auth }) {
         const totalDataList = [];
         const optionsList = [];
 
-        Object.entries(expenditureInfoList).forEach(([categoryName, dateToAmountList]) => {
-            const amountList = [];
-            dateList.forEach((date) => {
-                const amount = dateToAmountList[date] ?? 0;
-                amountList.push(amount);
-            });
+        Object.entries(expenditureInfoList).forEach(
+            ([categoryName, dateToAmountList]) => {
+                const amountList = [];
+                dateList.forEach((date) => {
+                    const amount = dateToAmountList[date] ?? 0;
+                    amountList.push(amount);
+                });
 
-            totalDataList.push({
-                name: categoryName,
-                data: amountList
-            });
-
-            optionsList.push({
-                chart: {
-                    type: 'column'
-                },
-                title: {
-                    text: `${categoryName}の月別支出額`
-                },
-                xAxis: {
-                    categories: dateList
-                },
-                yAxis: {
-                    title: {
-                        text: '支出額 (万)'
-                    },
-                    labels: {
-                        formatter: function() {
-                            return this.value / 10000 + '万';
-                        }
-                    }
-                },
-                legend: {
-                    reversed: true
-                },
-                plotOptions: {
-                    series: {
-                        stacking: 'normal',
-                        dataLabels: {
-                            enabled: true
-                        }
-                    }
-                },
-                series: [{
+                totalDataList.push({
                     name: categoryName,
-                    data: amountList
-                }]
-            });
-        });
+                    data: amountList,
+                });
+
+                optionsList.push({
+                    chart: {
+                        type: "column",
+                    },
+                    title: {
+                        text: `${categoryName}の月別支出額`,
+                    },
+                    xAxis: {
+                        categories: dateList,
+                    },
+                    yAxis: {
+                        title: {
+                            text: "支出額 (万)",
+                        },
+                        labels: {
+                            formatter: function () {
+                                return this.value / 10000 + "万";
+                            },
+                        },
+                    },
+                    legend: {
+                        reversed: true,
+                    },
+                    plotOptions: {
+                        series: {
+                            stacking: "normal",
+                            dataLabels: {
+                                enabled: true,
+                            },
+                        },
+                    },
+                    series: [
+                        {
+                            name: categoryName,
+                            data: amountList,
+                        },
+                    ],
+                });
+            }
+        );
 
         const totalChartOptions = {
             chart: {
-                type: 'column'
+                type: "column",
             },
             title: {
-                text: '合計支出額'
+                text: "合計支出額",
             },
             xAxis: {
-                categories: dateList
+                categories: dateList,
             },
             yAxis: {
                 title: {
-                    text: '支出額 (万)'
+                    text: "支出額 (万)",
                 },
                 labels: {
-                    formatter: function() {
-                        return this.value / 10000 + '万';
-                    }
-                }
+                    formatter: function () {
+                        return this.value / 10000 + "万";
+                    },
+                },
             },
             legend: {
-                reversed: true
+                reversed: true,
             },
             plotOptions: {
                 series: {
-                    stacking: 'normal',
+                    stacking: "normal",
                     dataLabels: {
-                        enabled: true
-                    }
-                }
+                        enabled: true,
+                    },
+                },
             },
-            series: totalDataList
+            series: totalDataList,
         };
 
         setChartOptionsList(optionsList);
         setTotalChartOptions(totalChartOptions);
-    }, [expenditureInfoList, dateList]); 
+    }, [expenditureInfoList, dateList]);
 
     return (
         <>
             <AuthenticatedLayout
                 user={auth.user}
-                header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">レポート</h2>}
+                header={
+                    <h2 className="font-semibold text-xl text-gray-800 leading-tight">
+                        レポート
+                    </h2>
+                }
             >
                 <Head title="レポート" />
 
-                <div className='flex flex-col min-h-screen'>
+                <div className="flex flex-col min-h-screen">
                     <div className="w-5/6 mx-auto my-3 flex-1 relative sm:justify-center bg-dots-darker bg-center bg-gray-100 dark:bg-dots-lighter dark:bg-gray-900 selection:text-white">
-                        <div className='container'>
+                        <div className="container">
                             <div className="flex">
                                 <YearSelectBox
                                     onChange={changeYear}
-                                >
-                                </YearSelectBox>
+                                ></YearSelectBox>
                                 <select
                                     className="w-1/6 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 ml-3"
                                     onChange={changeRelativePeriod}
                                 >
-                                    {Array.from(relativePeriodList.entries()).map(([value, period], index) => (
+                                    {Array.from(
+                                        relativePeriodList.entries()
+                                    ).map(([value, period], index) => (
                                         <React.Fragment key={value}>
-                                            <option value={value} selected={value == THREE_MONTHS_PERIOD}>{ period }</option>
+                                            <option
+                                                value={value}
+                                                selected={
+                                                    value == THREE_MONTHS_PERIOD
+                                                }
+                                            >
+                                                {period}
+                                            </option>
                                         </React.Fragment>
                                     ))}
                                 </select>
