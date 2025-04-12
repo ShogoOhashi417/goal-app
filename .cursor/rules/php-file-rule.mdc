@@ -1,0 +1,211 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# ドメインオブジェクトの実装ルール
+
+## 基本方針
+
+ドメインオブジェクトは、ビジネスロジックの中心となる概念を表現します。
+各オブジェクトは明確な境界と責務を持ち、ドメインの概念を正確に反映します。
+
+> **Note**
+> PHP ファイルの基本構造に関するルールは [php-file-rules.md](./php-file-rules.md) を参照してください。
+
+## ディレクトリ構造
+
+### 1. ベースディレクトリ
+
+-   すべてのドメインオブジェクトは `app/Domain/Model` 配下に配置します
+-   各ドメイン概念ごとにディレクトリを作成します
+
+```
+app/Domain/Model/
+├── User/              # ユーザー関連の概念
+├── Income/            # 収入関連の概念
+├── Expenditure/       # 支出関連の概念
+└── Category/          # カテゴリー関連の概念
+```
+
+### 2. 概念ディレクトリの構造
+
+各概念のディレクトリは以下の構造を持ちます：
+
+```
+app/Domain/Model/ConceptName/
+├── Exception/         # ドメイン例外クラス
+├── FixedIncome.php   # エンティティクラス
+├── FixedIncomeId.php # 値オブジェクトクラス
+├── Income.php        # 値オブジェクトクラス
+├── ReceivingPace.php # 列挙型クラス
+└── ReceivingDate.php # 値オブジェクトクラス
+```
+
+### 3. 命名規則
+
+-   ディレクトリ名は単数形でパスカルケース
+-   ファイル名はクラス名と一致させる
+-   名前空間は `App\Domain\Model\{ConceptName}` とする
+-   例外クラスの名前空間は `App\Domain\Model\{ConceptName}\Exception` とする
+
+## 実装ルール
+
+### 1. PHP ファイルの基本構造
+
+-   すべての PHP ファイルは `<?php` タグで開始する
+-   `declare(strict_types=1);` を必ず記述する
+-   名前空間の宣言を行う
+-   必要な use ステートメントを記述する
+
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Domain\Model\Example;
+
+use SomeNamespace\SomeClass;
+
+final class ExampleClass
+{
+    // クラスの実装
+}
+```
+
+### 2. エンティティの生成
+
+-   エンティティは、ビジネス上の概念単位で作成します
+-   関連する属性や振る舞いを一つのエンティティにまとめます
+-   一貫性のある単位でオブジェクトを分割します
+
+```php
+// Good：ユーザーという概念単位でエンティティを作成
+final class User
+{
+    public function __construct(
+        private readonly UserId $id,
+        private readonly UserName $name,
+        private readonly EmailAddress $email,
+        private readonly UserStatus $status
+    ) {
+        $this->assertUserValid();
+    }
+
+    private function assertUserValid(): void
+    {
+        if ($this->status->isDeleted() && $this->email->isVerified()) {
+            throw new DomainException('削除済みユーザーのメールアドレスを認証済みにはできません');
+        }
+    }
+}
+
+// Bad：概念が混在している
+class UserAndPayment
+{
+    public function __construct(
+        private string $userName,
+        private string $email,
+        private int $paymentAmount,
+        private string $cardNumber
+    ) {}
+}
+```
+
+### 3. 値オブジェクトの使用
+
+-   プリミティブ型は直接使用せず、値オブジェクトでラップします
+-   値オブジェクトには、その値に関する検証ロジックを含めます
+-   値オブジェクトは不変（イミュータブル）にします
+
+```php
+// Good：値オブジェクトを使用
+final class UserName
+{
+    public function __construct(
+        private readonly string $value
+    ) {
+        $this->assertValid();
+    }
+
+    private function assertValid(): void
+    {
+        if (mb_strlen($this->value) < 3) {
+            throw new DomainException('ユーザー名は3文字以上である必要があります');
+        }
+        if (mb_strlen($this->value) > 20) {
+            throw new DomainException('ユーザー名は20文字以下である必要があります');
+        }
+    }
+
+    public function value(): string
+    {
+        return $this->value;
+    }
+}
+
+// Bad：プリミティブ型を直接使用
+class User
+{
+    public function __construct(
+        private string $name
+    ) {
+        if (strlen($name) < 3) {
+            throw new Exception('Invalid name');
+        }
+    }
+}
+```
+
+### 4. 生成ルールとバリデーション
+
+-   すべてのオブジェクトは、コンストラクタで生成ルールを検証します
+-   バリデーションは、ドメインの制約を明確に表現します
+-   複雑なバリデーションは、専用のファクトリクラスに分離することも検討します
+
+```php
+// Good：ファクトリメソッドとバリデーションの組み合わせ
+final class Order
+{
+    private function __construct(
+        private readonly OrderId $id,
+        private readonly UserId $userId,
+        private readonly OrderItems $items,
+        private readonly OrderStatus $status
+    ) {
+        $this->assertOrderValid();
+    }
+
+    public static function create(
+        OrderId $id,
+        UserId $userId,
+        OrderItems $items
+    ): self {
+        return new self(
+            $id,
+            $userId,
+            $items,
+            OrderStatus::draft()
+        );
+    }
+
+    private function assertOrderValid(): void
+    {
+        if ($this->items->isEmpty()) {
+            throw new DomainException('注文には少なくとも1つの商品が必要です');
+        }
+        if ($this->items->totalAmount()->isNegative()) {
+            throw new DomainException('注文金額は0円以上である必要があります');
+        }
+    }
+}
+
+// Bad：バリデーションが不十分
+class Order
+{
+    public function __construct(
+        private int $userId,
+        private array $items
+    ) {}
+}
+```

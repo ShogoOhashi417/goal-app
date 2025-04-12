@@ -1,0 +1,215 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# ユースケースの実装ルール
+
+## 基本方針
+
+ユースケースは、アプリケーション層のビジネスロジックを実装するためのクラスです。
+データの永続化や更新を伴う処理は、必ずユースケースを通して実行します。
+
+## 実装ルール
+
+### 1. 依存性の注入
+
+-   ユースケースクラスでは、必要なトランザクションとリポジトリをコンストラクタで DI します
+-   DI されたオブジェクトは private readonly プロパティとして保持します
+-   トランザクションは必ず第一引数として受け取ります
+
+```php
+final class UpdateUserUseCase
+{
+    public function __construct(
+        private readonly TransactionInterface $transaction,
+        private readonly UserRepository $userRepository
+    ) {}
+}
+```
+
+### 2. メソッド名
+
+-   ユースケースの実行メソッド名は必ず `handle` とします
+-   パラメータは InputData オブジェクトとして渡します
+-   プリミティブ型の値を直接渡すことは避けます
+
+```php
+// Good
+public function handle(UpdateUserInputData $inputData): void
+
+// Bad
+public function execute(string $name, int $age): void
+```
+
+### 3. オブジェクトの生成
+
+-   ドメインオブジェクトの生成はメソッド内で行います
+-   外部から生成済みのドメインオブジェクトを受け取ることは避けます
+
+```php
+// Good
+public function handle(CreateUserInputData $inputData): void
+{
+    $user = new User($inputData->name, $inputData->email);
+    $this->userRepository->save($user);
+}
+
+// Bad
+public function handle(User $user): void
+{
+    $this->userRepository->save($user);
+}
+```
+
+### 4. InputData の実装
+
+-   ユースケースを作成する際は、必ず対応する InputData クラスも作成します
+-   クラス名は Create 〇〇〇 InputData のような命名とします
+-   InputData のプロパティはすべて`public readonly`で定義します
+-   InputData はイミュータブルであり、単純なデータ構造体として扱います
+
+```php
+// Good：対応するInputData
+final class CreateUserInputData
+{
+    public function __construct(
+        public readonly string $name,
+        public readonly string $email,
+        public readonly int $age
+    ) {}
+}
+
+// Bad：readonlyではない
+final class UpdateUserInputData
+{
+    public string $name;
+    public string $email;
+
+    public function __construct(string $name, string $email)
+    {
+        $this->name = $name;
+        $this->email = $email;
+    }
+}
+```
+
+### 5. リポジトリの実装
+
+#### 基本方針
+
+-   リポジトリはドメインオブジェクトとデータベースの橋渡しを担当します
+-   Eloquent モデルとドメインオブジェクトの変換を行います
+
+#### 依存性の注入
+
+-   リポジトリクラスでは、対応する Eloquent モデルをコンストラクタで DI します
+-   DI されたモデルは private readonly プロパティとして保持します
+
+```php
+// Good
+final class UserRepository implements UserRepositoryInterface
+{
+    public function __construct(
+        private readonly UserModel $userModel
+    ) {}
+}
+
+// Bad：DIを使用していない
+final class UserRepository implements UserRepositoryInterface
+{
+    private UserModel $userModel;
+
+    public function __construct()
+    {
+        $this->userModel = new UserModel();
+    }
+}
+```
+
+#### メソッド名の規則
+
+-   新規作成：`save(Entity $entity): void`
+-   更新：`update(Entity $entity): void`
+-   削除：`remove(Entity $entity): void`
+-   取得：`fetch〇〇〇`（例：`fetchById`, `fetchByEmail`）
+
+```php
+// Good
+interface UserRepositoryInterface
+{
+    public function save(User $user): void;
+    public function update(User $user): void;
+    public function remove(User $user): void;
+    public function fetchById(UserId $id): ?User;
+    public function fetchByEmail(Email $email): ?User;
+}
+
+// Bad：命名規則に従っていない
+interface UserRepositoryInterface
+{
+    public function create(User $user): void;
+    public function modify(User $user): void;
+    public function delete(User $user): void;
+    public function findById(UserId $id): ?User;
+}
+```
+
+#### 実装例
+
+```php
+final class UserRepository implements UserRepositoryInterface
+{
+    public function __construct(
+        private readonly UserModel $userModel
+    ) {}
+
+    public function save(User $user): void
+    {
+        $this->userModel->create([
+            'id' => $user->id()->value(),
+            'name' => $user->name()->value(),
+            'email' => $user->email()->value(),
+        ]);
+    }
+
+    public function fetchById(UserId $id): ?User
+    {
+        $model = $this->userModel->find($id->value());
+        if (!$model) {
+            return null;
+        }
+
+        return new User(
+            new UserId($model->id),
+            new UserName($model->name),
+            new Email($model->email)
+        );
+    }
+}
+```
+
+## 実装例
+
+```php
+final class CreateUserUseCase
+{
+    public function __construct(
+        private readonly TransactionInterface $transaction,
+        private readonly UserRepository $userRepository
+    ) {}
+
+    public function handle(CreateUserInputData $inputData): void
+    {
+        $this->transaction->begin();
+        try {
+            $user = new User($inputData->name, $inputData->email);
+            $this->userRepository->save($user);
+            $this->transaction->commit();
+        } catch (Exception $e) {
+            $this->transaction->rollback();
+            throw $e;
+        }
+    }
+}
+```
