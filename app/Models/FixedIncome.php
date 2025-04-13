@@ -98,7 +98,7 @@ final class FixedIncome extends Model
         string $startDate,
         ?string $endDate,
     ): void {
-        $this->where('id', $id)->update([
+        $this->where('income_id', $id)->update([
             'cycle_unit' => $cycleUnit,
             'payment_day' => $paymentDay,
             'payment_month' => $paymentMonth,
