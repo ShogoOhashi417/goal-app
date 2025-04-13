@@ -28,7 +28,12 @@ final class Income extends Model
      */
     public function fetchById(int $id): array
     {
-        return $this->find($id)->toArray();
+		return $this->join('income_categories', 'incomes.category_id', '=', 'income_categories.id')
+					->join('fixed_incomes', 'incomes.id', '=', 'fixed_incomes.income_id')
+					->select('incomes.*', 'income_categories.name as category_name', 'fixed_incomes.payment_day', 'fixed_incomes.payment_month', 'fixed_incomes.start_date', 'fixed_incomes.end_date', 'fixed_incomes.cycle_unit')
+					->where('incomes.id', $id)
+					->first()
+					->toArray();
     }
 
     /**

@@ -56,15 +56,14 @@ final class FixedIncome extends Model
         ]);
     }
 
-    /**
-     * @param integer $id
-     * @return array
-     */
-    public function fetchById(int $id): array
-    {
-        return $this->find($id)->toArray();
-    }
-
+	/**
+	 * @param integer $id
+	 * @return ?FixedIncome
+	 */
+	public function fetchById(int $id): ?FixedIncome
+	{
+		return $this->find($id);
+	}
     // /**
     //  * @return array
     //  */
@@ -84,7 +83,7 @@ final class FixedIncome extends Model
 
     /**
      * @param integer $id
-     * @param string $cycleUnit
+     * @param integer $cycleUnit
      * @param integer $paymentDay
      * @param integer|null $paymentMonth
      * @param string $startDate
@@ -93,7 +92,7 @@ final class FixedIncome extends Model
      */
     public function updateById(
         int $id,
-        string $cycleUnit,
+        int $cycleUnit,
         int $paymentDay,
         ?int $paymentMonth,
         string $startDate,

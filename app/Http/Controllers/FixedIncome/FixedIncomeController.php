@@ -127,6 +127,9 @@ class FixedIncomeController extends Controller
     public function update(Request $request, int $id)
     {
         $updateFixedIncomeUseCase = new UpdateFixedIncomeUseCase(
+            new IncomeRepository(
+                new Income()
+            ),
             new FixedIncomeRepository(
                 new FixedIncomeModel()
             )
@@ -153,13 +156,16 @@ class FixedIncomeController extends Controller
     public function delete(int $id)
     {
         $deleteFixedIncomeUseCase = new DeleteFixedIncomeUseCase(
+            new IncomeRepository(
+                new Income()
+            ),
             new FixedIncomeRepository(
                 new FixedIncomeModel()
             )
         );
 
         $deleteFixedIncomeUseCase->handle(
-            new DeleteFixedIncomeInputData($id)
+            new DeleteFixedIncomeInputData($id, Auth::id())
         );
 
         return response()->json(['status' => 'success']);
