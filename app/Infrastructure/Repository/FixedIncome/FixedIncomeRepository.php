@@ -51,7 +51,7 @@ final class FixedIncomeRepository implements FixedIncomeRepositoryInterface
     public function update(FixedIncome $fixedIncome): void
     {
         $this->fixedIncomeModel->updateById(
-            $fixedIncome->getId(),
+            $fixedIncome->getIncomeId(),
             $fixedIncome->getCycleUnit()->value,
             $fixedIncome->getPaymentDay()->getValue(),
             $fixedIncome->getPaymentMonth() ? $fixedIncome->getPaymentMonth()->getValue() : null,
