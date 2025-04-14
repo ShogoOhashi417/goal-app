@@ -20,20 +20,34 @@ export default function BulkOperation({ auth }) {
     const [isDownloading, setIsDownloading] = useState(false);
 
     const exportSampleCsv = () => {
-        const fileInput = document.querySelector('input[name="csv"]');
-        const formData = new FormData();
-
-        if (fileInput && fileInput.files.length > 0) {
-            formData.append("csv", fileInput.files[0]); // ファイルをFormDataに追加
-        }
         axios.get("/expenditure/export", {}).then((response) => {
-            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const bom = new Uint8Array([0xef, 0xbb, 0xbf]);
+
+            const rows = [response.data.header, ...response.data.data];
+
+            const csvContent = rows
+                .map((row) =>
+                    row
+                        .map((cell) =>
+                            typeof cell === "string" && cell.includes(",")
+                                ? `"${cell}"`
+                                : cell
+                        )
+                        .join(",")
+                )
+                .join("\n");
+
+            const blob = new Blob([bom, csvContent], {
+                type: "text/csv;charset=utf-8",
+            });
+            const url = window.URL.createObjectURL(blob);
             const link = document.createElement("a");
             link.href = url;
             link.setAttribute("download", "sample.csv");
             document.body.appendChild(link);
             link.click();
             link.remove();
+            window.URL.revokeObjectURL(url);
         });
     };
 
