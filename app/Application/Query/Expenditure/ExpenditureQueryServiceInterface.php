@@ -7,4 +7,5 @@ namespace App\Application\Query\Expenditure;
 interface ExpenditureQueryServiceInterface
 {
     public function fetchAll(): array;
+    public function fetchByDateRange(string $startDate, string $endDate): array;
 }

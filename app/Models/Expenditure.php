@@ -28,6 +28,15 @@ final class Expenditure extends Model
         return $this->find($id)->toArray();
     }
 
+    public function fetchByDateRange(string $startDate, string $endDate): array
+    {
+        return $this->whereBetween('calendar_date', [$startDate, $endDate])
+                    ->join('expenditure_categories', 'expenditures.category_id', '=', 'expenditure_categories.id')
+                    ->select('expenditures.*', 'expenditure_categories.name as category_name')
+                    ->get()
+                    ->toArray();
+    }
+
     /**
      * @param string $name
      * @param integer $categoryId
