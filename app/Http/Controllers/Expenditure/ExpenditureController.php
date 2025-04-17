@@ -21,6 +21,7 @@ use App\Application\UseCase\Expenditure\Create\CreateExpenditureUseCase;
 use App\Application\UseCase\Expenditure\Delete\DeleteExpenditureUseCase;
 use App\Application\UseCase\Expenditure\Update\UpdateExpenditureUseCase;
 use App\Application\UseCase\CSV\Export\ExportSampleExpenditureCsvUseCase;
+use App\Application\UseCase\CSV\Export\ExportExpenditureCsvUseCase;
 use App\Application\UseCase\Expenditure\Create\CreateExpenditureInputData;
 use App\Application\UseCase\Expenditure\Delete\DeleteExpenditureInputData;
 use App\Application\UseCase\Expenditure\Update\UpdateExpenditureInputData;
@@ -29,6 +30,7 @@ use App\Application\UseCase\Expenditure\Create\BulkCreateExpenditureInputData;
 use App\Application\UseCase\Expenditure\Create\BulkCreateExpenditureUseCase;
 use App\Infrastructure\Repository\PresetExpenditureItem\PresetExpenditureItemRepository;
 use App\Models\PresetExpenditureItem;
+use App\Infrastructure\Util\CsvExporter;
 
 class ExpenditureController extends Controller
 {
@@ -151,6 +153,29 @@ class ExpenditureController extends Controller
         $exportSampleExpenditureCsvUseCase = new ExportSampleExpenditureCsvUseCase();
         
         return $exportSampleExpenditureCsvUseCase->handle();
+    }
+
+    public function exportData(Request $request)
+    {
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+        $format = $request->input('format', 'detailed');
+        
+        $exportExpenditureCsvUseCase = new ExportExpenditureCsvUseCase(
+            new ExpenditureQueryService(
+                new ExpenditureModel()
+            ),
+            new CsvExporter()
+        );
+        
+        $result = $exportExpenditureCsvUseCase->handle($startDate, $endDate, $format);
+        
+        $filename = 'expenditure.csv';
+        if ($startDate && $endDate) {
+            $filename = "expenditure_{$startDate}_{$endDate}.csv";
+        }
+        
+        return (new CsvExporter())->export($result['header'], $result['data'], $filename);
     }
 
     public function import_csv(Request $request)

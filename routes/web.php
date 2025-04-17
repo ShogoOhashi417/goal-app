@@ -95,6 +95,7 @@ Route::put('/expenditure_category/update/{id}', [ExpenditureCategoryController::
 Route::post('/expenditure_category/delete', [ExpenditureCategoryController::class, 'delete']);
 
 Route::get('/expenditure/export', [ExpenditureController::class, 'export']);
+Route::get('/expenditure/export_data', [ExpenditureController::class, 'exportData']);
 Route::post('/expenditure/import_csv', [ExpenditureController::class, 'import_csv']);
 
 Route::post('/expenditure/bulk_create', [ExpenditureController::class, 'bulkCreate']);
