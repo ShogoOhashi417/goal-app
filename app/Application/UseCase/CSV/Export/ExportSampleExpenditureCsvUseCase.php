@@ -8,10 +8,10 @@ final readonly class ExportSampleExpenditureCsvUseCase
 {
     public function handle(): array
     {
-        $header = ['支払日', '項目名', '金額', 'カテゴリー'];
+        $header = ['ID', '支払日', '項目名', '金額', 'カテゴリー'];
         
         $data = [
-            ['2024/11/1', 'スーパー', '2000', '食費']
+            ['', '2024/11/1', 'スーパー', '2000', '食費']
         ];
         
         return [
