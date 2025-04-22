@@ -57,9 +57,9 @@ final readonly class ImportExpendtureCsvUseCase
         $expenditureNameToCategoryIdMapList = array_column($presetExpenditureItemInfoList, 'category_id', 'name');
 
         foreach ($targetLineList as $line) {
-
             $line = array_map(function($value) {
-                return mb_convert_encoding($value, 'UTF-8', 'SJIS-win'); // ここでエンコーディングを変換
+                $encoding = mb_detect_encoding($value, ['UTF-8', 'SJIS-win', 'eucJP-win']);
+                return mb_convert_encoding($value, 'UTF-8', $encoding ?: 'UTF-8');
             }, $line);
 
             $date = $this->dateConverter->toYearMonthDay($line[0]);
