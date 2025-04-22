@@ -60,6 +60,9 @@ final readonly class ImportExpendtureCsvUseCase
         $expenditureNameToCategoryIdMapList = array_column($presetExpenditureItemInfoList, 'category_id', 'name');
 
         foreach ($targetLineList as $line) {
+
+            $id = $line[self::ID_COLUMN];
+
             $line = array_map(function($value) {
                 $encoding = mb_detect_encoding($value, ['UTF-8', 'SJIS-win', 'eucJP-win']);
                 return mb_convert_encoding($value, 'UTF-8', $encoding ?: 'UTF-8');
@@ -79,7 +82,8 @@ final readonly class ImportExpendtureCsvUseCase
             }
 
             $expenditureHolder->appendExpenditure(
-                Expenditure::create(
+                Expenditure::reconstruct(
+                    $id,
                     $name,
                     $categoryId,
                     $amount,
