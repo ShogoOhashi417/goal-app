@@ -149,6 +149,8 @@ export default function BulkOperation({ auth }) {
         const rows = table.querySelectorAll("tbody tr");
 
         rows.forEach((row, index) => {
+            const id = row.querySelector('input[name="id"]')?.value || '';
+
             const itemName = row.querySelector(
                 'input[name="category_name"]'
             ).value;
@@ -162,6 +164,7 @@ export default function BulkOperation({ auth }) {
                 'input[name="calendar_date"]'
             ).value;
 
+            formData.append(`items[${index}][id]`, id);
             formData.append(`items[${index}][name]`, itemName);
             formData.append(`items[${index}][category_id]`, selectedCategory);
             formData.append(`items[${index}][amount]`, amount);
@@ -249,7 +252,6 @@ export default function BulkOperation({ auth }) {
                             {activeTab === "upload" && (
                                 <div className="bg-white p-3 rounded-lg">
                                     <h3 className="text-lg font-semibold text-gray-900 mb-3">
-                                        STEP.1
                                         サンプルCSVファイルをダウンロードする
                                     </h3>
 
@@ -270,132 +272,12 @@ export default function BulkOperation({ auth }) {
                                     <hr className="my-5" />
 
                                     <h3 className="text-lg font-semibold text-gray-900 mb-3">
-                                        STEP.2 アップロード方式の選択
+                                        CSVファイルをアップロードする
                                     </h3>
 
                                     <p className="text-gray-600 text-sm mb-2">
-                                        処理方式を選択してください。
+                                        CSVファイルをアップロードしてください。IDが含まれている場合は既存データを上書きし、含まれていない場合は新規追加します。
                                     </p>
-
-                                    <div className="my-3 mb-4">
-                                        <table className="w-full border-collapse rounded-lg overflow-hidden">
-                                            <thead className="bg-gray-100">
-                                                <tr>
-                                                    <th className="w-16 p-2 border border-gray-200"></th>
-                                                    <th className="p-2 border border-gray-200 text-left">
-                                                        処理方式
-                                                    </th>
-                                                    <th className="p-2 border border-gray-200 text-left">
-                                                        説明
-                                                    </th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr className="bg-gray-50 border border-gray-200">
-                                                    <td
-                                                        className="p-3 border border-gray-200 w-16 text-center cursor-pointer"
-                                                        onClick={() =>
-                                                            setUploadMode("add")
-                                                        }
-                                                    >
-                                                        <input
-                                                            id="upload-mode-add"
-                                                            type="radio"
-                                                            name="upload-mode"
-                                                            value="add"
-                                                            checked={
-                                                                uploadMode ===
-                                                                "add"
-                                                            }
-                                                            onChange={() =>
-                                                                setUploadMode(
-                                                                    "add"
-                                                                )
-                                                            }
-                                                            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500"
-                                                        />
-                                                    </td>
-                                                    <td
-                                                        className="p-3 border border-gray-200 cursor-pointer"
-                                                        onClick={() =>
-                                                            setUploadMode("add")
-                                                        }
-                                                    >
-                                                        <label
-                                                            htmlFor="upload-mode-add"
-                                                            className="text-sm font-medium text-gray-900 cursor-pointer block"
-                                                        >
-                                                            新規追加
-                                                        </label>
-                                                    </td>
-                                                    <td
-                                                        className="p-3 border border-gray-200 cursor-pointer"
-                                                        onClick={() =>
-                                                            setUploadMode("add")
-                                                        }
-                                                    >
-                                                        <span className="text-sm text-gray-600">
-                                                            既存データを残したまま、新しいデータを追加します
-                                                        </span>
-                                                    </td>
-                                                </tr>
-                                                <tr className="bg-white border border-gray-200">
-                                                    <td
-                                                        className="p-3 border border-gray-200 w-16 text-center cursor-pointer"
-                                                        onClick={() =>
-                                                            setUploadMode(
-                                                                "overwrite"
-                                                            )
-                                                        }
-                                                    >
-                                                        <input
-                                                            id="upload-mode-overwrite"
-                                                            type="radio"
-                                                            name="upload-mode"
-                                                            value="overwrite"
-                                                            checked={
-                                                                uploadMode ===
-                                                                "overwrite"
-                                                            }
-                                                            onChange={() =>
-                                                                setUploadMode(
-                                                                    "overwrite"
-                                                                )
-                                                            }
-                                                            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500"
-                                                        />
-                                                    </td>
-                                                    <td
-                                                        className="p-3 border border-gray-200 cursor-pointer"
-                                                        onClick={() =>
-                                                            setUploadMode(
-                                                                "overwrite"
-                                                            )
-                                                        }
-                                                    >
-                                                        <label
-                                                            htmlFor="upload-mode-overwrite"
-                                                            className="text-sm font-medium text-gray-900 cursor-pointer block"
-                                                        >
-                                                            上書き
-                                                        </label>
-                                                    </td>
-                                                    <td
-                                                        className="p-3 border border-gray-200 cursor-pointer"
-                                                        onClick={() =>
-                                                            setUploadMode(
-                                                                "overwrite"
-                                                            )
-                                                        }
-                                                    >
-                                                        <span className="text-sm text-gray-600">
-                                                            既存データを削除し、アップロードデータで置き換えます
-                                                        </span>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
 
                                     <div className="my-3 flex items-center">
                                         <label
