@@ -93,7 +93,6 @@ export default function BulkOperation({ auth }) {
 
     const [fileName, setFileName] = useState("ファイルを選択してください");
     const [isUploading, setIsUploading] = useState(false);
-    const [uploadMode, setUploadMode] = useState("add");
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
@@ -107,7 +106,6 @@ export default function BulkOperation({ auth }) {
 
         if (fileInput.files.length > 0) {
             formData.append("csv", fileInput.files[0]);
-            formData.append("mode", uploadMode);
         }
         axios
             .post("/expenditure/import_csv", formData, {
@@ -467,7 +465,13 @@ export default function BulkOperation({ auth }) {
                                         <tr>
                                             <th
                                                 scope="col"
-                                                className="px-3 py-3 w-5/12"
+                                                className="px-3 py-3 w-1/12"
+                                            >
+                                                処理
+                                            </th>
+                                            <th
+                                                scope="col"
+                                                className="px-3 py-3 w-4/12"
                                             >
                                                 支出名
                                             </th>
@@ -477,7 +481,7 @@ export default function BulkOperation({ auth }) {
                                             <th className="px-3 py-3 w-3/12">
                                                 カテゴリー名
                                             </th>
-                                            <th className="px-3 py-3 w-3/12">
+                                            <th className="px-3 py-3 w-2/12">
                                                 支払い日時
                                             </th>
                                             <th className="px-3 py-3 w-min"></th>
@@ -490,6 +494,24 @@ export default function BulkOperation({ auth }) {
                                                     key={index}
                                                     className="bg-white border-b hover:bg-gray-50"
                                                 >
+                                                    <td className="px-3 py-4 font-medium text-gray-900 whitespace-nowrap">
+                                                        <input
+                                                            type="hidden"
+                                                            name="id"
+                                                            value={
+                                                                csvPreviewList[
+                                                                    index
+                                                                ].id || ''
+                                                            }
+                                                        />
+                                                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                                                            csvPreviewList[index].id 
+                                                                ? 'bg-yellow-100 text-yellow-800' 
+                                                                : 'bg-green-100 text-green-800'
+                                                        }`}>
+                                                            {csvPreviewList[index].id ? '上書き' : '新規'}
+                                                        </span>
+                                                    </td>
                                                     <td className="px-3 py-4 font-medium text-gray-900 whitespace-nowrap">
                                                         <input
                                                             type="text"
