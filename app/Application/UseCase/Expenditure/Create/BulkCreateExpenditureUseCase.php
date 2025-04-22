@@ -28,8 +28,25 @@ readonly class BulkCreateExpenditureUseCase
     public function handle(BulkCreateExpenditureInputData $inputData): void
     {
         $expenditureHolder = new ExpenditureHolder();
+        $updateExpenditureHolder = new ExpenditureHolder();
 
         foreach ($inputData->itemList as $item) {
+            $isOverwrite = isset($item['id']) && $item['id'] !== '';
+
+            if ($isOverwrite) {
+                $updateExpenditureHolder->appendExpenditure(
+                    Expenditure::reconstruct(
+                        (int)$item['id'],
+                        $item['name'],
+                        $item['category_id'],
+                        $item['amount'],
+                        $item['calendar_date']
+                    )
+                );
+
+                continue;
+            }
+
             $expenditureHolder->appendExpenditure(
                 Expenditure::create(
                     $item['name'],
@@ -40,8 +57,15 @@ readonly class BulkCreateExpenditureUseCase
             );
         }
 
-        $this->expenditureRepository->saveBulk($expenditureHolder);
+        if ($expenditureHolder->getExpenditureList() !== []) {
+            $this->expenditureRepository->saveBulk($expenditureHolder);
+            $this->presetExpenditureItemRepository->create($expenditureHolder);
+        }
 
-        $this->presetExpenditureItemRepository->create($expenditureHolder);
+        if ($updateExpenditureHolder->getExpenditureList() !== []) {
+            foreach ($updateExpenditureHolder->getExpenditureList() as $expenditure) {
+                $this->expenditureRepository->update($expenditure);
+            }
+        }
     }
 }

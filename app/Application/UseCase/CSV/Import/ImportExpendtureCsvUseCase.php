@@ -12,9 +12,12 @@ use App\Models\PresetExpenditureItem;
 final readonly class ImportExpendtureCsvUseCase 
 {
     private const ITEM_LINE = 1;
-    private const NAME_COLUMN = 1;
-    private const AMOUNT_COLUMN = 2;
-    private const CATEGORY_COLUMN = 3;
+
+    private const ID_COLUMN = 0;
+    private const DATE_COLUMN = 1;
+    private const NAME_COLUMN = 2;
+    private const AMOUNT_COLUMN = 3;
+    private const CATEGORY_COLUMN = 4;
 
     private DateConverterInterface $dateConverter;
     private FetchExpenditureCategoryUseCase $fetchExpenditureCategoryUseCase;
@@ -58,11 +61,14 @@ final readonly class ImportExpendtureCsvUseCase
 
         foreach ($targetLineList as $line) {
 
+            $id = $line[self::ID_COLUMN];
+
             $line = array_map(function($value) {
-                return mb_convert_encoding($value, 'UTF-8', 'SJIS-win'); // ここでエンコーディングを変換
+                $encoding = mb_detect_encoding($value, ['UTF-8', 'SJIS-win', 'eucJP-win']);
+                return mb_convert_encoding($value, 'UTF-8', $encoding ?: 'UTF-8');
             }, $line);
 
-            $date = $this->dateConverter->toYearMonthDay($line[0]);
+            $date = $this->dateConverter->toYearMonthDay($line[self::DATE_COLUMN]);
             
             $name = $line[self::NAME_COLUMN];
 
@@ -76,7 +82,8 @@ final readonly class ImportExpendtureCsvUseCase
             }
 
             $expenditureHolder->appendExpenditure(
-                Expenditure::create(
+                Expenditure::reconstruct(
+                    $id,
                     $name,
                     $categoryId,
                     $amount,
