@@ -199,6 +199,7 @@ class ExpenditureController extends Controller
         $expenditureNameToCategoryIdMapList = array_column($presetExpenditureItemInfoList, 'category_id', 'name');
 
         foreach ($expenditureList as $expenditure) {
+            $id = $expenditure->getId();
             $expenditureName = $expenditure->getName()->getValue();
             $categoryId = $expenditure->getCategoryId()->getValue();
             $amount = $expenditure->getAmount()->getValue();
@@ -212,6 +213,7 @@ class ExpenditureController extends Controller
             }
 
             $result[] = [
+                "id" => $id,
                 "name" => $expenditureName,
                 "category_id" => $categoryId,
                 "amount" => $amount,
