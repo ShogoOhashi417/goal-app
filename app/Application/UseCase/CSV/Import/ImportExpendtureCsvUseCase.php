@@ -12,9 +12,12 @@ use App\Models\PresetExpenditureItem;
 final readonly class ImportExpendtureCsvUseCase 
 {
     private const ITEM_LINE = 1;
-    private const NAME_COLUMN = 1;
-    private const AMOUNT_COLUMN = 2;
-    private const CATEGORY_COLUMN = 3;
+
+    private const ID_COLUMN = 0;
+    private const DATE_COLUMN = 1;
+    private const NAME_COLUMN = 2;
+    private const AMOUNT_COLUMN = 3;
+    private const CATEGORY_COLUMN = 4;
 
     private DateConverterInterface $dateConverter;
     private FetchExpenditureCategoryUseCase $fetchExpenditureCategoryUseCase;
@@ -62,7 +65,7 @@ final readonly class ImportExpendtureCsvUseCase
                 return mb_convert_encoding($value, 'UTF-8', $encoding ?: 'UTF-8');
             }, $line);
 
-            $date = $this->dateConverter->toYearMonthDay($line[0]);
+            $date = $this->dateConverter->toYearMonthDay($line[self::DATE_COLUMN]);
             
             $name = $line[self::NAME_COLUMN];
 
