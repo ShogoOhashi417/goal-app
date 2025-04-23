@@ -7,6 +7,7 @@ export default function Welcome({ auth, laravelVersion, phpVersion }) {
     return (
         <>
             <Head title="Welcome" />
+
             <div className="min-h-screen bg-gradient-to-b from-green-50 to-white">
                 <div className="container mx-auto px-4 py-12">
                     <header className="flex justify-between items-center mb-12">
@@ -16,12 +17,20 @@ export default function Welcome({ auth, laravelVersion, phpVersion }) {
                         </div>
                     
                         <div className="flex gap-4">
-                            <Button variant="outline" asChild>
-                                <Link href="/login">ログイン</Link>
-                            </Button>
-                            <Button className="bg-green-600 hover:bg-green-700" asChild>
-                                <Link href="/register">新規登録</Link>
-                            </Button>
+                            {auth.user ? (
+                                <Button className="bg-green-600 hover:bg-green-700" asChild>
+                                    <Link href={route('report.balance')}>ダッシュボード</Link>
+                                </Button>
+                            ) : (
+                                <>
+                                    <Button variant="outline" asChild>
+                                        <Link href={route('login')}>ログイン</Link>
+                                    </Button>
+                                    <Button className="bg-green-600 hover:bg-green-700" asChild>
+                                        <Link href={route('register')}>新規登録</Link>
+                                    </Button>
+                                </>
+                            )}
                         </div>
                     </header>
 
@@ -31,54 +40,54 @@ export default function Welcome({ auth, laravelVersion, phpVersion }) {
                             <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
                             日々の支出を簡単に記録し、あなたの家計をスマートに管理しましょう。
                             </p>
-                            <Button size="lg" className="bg-green-600 hover:bg-green-700">
-                            <Link href="/register">今すぐ始める</Link>
+                            <Button size="lg" className="bg-green-600 hover:bg-green-700" asChild>
+                                <Link href={route('register')}>今すぐ始める</Link>
                             </Button>
                         </section>
 
                         <section className="py-12">
                             <div className="grid md:grid-cols-3 gap-8">
-                            <Card>
-                                <CardContent className="pt-6">
-                                <div className="text-center">
-                                    <div className="bg-green-100 p-3 rounded-full inline-flex mb-4">
-                                    <Wallet className="h-8 w-8 text-green-600" />
-                                    </div>
-                                    <h3 className="text-xl font-medium mb-2">簡単な支出記録</h3>
-                                    <p className="text-gray-600">日々の支出を数タップで簡単に記録できます。</p>
-                                </div>
-                                </CardContent>
-                            </Card>
+                                <Card>
+                                    <CardContent className="pt-6">
+                                        <div className="text-center">
+                                            <div className="bg-green-100 p-3 rounded-full inline-flex mb-4">
+                                                <Wallet className="h-8 w-8 text-green-600" />
+                                            </div>
+                                            <h3 className="text-xl font-medium mb-2">簡単な支出記録</h3>
+                                            <p className="text-gray-600">日々の支出を数タップで簡単に記録できます。</p>
+                                        </div>
+                                    </CardContent>
+                                </Card>
 
-                            <Card>
-                                <CardContent className="pt-6">
-                                <div className="text-center">
-                                    <div className="bg-green-100 p-3 rounded-full inline-flex mb-4">
-                                    <PieChart className="h-8 w-8 text-green-600" />
-                                    </div>
-                                    <h3 className="text-xl font-medium mb-2">わかりやすい分析</h3>
-                                    <p className="text-gray-600">グラフやチャートで支出の傾向を一目で確認できます。</p>
-                                </div>
-                                </CardContent>
-                            </Card>
+                                <Card>
+                                    <CardContent className="pt-6">
+                                        <div className="text-center">
+                                            <div className="bg-green-100 p-3 rounded-full inline-flex mb-4">
+                                                <PieChart className="h-8 w-8 text-green-600" />
+                                            </div>
+                                            <h3 className="text-xl font-medium mb-2">わかりやすい分析</h3>
+                                            <p className="text-gray-600">グラフやチャートで支出の傾向を一目で確認できます。</p>
+                                        </div>
+                                    </CardContent>
+                                </Card>
 
-                            <Card>
-                                <CardContent className="pt-6">
-                                <div className="text-center">
-                                    <div className="bg-green-100 p-3 rounded-full inline-flex mb-4">
-                                    <TrendingUp className="h-8 w-8 text-green-600" />
-                                    </div>
-                                    <h3 className="text-xl font-medium mb-2">目標設定と管理</h3>
-                                    <p className="text-gray-600">貯金目標を設定して、達成状況を簡単に追跡できます。</p>
-                                </div>
-                                </CardContent>
-                            </Card>
+                                <Card>
+                                    <CardContent className="pt-6">
+                                        <div className="text-center">
+                                            <div className="bg-green-100 p-3 rounded-full inline-flex mb-4">
+                                                <TrendingUp className="h-8 w-8 text-green-600" />
+                                            </div>
+                                            <h3 className="text-xl font-medium mb-2">目標設定と管理</h3>
+                                            <p className="text-gray-600">貯金目標を設定して、達成状況を簡単に追跡できます。</p>
+                                        </div>
+                                    </CardContent>
+                                </Card>
                             </div>
                         </section>
                     </main>
 
                     <footer className="text-center py-8 text-gray-600 border-t border-gray-200 mt-12">
-                    <p>© 2025 かけいぼ - シンプルな家計簿アプリ</p>
+                        <p>© 2025 かけいぼ - シンプルな家計簿アプリ</p>
                     </footer>
                 </div>
             </div>
