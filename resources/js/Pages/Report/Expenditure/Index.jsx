@@ -42,7 +42,7 @@ export default function Report({ auth }) {
         const YearMonthList = [];
         let month = 1;
         while (month <= 12) {
-            YearMonthList.push(year + "-" + month);
+            YearMonthList.push(year + "-" + String(month).padStart(2, "0"));
             month++;
         }
 
