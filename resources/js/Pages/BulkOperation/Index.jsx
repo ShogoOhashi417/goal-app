@@ -12,11 +12,14 @@ import Datepicker from "react-tailwindcss-datepicker";
 
 export default function BulkOperation({ auth }) {
     const [activeTab, setActiveTab] = useState("upload");
-    const [dateRange, setDateRange] = useState({
-        startDate: new Date(),
-        endDate: new Date(),
+    const [dateRange, setDateRange] = useState(() => {
+        const today = new Date();
+        const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+        return {
+            startDate: firstDayOfMonth,
+            endDate: today,
+        };
     });
-    const [exportFormat, setExportFormat] = useState("detailed");
     const [isDownloading, setIsDownloading] = useState(false);
 
     const exportSampleCsv = () => {
@@ -58,7 +61,6 @@ export default function BulkOperation({ auth }) {
                 params: {
                     start_date: dateRange.startDate,
                     end_date: dateRange.endDate,
-                    format: exportFormat,
                 },
                 responseType: "blob",
             })
@@ -246,7 +248,6 @@ export default function BulkOperation({ auth }) {
                                 </ul>
                             </div>
 
-                            {/* Upload Tab Content */}
                             {activeTab === "upload" && (
                                 <div className="bg-white p-3 rounded-lg">
                                     <h3 className="text-lg font-semibold text-gray-900 mb-3">
@@ -340,30 +341,6 @@ export default function BulkOperation({ auth }) {
                                                     setDateRange(value);
                                                 }}
                                             />
-                                        </div>
-                                        <div>
-                                            <label className="block mb-2 text-sm font-medium text-gray-900">
-                                                出力形式
-                                            </label>
-                                            <select
-                                                value={exportFormat}
-                                                onChange={(e) =>
-                                                    setExportFormat(
-                                                        e.target.value
-                                                    )
-                                                }
-                                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-                                            >
-                                                <option value="detailed">
-                                                    詳細（日付・項目名・金額・カテゴリー）
-                                                </option>
-                                                <option value="summary">
-                                                    サマリー（カテゴリー別集計）
-                                                </option>
-                                                <option value="monthly">
-                                                    月別集計
-                                                </option>
-                                            </select>
                                         </div>
                                     </div>
 
