@@ -59,10 +59,13 @@ export default function Fixed({
     const updateIncomeRef = useRef(null);
 
     const openAddModal = () => {
+        const today = new Date();
+        const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+        
         setIncomeName("");
         setIncomeCategoryId(0);
         setIncomeAmount(0);
-        setPeriodStartDate(null);
+        setPeriodStartDate(firstDayOfMonth);
         setPeriodEndDate(null);
         setCycleUnit(1);
         setPaymentDay(1);
@@ -111,12 +114,14 @@ export default function Fixed({
     };
 
     const addIncome = () => {
-        const localPeriodStartDate = periodStartDate
-            ? format(
-                  periodStartDate,
-                  cycleUnit == 1 ? "yyyy-MM-01" : "yyyy-01-01"
-              )
-            : null;
+        const today = new Date();
+        const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+        const localStartDate = periodStartDate || firstDayOfMonth;
+
+        const localPeriodStartDate = format(
+            localStartDate,
+            cycleUnit == 1 ? "yyyy-MM-01" : "yyyy-01-01"
+        );
         const localPeriodEndDate = periodEndDate
             ? format(
                   periodEndDate,
@@ -241,12 +246,14 @@ export default function Fixed({
             columnHelper.accessor("period_start_date", {
                 header: "開始",
                 cell: (info) => {
-                    const date = new Date(info.getValue());
+                    const value = info.getValue();
+                    if (!value) return "-";
+                    const date = new Date(value);
                     return format(date, "yyyy/MM");
                 },
                 sortingFn: "basic",
                 formatValue: (value) => {
-                    if (!value) return "";
+                    if (!value) return "-";
                     const date = new Date(value);
                     return format(date, "yyyy/MM");
                 },
@@ -254,13 +261,14 @@ export default function Fixed({
             columnHelper.accessor("period_end_date", {
                 header: "終了",
                 cell: (info) => {
-                    if (!info.getValue()) return "";
-                    const date = new Date(info.getValue());
+                    const value = info.getValue();
+                    if (!value) return "-";
+                    const date = new Date(value);
                     return format(date, "yyyy/MM");
                 },
                 sortingFn: "basic",
                 formatValue: (value) => {
-                    if (!value) return "";
+                    if (!value) return "-";
                     const date = new Date(value);
                     return format(date, "yyyy/MM");
                 },
