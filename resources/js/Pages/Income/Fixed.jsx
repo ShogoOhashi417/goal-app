@@ -114,12 +114,14 @@ export default function Fixed({
     };
 
     const addIncome = () => {
-        const localPeriodStartDate = periodStartDate
-            ? format(
-                  periodStartDate,
-                  cycleUnit == 1 ? "yyyy-MM-01" : "yyyy-01-01"
-              )
-            : null;
+        const today = new Date();
+        const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+        const localStartDate = periodStartDate || firstDayOfMonth;
+
+        const localPeriodStartDate = format(
+            localStartDate,
+            cycleUnit == 1 ? "yyyy-MM-01" : "yyyy-01-01"
+        );
         const localPeriodEndDate = periodEndDate
             ? format(
                   periodEndDate,
