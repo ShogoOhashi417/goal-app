@@ -246,12 +246,14 @@ export default function Fixed({
             columnHelper.accessor("period_start_date", {
                 header: "開始",
                 cell: (info) => {
-                    const date = new Date(info.getValue());
+                    const value = info.getValue();
+                    if (!value) return "-";
+                    const date = new Date(value);
                     return format(date, "yyyy/MM");
                 },
                 sortingFn: "basic",
                 formatValue: (value) => {
-                    if (!value) return "";
+                    if (!value) return "-";
                     const date = new Date(value);
                     return format(date, "yyyy/MM");
                 },
@@ -259,13 +261,14 @@ export default function Fixed({
             columnHelper.accessor("period_end_date", {
                 header: "終了",
                 cell: (info) => {
-                    if (!info.getValue()) return "";
-                    const date = new Date(info.getValue());
+                    const value = info.getValue();
+                    if (!value) return "-";
+                    const date = new Date(value);
                     return format(date, "yyyy/MM");
                 },
                 sortingFn: "basic",
                 formatValue: (value) => {
-                    if (!value) return "";
+                    if (!value) return "-";
                     const date = new Date(value);
                     return format(date, "yyyy/MM");
                 },
