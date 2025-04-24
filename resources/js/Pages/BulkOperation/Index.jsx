@@ -12,9 +12,13 @@ import Datepicker from "react-tailwindcss-datepicker";
 
 export default function BulkOperation({ auth }) {
     const [activeTab, setActiveTab] = useState("upload");
-    const [dateRange, setDateRange] = useState({
-        startDate: new Date(),
-        endDate: new Date(),
+    const [dateRange, setDateRange] = useState(() => {
+        const today = new Date();
+        const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+        return {
+            startDate: firstDayOfMonth,
+            endDate: today,
+        };
     });
     const [isDownloading, setIsDownloading] = useState(false);
 
