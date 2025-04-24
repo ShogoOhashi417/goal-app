@@ -59,10 +59,13 @@ export default function Fixed({
     const updateIncomeRef = useRef(null);
 
     const openAddModal = () => {
+        const today = new Date();
+        const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+        
         setIncomeName("");
         setIncomeCategoryId(0);
         setIncomeAmount(0);
-        setPeriodStartDate(null);
+        setPeriodStartDate(firstDayOfMonth);
         setPeriodEndDate(null);
         setCycleUnit(1);
         setPaymentDay(1);
