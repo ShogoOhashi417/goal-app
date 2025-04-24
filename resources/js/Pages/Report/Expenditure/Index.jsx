@@ -243,17 +243,13 @@ export default function Report({ auth }) {
                                 <select
                                     className="w-1/6 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 ml-3"
                                     onChange={changeRelativePeriod}
+                                    value={THREE_MONTHS_PERIOD}
                                 >
                                     {Array.from(
                                         relativePeriodList.entries()
                                     ).map(([value, period], index) => (
                                         <React.Fragment key={value}>
-                                            <option
-                                                value={value}
-                                                selected={
-                                                    value == THREE_MONTHS_PERIOD
-                                                }
-                                            >
+                                            <option value={value}>
                                                 {period}
                                             </option>
                                         </React.Fragment>
