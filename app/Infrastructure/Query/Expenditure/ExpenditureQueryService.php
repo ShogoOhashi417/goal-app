@@ -35,4 +35,14 @@ class ExpenditureQueryService implements ExpenditureQueryServiceInterface
     {
         return $this->expenditureModel->fetchByDateRange($startDate, $endDate);
     }
+
+    public function fetchOneTimeExpenditure(string $startDate, string $endDate): array
+    {
+        return $this->expenditureModel->fetchOneTimeExpenditure($startDate, $endDate);
+    }
+
+    public function fetchFixedExpenditure(): array
+    {
+        return $this->expenditureModel->fetchFixedExpenditure();
+    }
 }

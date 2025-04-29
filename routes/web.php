@@ -75,6 +75,7 @@ Route::post('/income/delete', [IncomeController::class, 'delete']);
 
 Route::get('/expenditure/get', [ExpenditureController::class, 'get']);
 Route::get('/expenditure/get_by_category', [ExpenditureController::class, 'fetchByCategory']);
+Route::get('/expenditure/report', [ExpenditureController::class, 'fetchByPeriod']);
 Route::post('/expenditure/add', [ExpenditureController::class, 'create']);
 Route::put('/expenditure/update/{id}', [ExpenditureController::class, 'update']);
 Route::post('/expenditure/delete', [ExpenditureController::class, 'delete']);
