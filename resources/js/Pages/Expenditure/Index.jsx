@@ -307,7 +307,7 @@ export default function Expenditure({
                                                                     className="mx-auto"
                                                                     onClick={() =>
                                                                         deleteExpenditure(
-                                                                            row.id
+                                                                            row.original.id
                                                                         )
                                                                     }
                                                                 >

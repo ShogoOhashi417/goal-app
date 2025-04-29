@@ -26,6 +26,10 @@ final class DeleteExpenditureUseCase
     {
         $expenditureInfoList = $this->expenditureRepository->fetchById($inputData->id);
 
+        if (!$expenditureInfoList) {
+            return;
+        }
+
         $expenditure = Expenditure::reconstruct(
             $inputData->id,
             $expenditureInfoList['name'],
