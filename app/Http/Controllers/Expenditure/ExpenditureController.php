@@ -73,6 +73,74 @@ class ExpenditureController extends Controller
         ];
     }
 
+    public function fetchByPeriod(Request $request)
+    {
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+
+        $expenditureQueryService = new ExpenditureQueryService(
+            new ExpenditureModel()
+        );
+
+        $oneTimeExpenditureInfoList = $expenditureQueryService->fetchOneTimeExpenditure($startDate, $endDate);
+        
+        $fixedExpenditureInfoList = $expenditureQueryService->fetchFixedExpenditure();
+
+        $targetFixedExpenditureInfoList = [];
+        foreach ($fixedExpenditureInfoList as $fixedExpenditure) {
+            $expenditureStartDate = new DateTime($fixedExpenditure['start_date']);
+            $expenditureEndDate = $fixedExpenditure['end_date'] ? new DateTime($fixedExpenditure['end_date']) : null;
+            
+            $requestStartDate = new DateTime($startDate);
+            $requestEndDate = new DateTime($endDate);
+
+            if ($expenditureEndDate && $expenditureEndDate < $requestStartDate) {
+                continue;
+            }
+
+            if ($expenditureStartDate > $requestEndDate) {
+                continue;
+            }
+
+            $currentDate = clone $requestStartDate;
+            while ($currentDate <= $requestEndDate) {
+                $paymentDate = clone $currentDate;
+                $paymentDate->setDate(
+                    (int)$currentDate->format('Y'),
+                    (int)$currentDate->format('m'),
+                    (int)$fixedExpenditure['payment_day']
+                );
+
+                $isAfterStartDate = !$expenditureStartDate || $paymentDate >= $expenditureStartDate;
+                $isBeforeEndDate = !$expenditureEndDate || $paymentDate <= $expenditureEndDate;
+
+                $isInPeriod = $isAfterStartDate && $isBeforeEndDate;
+
+                if ($isInPeriod) {
+                    $expenditureData = $fixedExpenditure;
+                    $expenditureData['calendar_date'] = $paymentDate->format('Y-m-d');
+                    $targetFixedExpenditureInfoList[] = $expenditureData;
+                }
+
+                $currentDate->modify('+1 month');
+            }
+        }
+
+        $expenditureInfoList = array_merge($oneTimeExpenditureInfoList, $targetFixedExpenditureInfoList);
+
+        $categoryAmountCalculater = new CategoryAmountCalculater(
+            new DateConverter()
+        );
+
+        $categoryToAmountList = $categoryAmountCalculater->calculate($expenditureInfoList);
+
+        $fixedExpenditureInfoList = $expenditureQueryService->fetchFixedExpenditure();
+
+        return [
+            'category_to_amount_list' => $categoryToAmountList
+        ];
+    }
+
     public function fetchByCategory()
     {
         $fetchExpenditureUseCase = new FetchExpenditureUseCase(
@@ -141,9 +209,9 @@ class ExpenditureController extends Controller
 
         $deleteExpenditureUseCase->handle(
             new DeleteExpenditureInputData(
-                $request->id,
+                (int)$request->id,
                 $request->name,
-                $request->amount
+                (int)$request->amount
             )
         );
     }
