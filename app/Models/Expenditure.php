@@ -14,18 +14,20 @@ final class Expenditure extends Model
     public function fetchAll(): array
     {
         return $this->join('expenditure_categories', 'expenditures.category_id', '=', 'expenditure_categories.id')
-                    ->select('expenditures.*', 'expenditure_categories.name as category_name')
+                    ->leftjoin('fixed_expenditures', 'expenditures.id', '=', 'fixed_expenditures.expenditure_id')
+                    ->whereNull('fixed_expenditures.id')
+                    ->select('expenditures.*', 'expenditure_categories.name as category_name', 'fixed_expenditures.id as fixed_expenditure_id', 'fixed_expenditures.cycle_unit', 'fixed_expenditures.payment_day', 'fixed_expenditures.payment_month', 'fixed_expenditures.start_date', 'fixed_expenditures.end_date')
                     ->get()
                     ->toArray();
     }
 
-        /**
+    /**
      * @param integer $id
-     * @return array
+     * @return Model|null
      */
-    public function fetchById(int $id): array
+    public function fetchById(int $id): ?Model
     {
-        return $this->find($id)->toArray();
+        return $this->find($id);
     }
 
     public function fetchByDateRange(string $startDate, string $endDate): array
@@ -33,6 +35,34 @@ final class Expenditure extends Model
         return $this->whereBetween('calendar_date', [$startDate, $endDate])
                     ->join('expenditure_categories', 'expenditures.category_id', '=', 'expenditure_categories.id')
                     ->select('expenditures.*', 'expenditure_categories.name as category_name')
+                    ->get()
+                    ->toArray();
+    }
+
+    public function fetchOneTimeExpenditure(string $startDate, string $endDate): array
+    {
+        return $this->whereBetween('calendar_date', [$startDate, $endDate])
+                    ->join('expenditure_categories', 'expenditures.category_id', '=', 'expenditure_categories.id')
+                    ->leftjoin('fixed_expenditures', 'expenditures.id', '=', 'fixed_expenditures.expenditure_id')
+                    ->whereNull('fixed_expenditures.id')
+                    ->select('expenditures.*', 'expenditure_categories.name as category_name')
+                    ->get()
+                    ->toArray();
+    }
+
+    public function fetchFixedExpenditure(): array
+    {
+        return $this->join('fixed_expenditures', 'expenditures.id', '=', 'fixed_expenditures.expenditure_id')
+                    ->join('expenditure_categories', 'expenditures.category_id', '=', 'expenditure_categories.id')
+                    ->select(
+                        'expenditures.*', 
+                        'expenditure_categories.name as category_name',
+                        'fixed_expenditures.cycle_unit', 
+                        'fixed_expenditures.payment_day', 
+                        'fixed_expenditures.payment_month', 
+                        'fixed_expenditures.start_date', 
+                        'fixed_expenditures.end_date',
+                    )
                     ->get()
                     ->toArray();
     }
