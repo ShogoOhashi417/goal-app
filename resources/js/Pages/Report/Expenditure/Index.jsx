@@ -4,6 +4,7 @@ import { Head } from "@inertiajs/react";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import YearSelectBox from "@/Components/YearSelectBox";
+import axios from "axios";
 
 export default function Report({ auth }) {
     const getMonth = (year, month, period) => {
@@ -54,6 +55,8 @@ export default function Report({ auth }) {
     const HALF_YEAR_PERIOD = "3";
     const THIS_YEAR_PERIOD = "4";
 
+    const [relativePeriod, setRelativePeriod] = useState(THREE_MONTHS_PERIOD);
+
     const relativePeriodList = new Map();
 
     relativePeriodList.set(THIS_MONTH_PERIOD, "今月");
@@ -61,9 +64,7 @@ export default function Report({ auth }) {
     relativePeriodList.set(HALF_YEAR_PERIOD, "半年間");
     relativePeriodList.set(THIS_YEAR_PERIOD, "1年間");
 
-    const changeRelativePeriod = (event) => {
-        const period = event.target.value;
-
+    const setDataByPeriod = (period) => {
         if (period === THIS_MONTH_PERIOD) {
             setDateList([getMonth(thisYear, thisMonth, 0)]);
 
@@ -109,21 +110,44 @@ export default function Report({ auth }) {
                 getMonth(thisYear, thisMonth, 1),
                 getMonth(thisYear, thisMonth, 0),
             ]);
-
-            return;
         }
+    };
+
+    const fetchData = async () => {
+        if (dateList.length === 0) return;
+
+        const startDate = dateList[0] + '-01';
+        
+        const [year, month] = dateList[dateList.length - 1].split('-');
+        const lastDay = new Date(year, month, 0).getDate();
+        const endDate = `${dateList[dateList.length - 1]}-${String(lastDay).padStart(2, '0')}`;
+
+        try {
+            const response = await axios.get('/expenditure/report', {
+                params: {
+                    start_date: startDate,
+                    end_date: endDate
+                }
+            });
+            setExpenditureInfoList(response.data.category_to_amount_list);
+        } catch (error) {
+            console.error('データの取得に失敗しました:', error);
+        }
+    };
+
+    const changeRelativePeriod = (event) => {
+        const period = event.target.value;
+        setRelativePeriod(period);
+
+        setDataByPeriod(period);
+        fetchData();
     };
 
     const [expenditureInfoList, setExpenditureInfoList] = useState([]);
 
-    const getIncomeCategory = async () => {
-        const response = await axios.get("/expenditure/get_by_category");
-        setExpenditureInfoList(response.data.category_to_amount_list);
-    };
-
     useEffect(() => {
-        getIncomeCategory();
-    }, []);
+        fetchData();
+    }, [dateList]);
 
     useEffect(() => {
         const totalDataList = [];
@@ -243,7 +267,7 @@ export default function Report({ auth }) {
                                 <select
                                     className="w-1/6 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 ml-3"
                                     onChange={changeRelativePeriod}
-                                    value={THREE_MONTHS_PERIOD}
+                                    value={relativePeriod}
                                 >
                                     {Array.from(
                                         relativePeriodList.entries()
