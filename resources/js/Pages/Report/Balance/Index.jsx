@@ -25,11 +25,15 @@ export default function Balance({ auth }) {
     const thisYear = thisDate.getFullYear();
     const thisMonth = thisDate.getMonth() + 1;
 
-    const [dateList, setDateList] = useState([
+    const initialDateList = [
         getMonth(thisYear, thisMonth, 2),
         getMonth(thisYear, thisMonth, 1),
         getMonth(thisYear, thisMonth, 0),
-    ]);
+    ];
+    
+    const [dateList, setDateList] = useState(initialDateList);
+
+    const INITIAL_SAVINGS = 500000;
 
     const THIS_MONTH_PERIOD = "1";
     const THREE_MONTHS_PERIOD = "2";
@@ -41,6 +45,48 @@ export default function Balance({ auth }) {
     relativePeriodList.set(THREE_MONTHS_PERIOD, "3ヶ月間");
     relativePeriodList.set(HALF_YEAR_PERIOD, "半年間");
     relativePeriodList.set(THIS_YEAR_PERIOD, "1年間");
+
+    const createDummyIncome = () => {
+        return {
+            "給与": initialDateList.reduce((acc, date) => {
+                acc[date] = 320000;
+                return acc;
+            }, {}),
+            "ボーナス": initialDateList.reduce((acc, date, index) => {
+                acc[date] = index === 1 ? 500000 : 0;
+                return acc;
+            }, {}),
+            "副業": initialDateList.reduce((acc, date, index) => {
+                const amounts = [50000, 30000, 45000];
+                acc[date] = amounts[index] || 0;
+                return acc;
+            }, {})
+        };
+    };
+
+    const createDummyExpenditure = () => {
+        return {
+            "家賃": initialDateList.reduce((acc, date) => {
+                acc[date] = 80000;
+                return acc;
+            }, {}),
+            "食費": initialDateList.reduce((acc, date, index) => {
+                const amounts = [45000, 42000, 48000];
+                acc[date] = amounts[index] || 0;
+                return acc;
+            }, {}),
+            "交通費": initialDateList.reduce((acc, date, index) => {
+                const amounts = [12000, 15000, 13000];
+                acc[date] = amounts[index] || 0;
+                return acc;
+            }, {}),
+            "娯楽": initialDateList.reduce((acc, date, index) => {
+                const amounts = [30000, 120000, 25000];
+                acc[date] = amounts[index] || 0;
+                return acc;
+            }, {})
+        };
+    };
 
     const changeRelativePeriod = (event) => {
         const period = event.target.value;
@@ -90,19 +136,28 @@ export default function Balance({ auth }) {
         }
     };
 
-    const [incomeInfoList, setIncomeInfoList] = useState([]);
-    const [expenditureInfoList, setExpenditureInfoList] = useState([]);
-    const [balanceChartOptions, setBalanceChartOptions] = useState({});
-    const [monthlyBalanceOptions, setMonthlyBalanceOptions] = useState({});
+    const [incomeInfoList, setIncomeInfoList] = useState(createDummyIncome());
+    const [expenditureInfoList, setExpenditureInfoList] = useState(createDummyExpenditure());
+    const [combinedChartOptions, setCombinedChartOptions] = useState({});
 
     const getIncomeByCategory = async () => {
-        const response = await axios.get("/income/get_by_category");
-        setIncomeInfoList(response.data.category_to_amount_list);
+        // try {
+        //     const response = await axios.get("/income/get_by_category");
+        //     setIncomeInfoList(response.data.category_to_amount_list);
+        // } catch (error) {
+        //     console.error("収入データの取得に失敗しました", error);
+        //     // エラー時はダミーデータを維持
+        // }
     };
 
     const getExpenditureByCategory = async () => {
-        const response = await axios.get("/expenditure/get_by_category");
-        setExpenditureInfoList(response.data.category_to_amount_list);
+        // try {
+        //     const response = await axios.get("/expenditure/get_by_category");
+        //     setExpenditureInfoList(response.data.category_to_amount_list);
+        // } catch (error) {
+        //     console.error("支出データの取得に失敗しました", error);
+        //     // エラー時はダミーデータを維持
+        // }
     };
 
     useEffect(() => {
@@ -111,105 +166,190 @@ export default function Balance({ auth }) {
     }, []);
 
     useEffect(() => {
-        // 収支バランスのグラフデータを作成
         const incomeData = [];
         const expenditureData = [];
         const balanceData = [];
+        const savingsData = [];
+        
+        let currentSavings = INITIAL_SAVINGS; // 貯金額の初期値
 
-        dateList.forEach((date) => {
+        const sortedDateList = [...dateList].sort();
+
+        sortedDateList.forEach((date) => {
             let totalIncome = 0;
             let totalExpenditure = 0;
 
             Object.values(incomeInfoList).forEach((dateToAmountList) => {
-                totalIncome += dateToAmountList[date] ?? 0;
+                if (dateToAmountList[date]) {
+                    totalIncome += parseInt(dateToAmountList[date]) || 0;
+                }
             });
 
             Object.values(expenditureInfoList).forEach((dateToAmountList) => {
-                totalExpenditure += dateToAmountList[date] ?? 0;
+                if (dateToAmountList[date]) {
+                    totalExpenditure += parseInt(dateToAmountList[date]) || 0;
+                }
             });
 
             incomeData.push(totalIncome);
-            expenditureData.push(-totalExpenditure);
-            balanceData.push(totalIncome - totalExpenditure);
+            expenditureData.push(totalExpenditure);
+            const monthlyBalance = totalIncome - totalExpenditure;
+            balanceData.push(monthlyBalance);
+            
+            currentSavings += monthlyBalance;
+            savingsData.push(currentSavings);
         });
 
-        // 収入と支出の積み上げグラフ
-        const balanceOptions = {
+        const maxIncomeValue = Math.max(...incomeData);
+        const maxExpenditureValue = Math.max(...expenditureData);
+        const maxIncomeExpenditure = Math.max(maxIncomeValue, maxExpenditureValue);
+        
+        const maxSavingsValue = Math.max(...savingsData);
+
+        const incomeColor = "#2E86C1";
+        const expenditureColor = "#D6EAF8";
+        const savingsColor = "#3498DB";
+
+        const incomeExpenditureAxisMax = Math.ceil(maxIncomeExpenditure * 5 / 100000) * 100000;
+        const savingsAxisMax = Math.ceil(maxSavingsValue * 1.0 / 100000) * 100000;
+
+        const combinedOptions = {
             chart: {
-                type: "column",
+                zoomType: 'xy'
             },
             title: {
-                text: "収支バランス（収入・支出）",
+                text: '収支と貯金額の推移'
             },
             xAxis: {
-                categories: dateList,
+                categories: sortedDateList,
+                crosshair: true
             },
-            yAxis: {
-                title: {
-                    text: "金額 (万)",
-                },
-                labels: {
-                    formatter: function () {
-                        return Math.abs(this.value) / 10000 + "万";
+            yAxis: [
+                {
+                    title: {
+                        text: '貯金額 (円)',
+                        style: {
+                            color: savingsColor,
+                            fontSize: '12px'
+                        }
                     },
+                    labels: {
+                        format: '{value}円',
+                        style: {
+                            color: savingsColor,
+                            fontSize: '11px'
+                        }
+                    },
+                    min: 0,
+                    max: savingsAxisMax,
+                    tickInterval: 500000,
+                    gridLineWidth: 1,
+                    gridLineDashStyle: 'Dot'
                 },
+                {
+                    title: {
+                        text: '金額 (円)',
+                        style: {
+                            color: Highcharts.getOptions().colors[0],
+                            fontSize: '12px'
+                        }
+                    },
+                    labels: {
+                        format: '{value}円',
+                        style: {
+                            color: Highcharts.getOptions().colors[0],
+                            fontSize: '11px'
+                        }
+                    },
+                    min: 0,
+                    max: incomeExpenditureAxisMax,
+                    tickInterval: 500000,
+                    opposite: true,
+                    gridLineWidth: 0
+                }
+            ],
+            tooltip: {
+                shared: true,
+                formatter: function() {
+                    let tooltip = '<b>' + this.x + '</b><br/>';
+                    
+                    this.points.forEach(function(point) {
+                        tooltip += '<span style="color:' + point.color + '">●</span> ' + 
+                                    point.series.name + ': ' + 
+                                    Highcharts.numberFormat(point.y, 0, '.', ',') + '円<br/>';
+                    });
+                    
+                    return tooltip;
+                }
+            },
+            legend: {
+                layout: 'horizontal',
+                align: 'center',
+                verticalAlign: 'bottom',
+                floating: false,
+                backgroundColor: 'white',
+                shadow: false
+            },
+            credits: {
+                enabled: false
             },
             plotOptions: {
                 column: {
-                    grouping: false,
-                    shadow: false,
+                    pointPadding: 0,
                     borderWidth: 0,
                 },
+                spline: {
+                    marker: {
+                        enabled: true
+                    }
+                }
             },
             series: [
                 {
-                    name: "収入",
-                    color: "#90EE90",
+                    name: '収入',
+                    type: 'column',
+                    color: incomeColor,
                     data: incomeData,
-                },
-                {
-                    name: "支出",
-                    color: "#FFB6C6",
-                    data: expenditureData,
-                },
-            ],
-        };
-
-        // 月次収支差額のグラフ
-        const monthlyOptions = {
-            chart: {
-                type: "line",
-            },
-            title: {
-                text: "月次収支差額",
-            },
-            xAxis: {
-                categories: dateList,
-            },
-            yAxis: {
-                title: {
-                    text: "金額 (万)",
-                },
-                labels: {
-                    formatter: function () {
-                        return this.value / 10000 + "万";
+                    yAxis: 1,
+                    tooltip: {
+                        valueSuffix: '円'
                     },
+                    pointPlacement: -0.05
                 },
-            },
-            series: [
                 {
-                    name: "収支差額",
-                    data: balanceData,
-                    color: "#4169E1",
+                    name: '支出',
+                    type: 'column',
+                    color: expenditureColor,
+                    data: expenditureData,
+                    yAxis: 1,
+                    tooltip: {
+                        valueSuffix: '円'
+                    },
+                    pointPlacement: 0.05
+                },
+                {
+                    name: '貯金額',
+                    type: 'spline',
+                    color: savingsColor,
+                    data: savingsData,
+                    yAxis: 0,
+                    tooltip: {
+                        valueSuffix: '円'
+                    },
                     marker: {
                         enabled: true,
+                        radius: 4,
+                        symbol: 'circle',
+                        lineColor: savingsColor,
+                        lineWidth: 2,
+                        fillColor: '#FFFFFF'
                     },
-                },
-            ],
+                    lineWidth: 2
+                }
+            ]
         };
 
-        setBalanceChartOptions(balanceOptions);
-        setMonthlyBalanceOptions(monthlyOptions);
+        setCombinedChartOptions(combinedOptions);
     }, [incomeInfoList, expenditureInfoList, dateList]);
 
     return (
@@ -234,6 +374,7 @@ export default function Balance({ auth }) {
                                 <select
                                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                     onChange={changeRelativePeriod}
+                                    defaultValue={THREE_MONTHS_PERIOD}
                                 >
                                     {Array.from(
                                         relativePeriodList.entries()
@@ -248,14 +389,7 @@ export default function Balance({ auth }) {
                             <div className="mb-8">
                                 <HighchartsReact
                                     highcharts={Highcharts}
-                                    options={balanceChartOptions}
-                                />
-                            </div>
-
-                            <div className="mb-8">
-                                <HighchartsReact
-                                    highcharts={Highcharts}
-                                    options={monthlyBalanceOptions}
+                                    options={combinedChartOptions}
                                 />
                             </div>
                         </div>
