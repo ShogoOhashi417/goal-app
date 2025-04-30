@@ -218,7 +218,7 @@ export default function Balance({ auth }) {
                 zoomType: 'xy'
             },
             title: {
-                text: '収支と貯金額の推移'
+                text: ''
             },
             xAxis: {
                 categories: sortedDateList,
@@ -248,7 +248,7 @@ export default function Balance({ auth }) {
                 },
                 {
                     title: {
-                        text: '金額 (円)',
+                        text: '収支額 (円)',
                         style: {
                             color: Highcharts.getOptions().colors[0],
                             fontSize: '12px'
@@ -357,11 +357,11 @@ export default function Balance({ auth }) {
             user={auth.user}
             header={
                 <h2 className="font-semibold text-xl text-gray-800 leading-tight">
-                    収支バランスレポート
+                    貯金額レポート
                 </h2>
             }
         >
-            <Head title="収支バランスレポート" />
+            <Head title="貯金額レポート" />
 
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">

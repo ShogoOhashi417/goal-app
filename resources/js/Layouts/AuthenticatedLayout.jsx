@@ -64,7 +64,7 @@ export default function Authenticated({ user, header, children }) {
                                                 "report.balance"
                                             )}
                                         >
-                                            収支バランス
+                                            貯金額
                                         </Dropdown.Link>
                                         <Dropdown.Link
                                             href={route("report.expenditure")}
@@ -72,7 +72,7 @@ export default function Authenticated({ user, header, children }) {
                                                 "report.expenditure"
                                             )}
                                         >
-                                            支出レポート
+                                            支出額
                                         </Dropdown.Link>
                                     </Dropdown.Content>
                                 </Dropdown>
