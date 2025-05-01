@@ -6,30 +6,21 @@ import HighchartsReact from "highcharts-react-official";
 
 export default function Balance({ auth }) {
     const getMonth = (year, month, period) => {
-        const MONTHS_PER_YEAR = 12;
-        const resultMonth = month - period;
-
-        if (resultMonth > 0) {
-            return year + "-" + String(resultMonth).padStart(2, "0");
-        }
-
-        return (
-            year -
-            1 +
-            "-" +
-            String(resultMonth + MONTHS_PER_YEAR).padStart(2, "0")
-        );
+        const date = new Date(year, month - 1 + period, 1);
+        const resultYear = date.getFullYear();
+        const resultMonth = date.getMonth() + 1;
+        
+        return resultYear + "-" + String(resultMonth).padStart(2, "0");
     };
 
     const thisDate = new Date();
     const thisYear = thisDate.getFullYear();
     const thisMonth = thisDate.getMonth() + 1;
 
-    const initialDateList = [
-        getMonth(thisYear, thisMonth, 2),
-        getMonth(thisYear, thisMonth, 1),
-        getMonth(thisYear, thisMonth, 0),
-    ];
+    const initialDateList = [];
+    for (let i = -11; i <= 0; i++) {
+        initialDateList.push(getMonth(thisYear, thisMonth, i));
+    }
     
     const [dateList, setDateList] = useState(initialDateList);
 
@@ -39,12 +30,16 @@ export default function Balance({ auth }) {
     const THREE_MONTHS_PERIOD = "2";
     const HALF_YEAR_PERIOD = "3";
     const THIS_YEAR_PERIOD = "4";
+    const THREE_YEARS_PERIOD = "5";
+    const DECADE_PERIOD = "6";
 
     const relativePeriodList = new Map();
     relativePeriodList.set(THIS_MONTH_PERIOD, "今月");
     relativePeriodList.set(THREE_MONTHS_PERIOD, "3ヶ月間");
     relativePeriodList.set(HALF_YEAR_PERIOD, "半年間");
     relativePeriodList.set(THIS_YEAR_PERIOD, "1年間");
+    relativePeriodList.set(THREE_YEARS_PERIOD, "3年間");
+    relativePeriodList.set(DECADE_PERIOD, "10年間");
 
     const createDummyIncome = () => {
         return {
@@ -97,41 +92,47 @@ export default function Balance({ auth }) {
         }
 
         if (period === THREE_MONTHS_PERIOD) {
-            setDateList([
-                getMonth(thisYear, thisMonth, 2),
-                getMonth(thisYear, thisMonth, 1),
-                getMonth(thisYear, thisMonth, 0),
-            ]);
+            const dateList = [];
+            for (let i = -2; i <= 0; i++) {
+                dateList.push(getMonth(thisYear, thisMonth, i));
+            }
+            setDateList(dateList);
             return;
         }
 
         if (period === HALF_YEAR_PERIOD) {
-            setDateList([
-                getMonth(thisYear, thisMonth, 5),
-                getMonth(thisYear, thisMonth, 4),
-                getMonth(thisYear, thisMonth, 3),
-                getMonth(thisYear, thisMonth, 2),
-                getMonth(thisYear, thisMonth, 1),
-                getMonth(thisYear, thisMonth, 0),
-            ]);
+            const dateList = [];
+            for (let i = -5; i <= 0; i++) {
+                dateList.push(getMonth(thisYear, thisMonth, i));
+            }
+            setDateList(dateList);
             return;
         }
 
         if (period === THIS_YEAR_PERIOD) {
-            setDateList([
-                getMonth(thisYear, thisMonth, 11),
-                getMonth(thisYear, thisMonth, 10),
-                getMonth(thisYear, thisMonth, 9),
-                getMonth(thisYear, thisMonth, 8),
-                getMonth(thisYear, thisMonth, 7),
-                getMonth(thisYear, thisMonth, 6),
-                getMonth(thisYear, thisMonth, 5),
-                getMonth(thisYear, thisMonth, 4),
-                getMonth(thisYear, thisMonth, 3),
-                getMonth(thisYear, thisMonth, 2),
-                getMonth(thisYear, thisMonth, 1),
-                getMonth(thisYear, thisMonth, 0),
-            ]);
+            const dateList = [];
+            for (let i = -11; i <= 0; i++) {
+                dateList.push(getMonth(thisYear, thisMonth, i));
+            }
+            setDateList(dateList);
+            return;
+        }
+
+        if (period === THREE_YEARS_PERIOD) {
+            const dateList = [];
+            for (let i = -35; i <= 0; i++) {
+                dateList.push(getMonth(thisYear, thisMonth, i));
+            }
+            setDateList(dateList);
+            return;
+        }
+
+        if (period === DECADE_PERIOD) {
+            const dateList = [];
+            for (let i = -119; i <= 0; i++) {
+                dateList.push(getMonth(thisYear, thisMonth, i));
+            }
+            setDateList(dateList);
             return;
         }
     };
@@ -140,38 +141,13 @@ export default function Balance({ auth }) {
     const [expenditureInfoList, setExpenditureInfoList] = useState(createDummyExpenditure());
     const [combinedChartOptions, setCombinedChartOptions] = useState({});
 
-    const getIncomeByCategory = async () => {
-        // try {
-        //     const response = await axios.get("/income/get_by_category");
-        //     setIncomeInfoList(response.data.category_to_amount_list);
-        // } catch (error) {
-        //     console.error("収入データの取得に失敗しました", error);
-        //     // エラー時はダミーデータを維持
-        // }
-    };
-
-    const getExpenditureByCategory = async () => {
-        // try {
-        //     const response = await axios.get("/expenditure/get_by_category");
-        //     setExpenditureInfoList(response.data.category_to_amount_list);
-        // } catch (error) {
-        //     console.error("支出データの取得に失敗しました", error);
-        //     // エラー時はダミーデータを維持
-        // }
-    };
-
-    useEffect(() => {
-        getIncomeByCategory();
-        getExpenditureByCategory();
-    }, []);
-
     useEffect(() => {
         const incomeData = [];
         const expenditureData = [];
         const balanceData = [];
         const savingsData = [];
         
-        let currentSavings = INITIAL_SAVINGS; // 貯金額の初期値
+        let currentSavings = INITIAL_SAVINGS;
 
         const sortedDateList = [...dateList].sort();
 
@@ -374,7 +350,7 @@ export default function Balance({ auth }) {
                                 <select
                                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                     onChange={changeRelativePeriod}
-                                    defaultValue={THREE_MONTHS_PERIOD}
+                                    defaultValue={THIS_YEAR_PERIOD}
                                 >
                                     {Array.from(
                                         relativePeriodList.entries()
