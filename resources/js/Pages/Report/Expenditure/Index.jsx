@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
 import Highcharts from "highcharts";
@@ -28,12 +28,18 @@ export default function Report({ auth }) {
         getMonth(thisYear, thisMonth, 0),
     ]);
 
+    const [selectedYear, setSelectedYear] = useState("");
+    const yearSelectRef = useRef(null);
+
     const changeYear = (event) => {
         const year = event.target.value;
+        setSelectedYear(year);
 
         if (year === "") {
             return;
         }
+
+        setRelativePeriod("");
 
         const YearMonthList = [];
         let month = 1;
@@ -67,6 +73,11 @@ export default function Report({ auth }) {
     const setDataByPeriod = (period) => {
         if (period === "") {
             return;
+        }
+        
+        setSelectedYear("");
+        if (yearSelectRef.current) {
+            yearSelectRef.current.resetYear();
         }
 
         if (period === THIS_MONTH_PERIOD) {
@@ -269,7 +280,9 @@ export default function Report({ auth }) {
                         <div className="container">
                             <div className="flex">
                                 <YearSelectBox
+                                    ref={yearSelectRef}
                                     onChange={changeYear}
+                                    value={selectedYear}
                                 ></YearSelectBox>
                                 <select
                                     className="w-1/6 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 ml-3"
