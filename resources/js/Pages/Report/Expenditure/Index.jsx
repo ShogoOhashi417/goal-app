@@ -31,6 +31,10 @@ export default function Report({ auth }) {
     const changeYear = (event) => {
         const year = event.target.value;
 
+        if (year === "") {
+            return;
+        }
+
         const YearMonthList = [];
         let month = 1;
         while (month <= 12) {
@@ -52,6 +56,7 @@ export default function Report({ auth }) {
 
     const relativePeriodList = new Map();
 
+    relativePeriodList.set("", "期間で表示する");
     relativePeriodList.set(THIS_MONTH_PERIOD, "今月");
     relativePeriodList.set(THREE_MONTHS_PERIOD, "3ヶ月間");
     relativePeriodList.set(HALF_YEAR_PERIOD, "半年間");
@@ -60,6 +65,10 @@ export default function Report({ auth }) {
     relativePeriodList.set(DECADE_PERIOD, "10年間");
 
     const setDataByPeriod = (period) => {
+        if (period === "") {
+            return;
+        }
+
         if (period === THIS_MONTH_PERIOD) {
             setDateList([getMonth(thisYear, thisMonth, 0)]);
             return;
