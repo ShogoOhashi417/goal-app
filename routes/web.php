@@ -10,6 +10,7 @@ use App\Http\Controllers\Expenditure\ExpenditureController;
 use App\Http\Controllers\Expenditure\FixedExpenditureController;
 use App\Http\Controllers\IncomeCategory\IncomeCategoryController;
 use App\Http\Controllers\FixedIncome\FixedIncomeController;
+use App\Http\Controllers\Report\ReportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -51,13 +52,8 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::get('/report/expenditure', function () {
-        return Inertia::render('Report/Expenditure/Index');
-    })->name('report.expenditure');
-
-    Route::get('/report/balance', function () {
-        return Inertia::render('Report/Balance/Index');
-    })->name('report.balance');
+    Route::get('/report/saving', [ReportController::class, 'saving'])->name('report.saving');
+    Route::get('/report/expense', [ReportController::class, 'expense'])->name('report.expense');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
