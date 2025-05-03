@@ -62,7 +62,7 @@ final class ReportController extends Controller
      */
     public function expense(): Response
     {
-        return Inertia::render('Report/Expense/Index');
+        return Inertia::render('Report/Expenditure/Index');
     }
 
     /**
@@ -93,7 +93,7 @@ final class ReportController extends Controller
         $queryService = new ExpenditureQueryService(
             new ExpenditureModel()
         );
-        
+
         $oneTimeDataList = $queryService->fetchOneTimeExpenditure($startDate, $endDate);
         $fixedDataList = $queryService->fetchFixedExpenditure();
 
