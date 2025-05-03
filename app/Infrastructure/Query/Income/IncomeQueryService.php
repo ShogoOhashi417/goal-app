@@ -25,4 +25,22 @@ final class IncomeQueryService implements IncomeQueryServiceInterface
     {
         return $this->incomeModel->fetchAll();
     }
+
+    /**
+     * @param string $startDate
+     * @param string $endDate
+     * @return array
+     */
+    public function fetchOneTimeIncome(string $startDate, string $endDate): array
+    {
+        return $this->incomeModel->fetchOneTimeIncome($startDate, $endDate);
+    }
+
+    /**
+     * @return array
+     */
+    public function fetchFixedIncome(): array
+    {
+        return $this->incomeModel->fetchFixedIncome();
+    }
 }

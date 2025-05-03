@@ -54,6 +54,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/report/saving', [ReportController::class, 'saving'])->name('report.saving');
     Route::get('/report/expense', [ReportController::class, 'expense'])->name('report.expense');
+    Route::get('/report/saving/get', [ReportController::class, 'getCategoryToAmountList'])->name('report.saving.get');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
