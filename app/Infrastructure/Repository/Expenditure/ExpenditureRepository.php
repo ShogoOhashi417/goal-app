@@ -26,8 +26,14 @@ final class ExpenditureRepository implements ExpenditureRepositoryInterface
      */
     public function fetchById(int $id): array
     {
-        return $this->expenditureModel->fetchById($id);
+        $expenditure = $this->expenditureModel->fetchById($id);
+        return $expenditure ? $expenditure->toArray() : [];
     }
+
+	public function fetchFixedExpenditureById(int $id): array
+	{
+		return $this->expenditureModel->fetchFixedExpenditureById($id);
+	}
 
     /**
      * @return void
@@ -86,5 +92,13 @@ final class ExpenditureRepository implements ExpenditureRepositoryInterface
         $this->expenditureModel->deleteById(
             $expenditure->getId(),
         );
+    }
+
+    /**
+     * @return integer
+     */
+    public function getLastInsertId(): int
+    {
+        return $this->expenditureModel->getLastInsertId();
     }
 }

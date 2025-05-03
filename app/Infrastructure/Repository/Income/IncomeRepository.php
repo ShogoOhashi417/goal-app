@@ -25,7 +25,12 @@ final class IncomeRepository implements IncomeRepositoryInterface
      */
     public function fetchById(int $id): array
     {
-        return $this->incomeModel->fetchById($id);
+        $income = $this->incomeModel->fetchById($id);
+        if (!$income) {
+            return [];
+        }
+        
+        return $income->toArray();
     }
 
     /**

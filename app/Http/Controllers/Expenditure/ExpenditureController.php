@@ -21,6 +21,7 @@ use App\Application\UseCase\Expenditure\Create\CreateExpenditureUseCase;
 use App\Application\UseCase\Expenditure\Delete\DeleteExpenditureUseCase;
 use App\Application\UseCase\Expenditure\Update\UpdateExpenditureUseCase;
 use App\Application\UseCase\CSV\Export\ExportSampleExpenditureCsvUseCase;
+use App\Application\UseCase\CSV\Export\ExportExpenditureCsvUseCase;
 use App\Application\UseCase\Expenditure\Create\CreateExpenditureInputData;
 use App\Application\UseCase\Expenditure\Delete\DeleteExpenditureInputData;
 use App\Application\UseCase\Expenditure\Update\UpdateExpenditureInputData;
@@ -29,6 +30,7 @@ use App\Application\UseCase\Expenditure\Create\BulkCreateExpenditureInputData;
 use App\Application\UseCase\Expenditure\Create\BulkCreateExpenditureUseCase;
 use App\Infrastructure\Repository\PresetExpenditureItem\PresetExpenditureItemRepository;
 use App\Models\PresetExpenditureItem;
+use App\Infrastructure\Util\CsvExporter;
 
 class ExpenditureController extends Controller
 {
@@ -71,6 +73,74 @@ class ExpenditureController extends Controller
         ];
     }
 
+    public function fetchByPeriod(Request $request)
+    {
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+
+        $expenditureQueryService = new ExpenditureQueryService(
+            new ExpenditureModel()
+        );
+
+        $oneTimeExpenditureInfoList = $expenditureQueryService->fetchOneTimeExpenditure($startDate, $endDate);
+        
+        $fixedExpenditureInfoList = $expenditureQueryService->fetchFixedExpenditure();
+
+        $targetFixedExpenditureInfoList = [];
+        foreach ($fixedExpenditureInfoList as $fixedExpenditure) {
+            $expenditureStartDate = new DateTime($fixedExpenditure['start_date']);
+            $expenditureEndDate = $fixedExpenditure['end_date'] ? new DateTime($fixedExpenditure['end_date']) : null;
+            
+            $requestStartDate = new DateTime($startDate);
+            $requestEndDate = new DateTime($endDate);
+
+            if ($expenditureEndDate && $expenditureEndDate < $requestStartDate) {
+                continue;
+            }
+
+            if ($expenditureStartDate > $requestEndDate) {
+                continue;
+            }
+
+            $currentDate = clone $requestStartDate;
+            while ($currentDate <= $requestEndDate) {
+                $paymentDate = clone $currentDate;
+                $paymentDate->setDate(
+                    (int)$currentDate->format('Y'),
+                    (int)$currentDate->format('m'),
+                    (int)$fixedExpenditure['payment_day']
+                );
+
+                $isAfterStartDate = !$expenditureStartDate || $paymentDate >= $expenditureStartDate;
+                $isBeforeEndDate = !$expenditureEndDate || $paymentDate <= $expenditureEndDate;
+
+                $isInPeriod = $isAfterStartDate && $isBeforeEndDate;
+
+                if ($isInPeriod) {
+                    $expenditureData = $fixedExpenditure;
+                    $expenditureData['calendar_date'] = $paymentDate->format('Y-m-d');
+                    $targetFixedExpenditureInfoList[] = $expenditureData;
+                }
+
+                $currentDate->modify('+1 month');
+            }
+        }
+
+        $expenditureInfoList = array_merge($oneTimeExpenditureInfoList, $targetFixedExpenditureInfoList);
+
+        $categoryAmountCalculater = new CategoryAmountCalculater(
+            new DateConverter()
+        );
+
+        $categoryToAmountList = $categoryAmountCalculater->calculate($expenditureInfoList);
+
+        $fixedExpenditureInfoList = $expenditureQueryService->fetchFixedExpenditure();
+
+        return [
+            'category_to_amount_list' => $categoryToAmountList
+        ];
+    }
+
     public function fetchByCategory()
     {
         $fetchExpenditureUseCase = new FetchExpenditureUseCase(
@@ -104,13 +174,13 @@ class ExpenditureController extends Controller
             new CreateExpenditureInputData(
                 $request->expenditure_name,
                 (int)$request->expenditure_category_id,
-                $request->expenditure_amount,
+                (int)$request->expenditure_amount,
                 (new DateTime($request->calendar_date))->format('Y-m-d')
             )
         );
     }
 
-    public function update(Request $request)
+    public function update(Request $request, $id)
     {
         $updateExpenditureUseCase = new UpdateExpenditureUseCase(
             new ExpenditureRepository(
@@ -120,10 +190,10 @@ class ExpenditureController extends Controller
 
         $updateExpenditureUseCase->handle(
             new UpdateExpenditureInputData(
-                (int)$request->id,
+                (int)$id,
                 $request->expenditure_name,
                 (int)$request->expenditure_category_id,
-                $request->expenditure_amount,
+                (int)$request->expenditure_amount,
                 (new DateTime($request->calendar_date))->format('Y-m-d')
             )
         );
@@ -139,9 +209,9 @@ class ExpenditureController extends Controller
 
         $deleteExpenditureUseCase->handle(
             new DeleteExpenditureInputData(
-                $request->id,
+                (int)$request->id,
                 $request->name,
-                $request->amount
+                (int)$request->amount
             )
         );
     }
@@ -151,6 +221,29 @@ class ExpenditureController extends Controller
         $exportSampleExpenditureCsvUseCase = new ExportSampleExpenditureCsvUseCase();
         
         return $exportSampleExpenditureCsvUseCase->handle();
+    }
+
+    public function exportData(Request $request)
+    {
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+        $format = $request->input('format', 'detailed');
+        
+        $exportExpenditureCsvUseCase = new ExportExpenditureCsvUseCase(
+            new ExpenditureQueryService(
+                new ExpenditureModel()
+            ),
+            new CsvExporter()
+        );
+        
+        $result = $exportExpenditureCsvUseCase->handle($startDate, $endDate, $format);
+        
+        $filename = 'expenditure.csv';
+        if ($startDate && $endDate) {
+            $filename = "expenditure_{$startDate}_{$endDate}.csv";
+        }
+        
+        return (new CsvExporter())->export($result['header'], $result['data'], $filename);
     }
 
     public function import_csv(Request $request)
@@ -174,6 +267,7 @@ class ExpenditureController extends Controller
         $expenditureNameToCategoryIdMapList = array_column($presetExpenditureItemInfoList, 'category_id', 'name');
 
         foreach ($expenditureList as $expenditure) {
+            $id = $expenditure->getId();
             $expenditureName = $expenditure->getName()->getValue();
             $categoryId = $expenditure->getCategoryId()->getValue();
             $amount = $expenditure->getAmount()->getValue();
@@ -187,6 +281,7 @@ class ExpenditureController extends Controller
             }
 
             $result[] = [
+                "id" => $id,
                 "name" => $expenditureName,
                 "category_id" => $categoryId,
                 "amount" => $amount,

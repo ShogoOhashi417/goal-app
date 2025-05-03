@@ -1,0 +1,10 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+
+# Your rule content
+
+## チャットをした時のレスポンスルール
+- 日本語で返してください

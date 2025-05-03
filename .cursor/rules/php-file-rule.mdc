@@ -1,0 +1,96 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# PHP ファイルの実装ルール
+
+## 基本方針
+
+PHP ファイルは一貫性のある命名規則とファイル構造に従って実装します。
+これにより、コードの可読性と保守性を高めます。
+
+## 命名規則
+
+### 1. 変数名
+
+-   キャメルケースを使用します
+-   例：
+    ```php
+    $userName
+    $emailAddress
+    $isActive
+    ```
+
+### 2. クラス名
+
+-   パスカルケースを使用します
+-   例：
+    ```php
+    class UserRepository
+    class EmailService
+    class OrderController
+    ```
+
+### 3. メソッド名
+
+-   キャメルケースを使用します
+-   例：
+    ```php
+    public function getUserById()
+    public function sendEmail()
+    public function calculateTotal()
+    ```
+
+### 4. Enum の定数名
+
+-   パスカルケースを使用します
+-   例：
+    ```php
+    enum UserStatus
+    {
+        case Active;
+        case Pending;
+        case Suspended;
+    }
+    ```
+
+## ファイル構造
+
+### 1. PHP タグ
+
+-   ファイルの先頭に必ず `<?php` タグを記述します
+-   PHP のみのファイルでは、終了タグ `?>` は省略します
+
+### 2. Strict Type 宣言
+
+-   `<?php` タグの直後、3 行目に必ず strict type 宣言を記述します
+-   形式：`declare(strict_types=1);`
+
+### 実装例
+
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Domain\Model\User;
+
+final class UserService
+{
+    private UserRepository $userRepository;
+
+    public function getUserProfile(int $userId): UserProfile
+    {
+        $userEntity = $this->userRepository->findById($userId);
+        return new UserProfile($userEntity);
+    }
+}
+```
+
+## 注意事項
+
+-   1 ファイルには 1 つのクラス/インターフェース/トレイトのみを定義します
+-   ファイル名はクラス名と完全に一致させます
+-   名前空間の宣言は strict type 宣言の後に記述します
+-   use 文は名前空間宣言の後にまとめて記述します

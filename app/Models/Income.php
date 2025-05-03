@@ -24,11 +24,51 @@ final class Income extends Model
 
     /**
      * @param integer $id
+     * @return ?
+     */
+    public function fetchById(int $id): ?Income
+    {
+		return $this->join('income_categories', 'incomes.category_id', '=', 'income_categories.id')
+					->leftjoin('fixed_incomes', 'incomes.id', '=', 'fixed_incomes.income_id')
+					->select('incomes.*', 'income_categories.name as category_name', 'fixed_incomes.payment_day', 'fixed_incomes.payment_month', 'fixed_incomes.start_date', 'fixed_incomes.end_date', 'fixed_incomes.cycle_unit')
+					->where('incomes.id', $id)
+					->first();
+    }
+
+    /**
+     * @param string $startDate
+     * @param string $endDate
      * @return array
      */
-    public function fetchById(int $id): array
+    public function fetchOneTimeIncome(string $startDate, string $endDate): array
     {
-        return $this->find($id)->toArray();
+        return $this->whereBetween('calendar_date', [$startDate, $endDate])
+                    ->join('income_categories', 'incomes.category_id', '=', 'income_categories.id')
+                    ->leftjoin('fixed_incomes', 'incomes.id', '=', 'fixed_incomes.income_id')
+                    ->whereNull('fixed_incomes.id')
+                    ->select('incomes.*', 'income_categories.name as category_name')
+                    ->get()
+                    ->toArray();
+    }
+
+    /**
+     * @return array
+     */
+    public function fetchFixedIncome(): array
+    {
+        return $this->join('fixed_incomes', 'incomes.id', '=', 'fixed_incomes.income_id')
+                    ->join('income_categories', 'incomes.category_id', '=', 'income_categories.id')
+                    ->select(
+                        'incomes.*', 
+                        'income_categories.name as category_name',
+                        'fixed_incomes.cycle_unit', 
+                        'fixed_incomes.payment_day', 
+                        'fixed_incomes.payment_month', 
+                        'fixed_incomes.start_date', 
+                        'fixed_incomes.end_date'
+                    )
+                    ->get()
+                    ->toArray();
     }
 
     /**

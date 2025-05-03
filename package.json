@@ -30,12 +30,20 @@
         "@fortawesome/react-fontawesome": "^0.2.0",
         "@inertiajs/inertia": "^0.11.1",
         "@inertiajs/inertia-react": "^0.8.1",
+        "@radix-ui/react-slot": "^1.2.0",
         "@tanstack/react-table": "^8.20.5",
+        "class-variance-authority": "^0.7.1",
+        "clsx": "^2.1.1",
+        "date-fns": "^4.1.0",
         "esbuild": "^0.19.9",
         "highcharts": "^11.4.8",
         "highcharts-react-official": "^3.2.1",
+        "lucide-react": "^0.503.0",
+        "react-datepicker": "^8.2.1",
         "react-router-dom": "^7.0.2",
         "react-tailwindcss-datepicker": "^1.7.2",
-        "tailwind-datepicker-react": "^1.4.3"
+        "tailwind-datepicker-react": "^1.4.3",
+        "tailwind-merge": "^3.2.0",
+        "tailwindcss-animate": "^1.0.7"
     }
 }
