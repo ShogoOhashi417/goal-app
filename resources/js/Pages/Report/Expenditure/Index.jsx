@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
 import Highcharts from "highcharts";
@@ -8,20 +8,11 @@ import axios from "axios";
 
 export default function Report({ auth }) {
     const getMonth = (year, month, period) => {
-        const MONTHS_PER_YEAR = 12;
-
-        const resultMonth = month - period;
-
-        if (resultMonth > 0) {
-            return year + "-" + String(resultMonth).padStart(2, "0");
-        }
-
-        return (
-            year -
-            1 +
-            "-" +
-            String(resultMonth + MONTHS_PER_YEAR).padStart(2, "0")
-        );
+        const date = new Date(year, month - 1 + period, 1);
+        const resultYear = date.getFullYear();
+        const resultMonth = date.getMonth() + 1;
+        
+        return resultYear + "-" + String(resultMonth).padStart(2, "0");
     };
 
     const [totalChartOptions, setTotalChartOptions] = useState([]);
@@ -32,13 +23,23 @@ export default function Report({ auth }) {
     const thisMonth = thisDate.getMonth() + 1;
 
     const [dateList, setDateList] = useState([
-        getMonth(thisYear, thisMonth, 2),
-        getMonth(thisYear, thisMonth, 1),
+        getMonth(thisYear, thisMonth, -2),
+        getMonth(thisYear, thisMonth, -1),
         getMonth(thisYear, thisMonth, 0),
     ]);
 
+    const [selectedYear, setSelectedYear] = useState("");
+    const yearSelectRef = useRef(null);
+
     const changeYear = (event) => {
         const year = event.target.value;
+        setSelectedYear(year);
+
+        if (year === "") {
+            return;
+        }
+
+        setRelativePeriod("");
 
         const YearMonthList = [];
         let month = 1;
@@ -54,62 +55,79 @@ export default function Report({ auth }) {
     const THREE_MONTHS_PERIOD = "2";
     const HALF_YEAR_PERIOD = "3";
     const THIS_YEAR_PERIOD = "4";
+    const THREE_YEARS_PERIOD = "5";
+    const DECADE_PERIOD = "6";
 
     const [relativePeriod, setRelativePeriod] = useState(THREE_MONTHS_PERIOD);
 
     const relativePeriodList = new Map();
 
+    relativePeriodList.set("", "期間で表示する");
     relativePeriodList.set(THIS_MONTH_PERIOD, "今月");
     relativePeriodList.set(THREE_MONTHS_PERIOD, "3ヶ月間");
     relativePeriodList.set(HALF_YEAR_PERIOD, "半年間");
     relativePeriodList.set(THIS_YEAR_PERIOD, "1年間");
+    relativePeriodList.set(THREE_YEARS_PERIOD, "3年間");
+    relativePeriodList.set(DECADE_PERIOD, "10年間");
 
     const setDataByPeriod = (period) => {
+        if (period === "") {
+            return;
+        }
+        
+        setSelectedYear("");
+        if (yearSelectRef.current) {
+            yearSelectRef.current.resetYear();
+        }
+
         if (period === THIS_MONTH_PERIOD) {
             setDateList([getMonth(thisYear, thisMonth, 0)]);
-
             return;
         }
 
         if (period === THREE_MONTHS_PERIOD) {
-            setDateList([
-                getMonth(thisYear, thisMonth, 2),
-                getMonth(thisYear, thisMonth, 1),
-                getMonth(thisYear, thisMonth, 0),
-            ]);
-
+            const dateList = [];
+            for (let i = -2; i <= 0; i++) {
+                dateList.push(getMonth(thisYear, thisMonth, i));
+            }
+            setDateList(dateList);
             return;
         }
 
         if (period === HALF_YEAR_PERIOD) {
-            setDateList([
-                getMonth(thisYear, thisMonth, 5),
-                getMonth(thisYear, thisMonth, 4),
-                getMonth(thisYear, thisMonth, 3),
-                getMonth(thisYear, thisMonth, 2),
-                getMonth(thisYear, thisMonth, 1),
-                getMonth(thisYear, thisMonth, 0),
-            ]);
-
+            const dateList = [];
+            for (let i = -5; i <= 0; i++) {
+                dateList.push(getMonth(thisYear, thisMonth, i));
+            }
+            setDateList(dateList);
             return;
         }
 
         if (period === THIS_YEAR_PERIOD) {
-            setDateList([
-                getMonth(thisYear, thisMonth, 12),
-                getMonth(thisYear, thisMonth, 11),
-                getMonth(thisYear, thisMonth, 10),
-                getMonth(thisYear, thisMonth, 9),
-                getMonth(thisYear, thisMonth, 8),
-                getMonth(thisYear, thisMonth, 7),
-                getMonth(thisYear, thisMonth, 6),
-                getMonth(thisYear, thisMonth, 5),
-                getMonth(thisYear, thisMonth, 4),
-                getMonth(thisYear, thisMonth, 3),
-                getMonth(thisYear, thisMonth, 2),
-                getMonth(thisYear, thisMonth, 1),
-                getMonth(thisYear, thisMonth, 0),
-            ]);
+            const dateList = [];
+            for (let i = -11; i <= 0; i++) {
+                dateList.push(getMonth(thisYear, thisMonth, i));
+            }
+            setDateList(dateList);
+            return;
+        }
+
+        if (period === THREE_YEARS_PERIOD) {
+            const dateList = [];
+            for (let i = -35; i <= 0; i++) {
+                dateList.push(getMonth(thisYear, thisMonth, i));
+            }
+            setDateList(dateList);
+            return;
+        }
+
+        if (period === DECADE_PERIOD) {
+            const dateList = [];
+            for (let i = -119; i <= 0; i++) {
+                dateList.push(getMonth(thisYear, thisMonth, i));
+            }
+            setDateList(dateList);
+            return;
         }
     };
 
@@ -262,7 +280,9 @@ export default function Report({ auth }) {
                         <div className="container">
                             <div className="flex">
                                 <YearSelectBox
+                                    ref={yearSelectRef}
                                     onChange={changeYear}
+                                    value={selectedYear}
                                 ></YearSelectBox>
                                 <select
                                     className="w-1/6 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 ml-3"
