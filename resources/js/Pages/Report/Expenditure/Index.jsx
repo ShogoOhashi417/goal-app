@@ -6,7 +6,7 @@ import HighchartsReact from "highcharts-react-official";
 import YearSelectBox from "@/Components/YearSelectBox";
 import axios from "axios";
 
-export default function Report({ auth }) {
+export default function Report({ auth, expenseInfoList }) {
     const getMonth = (year, month, period) => {
         const date = new Date(year, month - 1 + period, 1);
         const resultYear = date.getFullYear();
@@ -48,7 +48,34 @@ export default function Report({ auth }) {
             month++;
         }
 
-        setDateList(YearMonthList);
+        const updatedDateList = [...YearMonthList];
+        setDateList(updatedDateList);
+        
+        if (updatedDateList.length > 0) {
+            fetchDataWithDates(updatedDateList);
+        }
+    };
+
+    const fetchDataWithDates = async (dates) => {
+        if (!dates || dates.length === 0) return;
+
+        const startDate = dates[0] + '-01';
+        
+        const [year, month] = dates[dates.length - 1].split('-');
+        const lastDay = new Date(year, month, 0).getDate();
+        const endDate = `${dates[dates.length - 1]}-${String(lastDay).padStart(2, '0')}`;
+
+        try {
+            const response = await axios.get('/report/expense/get', {
+                params: {
+                    start_date: startDate,
+                    end_date: endDate
+                }
+            });
+            setExpenditureInfoList(response.data.category_to_amount_list);
+        } catch (error) {
+            console.error('データの取得に失敗しました:', error);
+        }
     };
 
     const THIS_MONTH_PERIOD = "1";
@@ -70,7 +97,55 @@ export default function Report({ auth }) {
     relativePeriodList.set(THREE_YEARS_PERIOD, "3年間");
     relativePeriodList.set(DECADE_PERIOD, "10年間");
 
-    const setDataByPeriod = (period) => {
+    const getDateListByPeriod = (period) => {
+        let dateList = [];
+        
+        if (period === THIS_MONTH_PERIOD) {
+            return [getMonth(thisYear, thisMonth, 0)];
+        }
+        
+        if (period === THREE_MONTHS_PERIOD) {
+            for (let i = -2; i <= 0; i++) {
+                dateList.push(getMonth(thisYear, thisMonth, i));
+            }
+            return dateList;
+        }
+        
+        if (period === HALF_YEAR_PERIOD) {
+            for (let i = -5; i <= 0; i++) {
+                dateList.push(getMonth(thisYear, thisMonth, i));
+            }
+            return dateList;
+        }
+        
+        if (period === THIS_YEAR_PERIOD) {
+            for (let i = -11; i <= 0; i++) {
+                dateList.push(getMonth(thisYear, thisMonth, i));
+            }
+            return dateList;
+        }
+        
+        if (period === THREE_YEARS_PERIOD) {
+            for (let i = -35; i <= 0; i++) {
+                dateList.push(getMonth(thisYear, thisMonth, i));
+            }
+            return dateList;
+        }
+        
+        if (period === DECADE_PERIOD) {
+            for (let i = -119; i <= 0; i++) {
+                dateList.push(getMonth(thisYear, thisMonth, i));
+            }
+            return dateList;
+        }
+        
+        return dateList;
+    };
+    
+    const changeRelativePeriod = (event) => {
+        const period = event.target.value;
+        setRelativePeriod(period);
+
         if (period === "") {
             return;
         }
@@ -80,92 +155,15 @@ export default function Report({ auth }) {
             yearSelectRef.current.resetYear();
         }
 
-        if (period === THIS_MONTH_PERIOD) {
-            setDateList([getMonth(thisYear, thisMonth, 0)]);
-            return;
-        }
-
-        if (period === THREE_MONTHS_PERIOD) {
-            const dateList = [];
-            for (let i = -2; i <= 0; i++) {
-                dateList.push(getMonth(thisYear, thisMonth, i));
-            }
-            setDateList(dateList);
-            return;
-        }
-
-        if (period === HALF_YEAR_PERIOD) {
-            const dateList = [];
-            for (let i = -5; i <= 0; i++) {
-                dateList.push(getMonth(thisYear, thisMonth, i));
-            }
-            setDateList(dateList);
-            return;
-        }
-
-        if (period === THIS_YEAR_PERIOD) {
-            const dateList = [];
-            for (let i = -11; i <= 0; i++) {
-                dateList.push(getMonth(thisYear, thisMonth, i));
-            }
-            setDateList(dateList);
-            return;
-        }
-
-        if (period === THREE_YEARS_PERIOD) {
-            const dateList = [];
-            for (let i = -35; i <= 0; i++) {
-                dateList.push(getMonth(thisYear, thisMonth, i));
-            }
-            setDateList(dateList);
-            return;
-        }
-
-        if (period === DECADE_PERIOD) {
-            const dateList = [];
-            for (let i = -119; i <= 0; i++) {
-                dateList.push(getMonth(thisYear, thisMonth, i));
-            }
-            setDateList(dateList);
-            return;
-        }
-    };
-
-    const fetchData = async () => {
-        if (dateList.length === 0) return;
-
-        const startDate = dateList[0] + '-01';
+        const updatedDateList = getDateListByPeriod(period);
+        setDateList(updatedDateList);
         
-        const [year, month] = dateList[dateList.length - 1].split('-');
-        const lastDay = new Date(year, month, 0).getDate();
-        const endDate = `${dateList[dateList.length - 1]}-${String(lastDay).padStart(2, '0')}`;
-
-        try {
-            const response = await axios.get('/expenditure/report', {
-                params: {
-                    start_date: startDate,
-                    end_date: endDate
-                }
-            });
-            setExpenditureInfoList(response.data.category_to_amount_list);
-        } catch (error) {
-            console.error('データの取得に失敗しました:', error);
+        if (updatedDateList.length > 0) {
+            fetchDataWithDates(updatedDateList);
         }
     };
 
-    const changeRelativePeriod = (event) => {
-        const period = event.target.value;
-        setRelativePeriod(period);
-
-        setDataByPeriod(period);
-        fetchData();
-    };
-
-    const [expenditureInfoList, setExpenditureInfoList] = useState([]);
-
-    useEffect(() => {
-        fetchData();
-    }, [dateList]);
+    const [expenditureInfoList, setExpenditureInfoList] = useState(expenseInfoList.category_to_amount_list);
 
     useEffect(() => {
         const totalDataList = [];
