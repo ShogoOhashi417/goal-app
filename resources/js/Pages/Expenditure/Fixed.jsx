@@ -354,90 +354,98 @@ export default function Fixed({
                                                 ))}
                                         </thead>
                                         <tbody>
-                                            {table
-                                                .getRowModel()
-                                                .rows.map((row) => (
-                                                    <tr
-                                                        key={row.id}
-                                                        className="bg-white border-b hover:bg-gray-50"
-                                                    >
-                                                        {row
-                                                            .getVisibleCells()
-                                                            .map((cell) => (
-                                                                <td
-                                                                    key={
-                                                                        cell.id
-                                                                    }
-                                                                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
-                                                                >
-                                                                    {cell.column
-                                                                        .columnDef
-                                                                        .formatValue
-                                                                        ? cell.column.columnDef.formatValue(
-                                                                              cell.getValue()
-                                                                          )
-                                                                        : cell.getValue()}
-                                                                </td>
-                                                            ))}
-                                                        <td>
-                                                            <div className="flex justify-center items-center gap-1">
-                                                                <button
-                                                                    className="mx-auto"
-                                                                    onClick={() =>
-                                                                        openUpdateModal(
-                                                                            row
-                                                                                .original
-                                                                                .id,
-                                                                            row.getValue(
-                                                                                "name"
-                                                                            ),
-                                                                            row
-                                                                                .original
-                                                                                .category_id,
-                                                                            row.getValue(
-                                                                                "amount"
-                                                                            ),
-                                                                            row.getValue(
-                                                                                "payment_day"
-                                                                            ),
-                                                                            row.getValue(
-                                                                                "payment_month"
-                                                                            ),
-                                                                            row.getValue(
-                                                                                "start_date"
-                                                                            ),
-                                                                            row.getValue(
-                                                                                "end_date"
+                                            {table.getRowModel().rows.length > 0 ? (
+                                                table
+                                                    .getRowModel()
+                                                    .rows.map((row) => (
+                                                        <tr
+                                                            key={row.id}
+                                                            className="bg-white border-b hover:bg-gray-50"
+                                                        >
+                                                            {row
+                                                                .getVisibleCells()
+                                                                .map((cell) => (
+                                                                    <td
+                                                                        key={
+                                                                            cell.id
+                                                                        }
+                                                                        className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
+                                                                    >
+                                                                        {cell.column
+                                                                            .columnDef
+                                                                            .formatValue
+                                                                            ? cell.column.columnDef.formatValue(
+                                                                                cell.getValue()
                                                                             )
-                                                                        )
-                                                                    }
-                                                                >
-                                                                    <FontAwesomeIcon
-                                                                        icon={
-                                                                            faPenToSquare
+                                                                            : cell.getValue()}
+                                                                    </td>
+                                                                ))}
+                                                            <td>
+                                                                <div className="flex justify-center items-center gap-1">
+                                                                    <button
+                                                                        className="mx-auto"
+                                                                        onClick={() =>
+                                                                            openUpdateModal(
+                                                                                row
+                                                                                    .original
+                                                                                    .id,
+                                                                                row.getValue(
+                                                                                    "name"
+                                                                                ),
+                                                                                row
+                                                                                    .original
+                                                                                    .category_id,
+                                                                                row.getValue(
+                                                                                    "amount"
+                                                                                ),
+                                                                                row.getValue(
+                                                                                    "payment_day"
+                                                                                ),
+                                                                                row.getValue(
+                                                                                    "payment_month"
+                                                                                ),
+                                                                                row.getValue(
+                                                                                    "start_date"
+                                                                                ),
+                                                                                row.getValue(
+                                                                                    "end_date"
+                                                                                )
+                                                                            )
                                                                         }
-                                                                    />
-                                                                </button>
-                                                                <button
-                                                                    className="mx-auto"
-                                                                    onClick={() =>
-                                                                        deleteExpenditure(
-                                                                            row
-                                                                                .original
-                                                                                .expenditure_id
-                                                                        )
-                                                                    }
-                                                                >
-                                                                    <FontAwesomeIcon
-                                                                        icon={
-                                                                            faCircleXmark
+                                                                    >
+                                                                        <FontAwesomeIcon
+                                                                            icon={
+                                                                                faPenToSquare
+                                                                            }
+                                                                        />
+                                                                    </button>
+                                                                    <button
+                                                                        className="mx-auto"
+                                                                        onClick={() =>
+                                                                            deleteExpenditure(
+                                                                                row
+                                                                                    .original
+                                                                                    .expenditure_id
+                                                                            )
                                                                         }
-                                                                    />
-                                                                </button>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                ))}
+                                                                    >
+                                                                        <FontAwesomeIcon
+                                                                            icon={
+                                                                                faCircleXmark
+                                                                            }
+                                                                        />
+                                                                    </button>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    ))
+                                            ) : (
+                                                <tr className="bg-white border-b">
+                                                    <td colSpan={9} className="px-6 py-4 text-center font-medium text-gray-900">
+                                                        データがありません。右上の <FontAwesomeIcon icon={faCirclePlus} /> から固定支出を登録してください。
+                                                    </td>
+                                                </tr>
+                                            )}
                                         </tbody>
                                     </table>
                                 </div>

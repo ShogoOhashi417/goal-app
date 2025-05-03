@@ -275,49 +275,57 @@ export default function Income({
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {incomeCategoryInfoList.map(
-                                                (item, index) => (
-                                                    <React.Fragment key={index}>
-                                                        <tr className="bg-white border-b hover:bg-gray-50">
-                                                            <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                                                                {item.name}
-                                                            </td>
-                                                            <td>
-                                                                <div className="flex justify-center items-center gap-1">
-                                                                    <button
-                                                                        className="mx-auto"
-                                                                        onClick={() =>
-                                                                            showEditIncomeCategoryModal(
-                                                                                item.id,
-                                                                                item.name
-                                                                            )
-                                                                        }
-                                                                    >
-                                                                        <FontAwesomeIcon
-                                                                            icon={
-                                                                                faPenToSquare
+                                            {incomeCategoryInfoList.length > 0 ? (
+                                                incomeCategoryInfoList.map(
+                                                    (item, index) => (
+                                                        <React.Fragment key={index}>
+                                                            <tr className="bg-white border-b hover:bg-gray-50">
+                                                                <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                                                                    {item.name}
+                                                                </td>
+                                                                <td>
+                                                                    <div className="flex justify-center items-center gap-1">
+                                                                        <button
+                                                                            className="mx-auto"
+                                                                            onClick={() =>
+                                                                                showEditIncomeCategoryModal(
+                                                                                    item.id,
+                                                                                    item.name
+                                                                                )
                                                                             }
-                                                                        />
-                                                                    </button>
-                                                                    <button
-                                                                        className="mx-auto"
-                                                                        onClick={() =>
-                                                                            deleteIncomeCategory(
-                                                                                item.id
-                                                                            )
-                                                                        }
-                                                                    >
-                                                                        <FontAwesomeIcon
-                                                                            icon={
-                                                                                faCircleXmark
+                                                                        >
+                                                                            <FontAwesomeIcon
+                                                                                icon={
+                                                                                    faPenToSquare
+                                                                                }
+                                                                            />
+                                                                        </button>
+                                                                        <button
+                                                                            className="mx-auto"
+                                                                            onClick={() =>
+                                                                                deleteIncomeCategory(
+                                                                                    item.id
+                                                                                )
                                                                             }
-                                                                        />
-                                                                    </button>
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                    </React.Fragment>
+                                                                        >
+                                                                            <FontAwesomeIcon
+                                                                                icon={
+                                                                                    faCircleXmark
+                                                                                }
+                                                                            />
+                                                                        </button>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        </React.Fragment>
+                                                    )
                                                 )
+                                            ) : (
+                                                <tr className="bg-white border-b">
+                                                    <td colSpan={2} className="px-6 py-4 text-center font-medium text-gray-900">
+                                                        データがありません。右上の <FontAwesomeIcon icon={faCirclePlus} /> から収入カテゴリーを登録してください。
+                                                    </td>
+                                                </tr>
                                             )}
                                         </tbody>
                                     </table>
@@ -357,49 +365,57 @@ export default function Income({
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {expenditureCategoryInfoList.map(
-                                                (item, index) => (
-                                                    <React.Fragment key={index}>
-                                                        <tr className="bg-white border-b hover:bg-gray-50">
-                                                            <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                                                                {item.name}
-                                                            </td>
-                                                            <td>
-                                                                <div className="flex justify-center items-center gap-1">
-                                                                    <button
-                                                                        className="mx-auto"
-                                                                        onClick={() =>
-                                                                            showEditExpenditureCategoryModal(
-                                                                                item.id,
-                                                                                item.name
-                                                                            )
-                                                                        }
-                                                                    >
-                                                                        <FontAwesomeIcon
-                                                                            icon={
-                                                                                faPenToSquare
+                                            {expenditureCategoryInfoList.length > 0 ? (
+                                                expenditureCategoryInfoList.map(
+                                                    (item, index) => (
+                                                        <React.Fragment key={index}>
+                                                            <tr className="bg-white border-b hover:bg-gray-50">
+                                                                <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                                                                    {item.name}
+                                                                </td>
+                                                                <td>
+                                                                    <div className="flex justify-center items-center gap-1">
+                                                                        <button
+                                                                            className="mx-auto"
+                                                                            onClick={() =>
+                                                                                showEditExpenditureCategoryModal(
+                                                                                    item.id,
+                                                                                    item.name
+                                                                                )
                                                                             }
-                                                                        />
-                                                                    </button>
-                                                                    <button
-                                                                        className="mx-auto"
-                                                                        onClick={() =>
-                                                                            deleteExpenditureCategory(
-                                                                                item.id
-                                                                            )
-                                                                        }
-                                                                    >
-                                                                        <FontAwesomeIcon
-                                                                            icon={
-                                                                                faCircleXmark
+                                                                        >
+                                                                            <FontAwesomeIcon
+                                                                                icon={
+                                                                                    faPenToSquare
+                                                                                }
+                                                                            />
+                                                                        </button>
+                                                                        <button
+                                                                            className="mx-auto"
+                                                                            onClick={() =>
+                                                                                deleteExpenditureCategory(
+                                                                                    item.id
+                                                                                )
                                                                             }
-                                                                        />
-                                                                    </button>
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                    </React.Fragment>
+                                                                        >
+                                                                            <FontAwesomeIcon
+                                                                                icon={
+                                                                                    faCircleXmark
+                                                                                }
+                                                                            />
+                                                                        </button>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        </React.Fragment>
+                                                    )
                                                 )
+                                            ) : (
+                                                <tr className="bg-white border-b">
+                                                    <td colSpan={2} className="px-6 py-4 text-center font-medium text-gray-900">
+                                                        データがありません。右上の <FontAwesomeIcon icon={faCirclePlus} /> から支出カテゴリーを登録してください。
+                                                    </td>
+                                                </tr>
                                             )}
                                         </tbody>
                                     </table>

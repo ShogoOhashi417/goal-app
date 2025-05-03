@@ -254,9 +254,8 @@ export default function Expenditure({
                                                 ))}
                                         </thead>
                                         <tbody>
-                                            {table
-                                                .getRowModel()
-                                                .rows.map((row) => (
+                                            {table.getRowModel().rows.length > 0 ? (
+                                                table.getRowModel().rows.map((row) => (
                                                     <tr
                                                         key={row.id}
                                                         className="bg-white border-b hover:bg-gray-50"
@@ -320,7 +319,14 @@ export default function Expenditure({
                                                             </div>
                                                         </td>
                                                     </tr>
-                                                ))}
+                                                ))
+                                            ) : (
+                                                <tr className="bg-white border-b">
+                                                    <td colSpan={4} className="px-6 py-4 text-center font-medium text-gray-900">
+                                                        データがありません。右上の <FontAwesomeIcon icon={faCirclePlus} /> から支出を登録してください。
+                                                    </td>
+                                                </tr>
+                                            )}
                                         </tbody>
                                     </table>
                                 </div>
