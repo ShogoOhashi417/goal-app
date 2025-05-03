@@ -1,66 +1,160 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 楽家計（Rakukake）- 家計管理アプリケーション
 
 <p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+<img src="https://img.shields.io/badge/-PHP-777BB4.svg?logo=php&style=for-the-badge&logoColor=white">
+<img src="https://img.shields.io/badge/-Laravel-FF2D20.svg?logo=laravel&style=for-the-badge&logoColor=white">
+<img src="https://img.shields.io/badge/-React-61DAFB.svg?logo=react&style=for-the-badge&logoColor=black">
+<img src="https://img.shields.io/badge/-Tailwind%20CSS-38B2AC.svg?logo=tailwind-css&style=for-the-badge&logoColor=white">
+<img src="https://img.shields.io/badge/-MySQL-4479A1.svg?logo=mysql&style=for-the-badge&logoColor=white">
+<img src="https://img.shields.io/badge/-Docker-2496ED.svg?logo=docker&style=for-the-badge&logoColor=white">
 </p>
 
-## About Laravel
+## プロジェクト概要
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+楽家計（Rakukake）は、日々の収入と支出を簡単に記録・管理し、家計の健全化をサポートするWebアプリケーションです。収入・支出の登録、カテゴリ管理、固定収支の管理、レポート機能などを提供します。
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 使用している主な技術
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### バックエンド
+- PHP 8.1以上
+- Laravel 10.x
+- MySQL 8.0
 
-## Learning Laravel
+### フロントエンド
+- React 18.x
+- Inertia.js
+- Tailwind CSS
+- Headless UI
+- Highcharts（グラフ表示）
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### 開発・インフラ
+- Docker / Laravel Sail
+- PHPUnit（テスト）
+- GitHub Actions（CI/CD）
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## 環境変数一覧
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+環境変数の設定は `.env` ファイルで行います。主な環境変数は以下の通りです：
 
-## Laravel Sponsors
+| 変数名                 | 役割                      | デフォルト値           |
+|-----------------------|--------------------------|---------------------|
+| APP_NAME              | アプリケーション名          | Laravel             |
+| APP_ENV               | 実行環境                  | local               |
+| APP_KEY               | アプリケーションキー        | 自動生成される値       |
+| APP_DEBUG             | デバッグモード             | true                |
+| APP_URL               | アプリケーションURL        | http://localhost    |
+| DB_CONNECTION         | データベース接続方式        | mysql               |
+| DB_HOST               | データベースホスト          | mysql               |
+| DB_PORT               | データベースポート          | 3306                |
+| DB_DATABASE           | データベース名             | laravel             |
+| DB_USERNAME           | データベースユーザー名      | sail                |
+| DB_PASSWORD           | データベースパスワード      | password            |
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## コマンド一覧
 
-### Premium Partners
+| コマンド                            | 説明                                         |
+|------------------------------------|---------------------------------------------|
+| `sail up`                          | Docker環境を起動                             |
+| `sail up -d`                       | Docker環境をバックグラウンドで起動             |
+| `sail down`                        | Docker環境を停止                             |
+| `sail artisan migrate`             | データベースマイグレーションを実行              |
+| `sail artisan db:seed`             | シードデータを投入                            |
+| `sail npm run dev`                 | フロントエンド開発サーバーを起動                |
+| `sail npm run build`               | フロントエンドのビルド                        |
+| `sail artisan test`                | テストを実行                                 |
+| `sail php --version`               | PHPのバージョンを確認                         |
+| `sail composer install`            | PHPパッケージをインストール                    |
+| `sail npm install`                 | NPMパッケージをインストール                    |
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+## ディレクトリ構成
 
-## Contributing
+```
+rakukake/
+├── app/                  # アプリケーションのコアコード
+│   ├── Http/             # コントローラー、ミドルウェア、リクエスト
+│   ├── Domain/           # ドメインモデル
+│   │   └── Model/        # エンティティと値オブジェクト
+│   ├── UseCase/          # ユースケース（アプリケーションロジック）
+│   └── Repository/       # リポジトリインターフェースと実装
+├── bootstrap/            # アプリケーション起動ファイル
+├── config/               # 設定ファイル
+├── database/             # マイグレーションとシード
+├── public/               # 公開ディレクトリ
+├── resources/            # ビュー、未コンパイルアセット
+│   ├── js/               # Reactコンポーネント
+│   └── css/              # スタイルシート
+├── routes/               # ルート定義
+├── storage/              # アップロードファイル、キャッシュなど
+├── tests/                # テストファイル
+└── vendor/               # Composerパッケージ
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## 開発環境構築手順
 
-## Code of Conduct
+### 前提条件
+- Docker
+- Docker Compose
+- Git
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### 手順
 
-## Security Vulnerabilities
+1. リポジトリをクローン
+```bash
+git clone [リポジトリURL]
+cd rakukake
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+2. 環境設定ファイルをコピー
+```bash
+cp .env.example .env
+```
 
-## License
+3. Dockerコンテナを起動
+```bash
+./vendor/bin/sail up -d
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+4. アプリケーションキーを生成
+```bash
+./vendor/bin/sail artisan key:generate
+```
+
+5. 依存パッケージをインストール
+```bash
+./vendor/bin/sail composer install
+./vendor/bin/sail npm install
+```
+
+6. マイグレーションを実行
+```bash
+./vendor/bin/sail artisan migrate
+./vendor/bin/sail artisan db:seed  # （オプション）テストデータを投入
+```
+
+7. フロントエンド開発サーバーを起動
+```bash
+./vendor/bin/sail npm run dev
+```
+
+8. ブラウザでアクセス  
+http://localhost にアクセスすると、アプリケーションが表示されます。
+
+## トラブルシューティング
+
+### Docker起動時に「Ports are not available: address already in use」エラーが発生する場合
+別のアプリケーションが同じポートを使用している可能性があります。`.env`ファイルの`APP_PORT`を変更してください。
+
+### マイグレーション実行時にエラーが発生する場合
+データベースの接続設定を確認してください。`.env`ファイルの`DB_*`設定が正しいことを確認してください。
+
+### フロントエンドのビルドが失敗する場合
+node_modulesを削除して再インストールしてみてください。
+```bash
+./vendor/bin/sail npm cache clean --force
+./vendor/bin/sail rm -rf node_modules
+./vendor/bin/sail npm install
+```
+
+## ライセンス
+
+このプロジェクトはMITライセンスの下で公開されています。
