@@ -291,7 +291,7 @@ export default function Balance({ auth, incomeDataList, expenseDataList }) {
                 },
                 {
                     name: '貯金額',
-                    type: 'spline',
+                    type: 'line',
                     color: savingsColor,
                     data: savingsData,
                     yAxis: 0,
@@ -301,7 +301,7 @@ export default function Balance({ auth, incomeDataList, expenseDataList }) {
                     marker: {
                         enabled: true,
                         radius: 4,
-                        symbol: 'circle',
+                        symbol: 'point',
                         lineColor: savingsColor,
                         lineWidth: 2,
                         fillColor: '#FFFFFF'
