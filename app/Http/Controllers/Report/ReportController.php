@@ -62,7 +62,30 @@ final class ReportController extends Controller
      */
     public function expense(): Response
     {
-        return Inertia::render('Report/Expense/Index');
+        $startDate = (new DateTime())->modify('-3 month');
+        $endDate = (new DateTime())->modify('last day of this month');
+
+        $expenseInfoList = $this->fetchFinancialData(
+            'expenditure',
+            $startDate->format('Y-m-d'),
+            $endDate->format('Y-m-d')
+        );
+
+        return Inertia::render('Report/Expenditure/Index', [
+            'expenseInfoList' => $expenseInfoList,
+        ]);
+    }
+
+    /**
+     * @param Request $request
+     * @return array
+     */
+    public function fetchExpenseInfoList(Request $request): array
+    {
+        $startDate = date('Y-m-d', strtotime($request->input('start_date')));
+        $endDate = date('Y-m-t', strtotime($request->input('end_date')));
+
+        return $this->fetchFinancialData('expenditure', $startDate, $endDate);
     }
 
     /**
@@ -93,7 +116,7 @@ final class ReportController extends Controller
         $queryService = new ExpenditureQueryService(
             new ExpenditureModel()
         );
-        
+
         $oneTimeDataList = $queryService->fetchOneTimeExpenditure($startDate, $endDate);
         $fixedDataList = $queryService->fetchFixedExpenditure();
 
