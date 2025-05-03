@@ -19,7 +19,7 @@ export default function Welcome({ auth, laravelVersion, phpVersion }) {
                         <div className="flex gap-4">
                             {auth.user ? (
                                 <Button className="bg-green-600 hover:bg-green-700" asChild>
-                                    <Link href={route('report.balance')}>ダッシュボード</Link>
+                                    <Link href={route('report.saving')}>ダッシュボード</Link>
                                 </Button>
                             ) : (
                                 <>

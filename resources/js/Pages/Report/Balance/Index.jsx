@@ -3,8 +3,9 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
+import axios from "axios";
 
-export default function Balance({ auth }) {
+export default function Balance({ auth, incomeDataList, expenseDataList }) {
     const getMonth = (year, month, period) => {
         const date = new Date(year, month - 1 + period, 1);
         const resultYear = date.getFullYear();
@@ -41,51 +42,7 @@ export default function Balance({ auth }) {
     relativePeriodList.set(THREE_YEARS_PERIOD, "3年間");
     relativePeriodList.set(DECADE_PERIOD, "10年間");
 
-    const createDummyIncome = () => {
-        return {
-            "給与": initialDateList.reduce((acc, date) => {
-                acc[date] = 320000;
-                return acc;
-            }, {}),
-            "ボーナス": initialDateList.reduce((acc, date, index) => {
-                acc[date] = index === 1 ? 500000 : 0;
-                return acc;
-            }, {}),
-            "副業": initialDateList.reduce((acc, date, index) => {
-                const amounts = [50000, 30000, 45000];
-                acc[date] = amounts[index] || 0;
-                return acc;
-            }, {})
-        };
-    };
-
-    const createDummyExpenditure = () => {
-        return {
-            "家賃": initialDateList.reduce((acc, date) => {
-                acc[date] = 80000;
-                return acc;
-            }, {}),
-            "食費": initialDateList.reduce((acc, date, index) => {
-                const amounts = [45000, 42000, 48000];
-                acc[date] = amounts[index] || 0;
-                return acc;
-            }, {}),
-            "交通費": initialDateList.reduce((acc, date, index) => {
-                const amounts = [12000, 15000, 13000];
-                acc[date] = amounts[index] || 0;
-                return acc;
-            }, {}),
-            "娯楽": initialDateList.reduce((acc, date, index) => {
-                const amounts = [30000, 120000, 25000];
-                acc[date] = amounts[index] || 0;
-                return acc;
-            }, {})
-        };
-    };
-
-    const changeRelativePeriod = (event) => {
-        const period = event.target.value;
-
+    const setRelativePeriod = (period) => {
         if (period === THIS_MONTH_PERIOD) {
             setDateList([getMonth(thisYear, thisMonth, 0)]);
             return;
@@ -137,9 +94,38 @@ export default function Balance({ auth }) {
         }
     };
 
-    const [incomeInfoList, setIncomeInfoList] = useState(createDummyIncome());
-    const [expenditureInfoList, setExpenditureInfoList] = useState(createDummyExpenditure());
+    const getCategoryToAmountList = async () => {
+        try {
+            const startDate = dateList[0];
+            const endDate = dateList[dateList.length - 1];
+
+            const response = await axios.get('/report/saving/get', {
+                params: {
+                    start_date: startDate,
+                    end_date: endDate
+                }
+            });
+
+            console.error(response.data);
+
+            setIncomeInfoList(response.data.incomeDataList.category_to_amount_list);
+            setExpenditureInfoList(response.data.expenseDataList.category_to_amount_list);
+        } catch (error) {
+            console.error('データの取得に失敗しました:', error);
+        }
+    }
+
+    const changeDate = (event) => {
+        setRelativePeriod(event.target.value);
+    }
+
+    const [incomeInfoList, setIncomeInfoList] = useState(incomeDataList.category_to_amount_list);
+    const [expenditureInfoList, setExpenditureInfoList] = useState(expenseDataList.category_to_amount_list);
     const [combinedChartOptions, setCombinedChartOptions] = useState({});
+
+    useEffect(() => {
+        getCategoryToAmountList();
+    }, [dateList]);
 
     useEffect(() => {
         const incomeData = [];
@@ -349,7 +335,7 @@ export default function Balance({ auth }) {
                                 </label>
                                 <select
                                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    onChange={changeRelativePeriod}
+                                    onChange={changeDate}
                                     defaultValue={THIS_YEAR_PERIOD}
                                 >
                                     {Array.from(

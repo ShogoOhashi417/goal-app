@@ -27,10 +27,10 @@ export default function Authenticated({ user, header, children }) {
                                         <span
                                             className={`inline-flex bg-indigo-50 ${
                                                 route().current(
-                                                    "report.expenditure"
+                                                    "report.expense"
                                                 ) ||
                                                 route().current(
-                                                    "report.balance"
+                                                    "report.saving"
                                                 )
                                                     ? "border-b-2 border-indigo-400 text-gray-900"
                                                     : ""
@@ -59,17 +59,17 @@ export default function Authenticated({ user, header, children }) {
 
                                     <Dropdown.Content>
                                         <Dropdown.Link
-                                            href={route("report.balance")}
+                                            href={route("report.saving")}
                                             active={route().current(
-                                                "report.balance"
+                                                "report.saving"
                                             )}
                                         >
                                             貯金額
                                         </Dropdown.Link>
                                         <Dropdown.Link
-                                            href={route("report.expenditure")}
+                                            href={route("report.expense")}
                                             active={route().current(
-                                                "report.expenditure"
+                                                "report.expense"
                                             )}
                                         >
                                             支出額
