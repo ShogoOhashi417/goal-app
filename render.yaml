@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: rakukake
+    runtime: docker
+    plan: free
+    region: singapore
+    healthCheckPath: /
+    buildCommand: ""  # Dockerfileが対応するため不要
+    startCommand: ""  # Dockerfileが対応するため不要
