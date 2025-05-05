@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
@@ -29,6 +30,14 @@ Route::get('/', function () {
         'canRegister' => Route::has('register'),
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
+    ]);
+});
+
+Route::get('/wasshoi', function (Request $request) {
+    return response([
+        'id' => 1,
+        'name' => 'テストユーザー',
+        'email' => 'test@example.com'
     ]);
 });
 

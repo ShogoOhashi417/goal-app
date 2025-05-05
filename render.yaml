@@ -1,0 +1,38 @@
+services:
+  - type: web
+    name: rakukake
+    runtime: docker
+    plan: free
+    region: singapore
+    healthCheckPath: /
+    buildCommand: ""  # Dockerfileが対応するため不要
+    startCommand: ""  # Dockerfileが対応するため不要
+    envVars:
+      - key: PORT
+        value: 80
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: false
+      - key: APP_KEY
+        value: base64:wdfkpTP9R9oq3y977PnshkyE6Sqgy8L3ZAxx4rNjE1M=
+      - key: DB_CONNECTION
+        value: mysql
+      # 以下は実際のデータベース情報に書き換えてください
+      - key: DB_HOST
+        value: mysql.example.com
+      - key: DB_PORT
+        value: 3306
+      - key: DB_DATABASE
+        value: laravel
+      - key: DB_USERNAME
+        value: user
+      - key: DB_PASSWORD
+        value: password
+      # キャッシュやセッションの設定
+      - key: CACHE_DRIVER
+        value: file
+      - key: SESSION_DRIVER
+        value: file
+      - key: QUEUE_CONNECTION
+        value: sync 
