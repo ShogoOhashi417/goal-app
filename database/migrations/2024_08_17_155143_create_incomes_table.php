@@ -12,9 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('incomes', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('name');
             $table->integer('amount')->unsigned();
+            $table->unsignedBigInteger('category_id')->comment('収入カテゴリー');
+            $table->foreign('category_id')->references('id')->on('income_categories')->onDelete('cascade');
+            $table->date('calendar_date');
             $table->timestamps();
         });
     }

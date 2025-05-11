@@ -12,7 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('life_insurances', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('name')->nullable();
             $table->integer('fee')->unsigned();
             $table->integer('payment_type')->unsigned();

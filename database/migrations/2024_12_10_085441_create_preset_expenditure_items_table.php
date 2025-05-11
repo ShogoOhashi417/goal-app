@@ -12,7 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('preset_expenditure_items', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('name', 128)->comment('支出名');
             $table->integer('category_id')->unsigned()->comment('支出カテゴリー');
         });
