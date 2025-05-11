@@ -19,7 +19,11 @@ return [
 
     'allowed_methods' => ['*'],
 
+<<<<<<< Updated upstream
     'allowed_origins' => ['*'],
+=======
+    'allowed_origins' => ['http://localhost:3000', 'https://rakukake-web-front.pages.dev'],
+>>>>>>> Stashed changes
 
     'allowed_origins_patterns' => [],
 

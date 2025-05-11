@@ -12,14 +12,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('fixed_expenditures', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedInteger('expenditure_id');
+            $table->bigIncrements('id');
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->unsignedBigInteger('expenditure_id');
             $table->string('cycle_unit');
             $table->integer('payment_day');
             $table->integer('payment_month')->nullable();
             $table->date('start_date');
             $table->date('end_date')->nullable();
-            $table->date('payment_date');
             $table->timestamps();
 
             $table->foreign('expenditure_id')->references('id')->on('expenditures')->onDelete('cascade');

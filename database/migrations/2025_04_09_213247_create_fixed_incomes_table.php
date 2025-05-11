@@ -12,8 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('fixed_incomes', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedInteger('income_id');
+            $table->bigIncrements('id');
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->unsignedBigInteger('income_id');
             $table->string('cycle_unit');
             $table->integer('payment_day');
             $table->integer('payment_month')->nullable();
