@@ -77,7 +77,8 @@ class IncomeCategoryController extends Controller
 
         $createIncomeCategoryUseCase->handle(
             new CreateIncomeCategoryInputData(
-                $request->incomeCategoryName
+                $request->name,
+                $request->user()->id
             )
         );
     }
