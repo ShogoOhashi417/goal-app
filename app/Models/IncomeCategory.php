@@ -9,7 +9,7 @@ class IncomeCategory extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'user_id'];
 
     /**
      * @return array
@@ -30,13 +30,15 @@ class IncomeCategory extends Model
 
     /**
      * @param string $name
+     * @param int $userId
      * @return void
      */
-    public function createIncomeCategory(string $name): void
+    public function createIncomeCategory(string $name, int $userId): void
     {
         $this->create(
             [
                 'name' => $name,
+                'user_id' => $userId,
             ]
         );
     }

@@ -32,7 +32,8 @@ final class IncomeCategoryRepository implements IncomeCategoryRepositoryInterfac
     public function save(IncomeCategory $incomeCategory): void
     {
         $this->incomeCategoryModel->createIncomeCategory(
-            $incomeCategory->getName()->value()
+            $incomeCategory->getName()->value(),
+            $incomeCategory->getUserId()
         );
     }
 

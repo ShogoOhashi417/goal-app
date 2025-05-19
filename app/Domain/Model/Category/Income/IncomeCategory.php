@@ -8,14 +8,17 @@ final class IncomeCategory
 {
     private readonly int $id;
     private readonly IncomeCategoryName $name;
+    private readonly int $userId;
 
     private function __construct(
         int $id,
-        IncomeCategoryName $name
+        IncomeCategoryName $name,
+        int $userId
     )
     {
         $this->id = $id;
         $this->name = $name;
+        $this->userId = $userId;
     }
 
     /**
@@ -35,30 +38,44 @@ final class IncomeCategory
     }
 
     /**
+     * @return integer
+     */
+    public function getUserId(): int
+    {
+        return $this->userId;
+    }
+
+    /**
      * @param IncomeCategoryName $name
+     * @param int $userId
      * @return self
      */
     public static function create(
-        IncomeCategoryName $name
+        IncomeCategoryName $name,
+        int $userId
     ): self {
         return new self(
             0,
-            $name
+            $name,
+            $userId
         );
     }
 
     /**
      * @param integer $id
      * @param IncomeCategoryName $name
+     * @param int $userId
      * @return self
      */
     public static function reconstruct(
         int $id,
-        IncomeCategoryName $name
+        IncomeCategoryName $name,
+        int $userId
     ): self {
         return new self(
             $id,
-            $name
+            $name,
+            $userId
         );
     }
 }

@@ -45,13 +45,13 @@ Route::prefix('v1')
         Route::put('/expenditure/update/{id}', [ExpenditureController::class, 'update']);
         Route::delete('/expenditure/{id}', [ExpenditureController::class, 'delete']);
 
-        Route::get('/income_category', [IncomeCategoryController::class, 'get']);
-        Route::post('/income_category', [IncomeCategoryController::class, 'store']);
-        Route::put('/income_category/{id}', [IncomeCategoryController::class, 'update']);
-        Route::delete('/income_category/{id}', [IncomeCategoryController::class, 'delete']);
+        Route::get('/income-categories', [IncomeCategoryController::class, 'get']);
+        Route::post('/income-categories', [IncomeCategoryController::class, 'store']);
+        Route::put('/income-categories/{id}', [IncomeCategoryController::class, 'update']);
+        Route::delete('/income-categories/{id}', [IncomeCategoryController::class, 'delete']);
 
-        Route::get('/expenditure_category', [ExpenditureCategoryController::class, 'get']);
-        Route::post('/expenditure_category', [ExpenditureCategoryController::class, 'store']);
-        Route::put('/expenditure_category/{id}', [ExpenditureCategoryController::class, 'update']);
-        Route::delete('/expenditure_category/{id}', [ExpenditureCategoryController::class, 'delete']);
+        Route::get('/expenditure-categories', [ExpenditureCategoryController::class, 'get']);
+        Route::post('/expenditure-categories', [ExpenditureCategoryController::class, 'store']);
+        Route::put('/expenditure-categories/{id}', [ExpenditureCategoryController::class, 'update']);
+        Route::delete('/expenditure-categories/{id}', [ExpenditureCategoryController::class, 'delete']);
     });

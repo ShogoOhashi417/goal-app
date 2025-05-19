@@ -20,7 +20,8 @@ final class CreateIncomeCategoryUseCase
     public function handle(CreateIncomeCategoryInputData $inputData)
     {
         $incomeCategory = IncomeCategory::create(
-            new IncomeCategoryName($inputData->name)
+            new IncomeCategoryName($inputData->name),
+            $inputData->userId
         );
 
         $this->repository->save($incomeCategory);
