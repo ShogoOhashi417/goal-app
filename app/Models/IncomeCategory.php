@@ -23,9 +23,9 @@ class IncomeCategory extends Model
      * @param integer $id
      * @return array
      */
-    public function fetchById(int $id): array
+    public function fetchById(int $id, int $userId): array
     {
-        return $this->where('id', $id)->get()->toArray();
+        return $this->where('id', $id)->where('user_id', $userId)->get()->toArray();
     }
 
     /**

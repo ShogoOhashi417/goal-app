@@ -20,9 +20,9 @@ final class IncomeCategoryRepository implements IncomeCategoryRepositoryInterfac
      * @param integer $id
      * @return array
      */
-    public function fetchById(int $id): array
+    public function fetchById(int $id, int $userId): array
     {
-        return $this->incomeCategoryModel->fetchById($id);
+        return $this->incomeCategoryModel->fetchById($id, $userId);
     }
 
     /**
@@ -33,7 +33,7 @@ final class IncomeCategoryRepository implements IncomeCategoryRepositoryInterfac
     {
         $this->incomeCategoryModel->createIncomeCategory(
             $incomeCategory->getName()->value(),
-            $incomeCategory->getUserId()
+            $incomeCategory->getUserId()->value()
         );
     }
 

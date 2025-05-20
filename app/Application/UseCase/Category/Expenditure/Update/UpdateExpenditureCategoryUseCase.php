@@ -2,6 +2,7 @@
 
 namespace App\Application\UseCase\Category\Expenditure\Update;
 
+use App\Domain\Model\User\UserId;
 use App\Domain\Model\Category\Expenditure\ExpenditureCategory;
 use App\Domain\Model\Category\Expenditure\ExpenditureCategoryName;
 use App\Domain\Model\Category\Expenditure\ExpenditureCategoryRepositoryInterface;
@@ -24,7 +25,8 @@ final class UpdateExpenditureCategoryUseCase
         $this->repository->edit(
             ExpenditureCategory::reconstruct(
                 $inputData->id,
-                new ExpenditureCategoryName($inputData->name)
+                new ExpenditureCategoryName($inputData->name),
+                new UserId($inputData->userId)
             )
         );
     }

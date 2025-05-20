@@ -11,13 +11,15 @@ final class UpdateExpenditureInputData
     public readonly int $categoryId;
     public readonly int $amount;
     public readonly string $calendarDate;
+    public readonly int $userId;
 
     public function __construct(
         int $id,
         string $name,
         int $categoryId,
         int $amount,
-        string $calendarDate
+        string $calendarDate,
+        int $userId
     )
     {
         $this->id = $id;
@@ -25,5 +27,6 @@ final class UpdateExpenditureInputData
         $this->categoryId = $categoryId;
         $this->amount = $amount;
         $this->calendarDate = $calendarDate;
+        $this->userId = $userId;
     }
 }

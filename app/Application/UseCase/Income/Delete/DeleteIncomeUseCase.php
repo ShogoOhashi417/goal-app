@@ -25,7 +25,7 @@ final class DeleteIncomeUseCase
      */
     public function handle(DeleteIncomeInputData $inputData): void
     {
-        $incomeInfoList = $this->incomeRepository->fetchById($inputData->id);
+        $incomeInfoList = $this->incomeRepository->fetchById($inputData->id, $inputData->userId);
 
         if (!$incomeInfoList) {
             return;
@@ -36,7 +36,8 @@ final class DeleteIncomeUseCase
             $incomeInfoList['name'],
             $incomeInfoList['category_id'],
             $incomeInfoList['amount'],
-            $incomeInfoList['calendar_date']
+            $incomeInfoList['calendar_date'],
+            $inputData->userId
         );
         
         $this->incomeRepository->remove($income);

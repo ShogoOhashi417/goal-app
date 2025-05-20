@@ -12,5 +12,5 @@ interface IncomeRepositoryInterface
 
     public function remove(Income $income): void;
 
-    public function fetchById(int $id): array;
+    public function fetchById(int $id, int $userId): array;
 }

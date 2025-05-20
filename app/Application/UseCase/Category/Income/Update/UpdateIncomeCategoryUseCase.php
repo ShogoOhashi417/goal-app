@@ -2,6 +2,7 @@
 
 namespace App\Application\UseCase\Category\Income\Update;
 
+use App\Domain\Model\User\UserId;
 use App\Domain\Model\Category\Income\IncomeCategory;
 use App\Domain\Model\Category\Income\IncomeCategoryName;
 use App\Domain\Model\Category\Income\IncomeCategoryRepositoryInterface;
@@ -24,7 +25,8 @@ final class UpdateIncomeCategoryUseCase
         $this->repository->edit(
             IncomeCategory::reconstruct(
                 $inputData->id,
-                new IncomeCategoryName($inputData->name)
+                new IncomeCategoryName($inputData->name),
+                new UserId($inputData->userId)
             )
         );
     }
