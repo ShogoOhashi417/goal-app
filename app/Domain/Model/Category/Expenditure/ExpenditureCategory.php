@@ -2,18 +2,23 @@
 
 namespace App\Domain\Model\Category\Expenditure;
 
+use App\Domain\Model\User\UserId;
+
 final class ExpenditureCategory
 {
     private readonly int $id;
     private readonly ExpenditureCategoryName $name;
+    private readonly UserId $userId;
 
     private function __construct(
         int $id,
-        ExpenditureCategoryName $name
+        ExpenditureCategoryName $name,
+        UserId $userId
     )
     {
         $this->id = $id;
         $this->name = $name;
+        $this->userId = $userId;
     }
 
     /**
@@ -33,30 +38,44 @@ final class ExpenditureCategory
     }
 
     /**
+     * @return UserId
+     */
+    public function getUserId(): UserId
+    {
+        return $this->userId;
+    }
+
+    /**
      * @param ExpenditureCategoryName $name
+     * @param UserId $userId
      * @return self
      */
     public static function create(
-        ExpenditureCategoryName $name
+        ExpenditureCategoryName $name,
+        UserId $userId
     ): self {
         return new self(
             0,
-            $name
+            $name,
+            $userId
         );
     }
 
     /**
      * @param integer $id
      * @param ExpenditureCategoryName $name
+     * @param UserId $userId
      * @return self
      */
     public static function reconstruct(
         int $id,
-        ExpenditureCategoryName $name
+        ExpenditureCategoryName $name,
+        UserId $userId
     ): self {
         return new self(
             $id,
-            $name
+            $name,
+            $userId
         );
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Application\UseCase\Category\Expenditure\Delete;
 
+use App\Domain\Model\User\UserId;
 use App\Domain\Model\Category\Expenditure\ExpenditureCategory;
 use App\Domain\Model\Category\Expenditure\ExpenditureCategoryName;
 use App\Domain\Model\Category\Expenditure\ExpenditureCategoryRepositoryInterface;
@@ -23,13 +24,15 @@ final class DeleteExpenditureCategoryUseCase
     public function handle(DeleteExpenditureCategoryInputData $inputData): void
     {
         $expenditureCategoryInfoList = $this->repository->fetchById(
-            $inputData->id
+            $inputData->id,
+            $inputData->userId
         );
 
         $this->repository->remove(
             ExpenditureCategory::reconstruct(
                 $inputData->id,
-                new ExpenditureCategoryName($expenditureCategoryInfoList[0]['name'])
+                new ExpenditureCategoryName($expenditureCategoryInfoList[0]['name']),
+                new UserId($inputData->userId)
             )
         );
     }

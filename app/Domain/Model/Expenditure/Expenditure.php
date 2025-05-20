@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Domain\Model\Expenditure;
 
+use App\Domain\Model\User\UserId;
+
 final class Expenditure
 {
     private readonly int $id;
@@ -11,13 +13,15 @@ final class Expenditure
     private readonly ExpenditureCategoryId $categoryId;
     private readonly ExpenditureAmount $amount;
     private readonly CalendarDate $calendarDate;
+    private readonly UserId $userId;
 
     private function __construct(
         int $id,
         ExpenditureName $name,
         ExpenditureCategoryId $categoryId,
         ExpenditureAmount $amount,
-        CalendarDate $calendarDate
+        CalendarDate $calendarDate,
+        UserId $userId
     )
     {
         $this->id = $id;
@@ -25,6 +29,7 @@ final class Expenditure
         $this->categoryId = $categoryId;
         $this->amount = $amount;
         $this->calendarDate = $calendarDate;
+        $this->userId = $userId;
     }
 
     /**
@@ -68,17 +73,27 @@ final class Expenditure
     }
 
     /**
+     * @return UserId
+     */
+    public function getUserId(): UserId
+    {
+        return $this->userId;
+    }
+
+    /**
      * @param string $name
      * @param integer $categoryId
      * @param integer $amount
      * @param string $calendarDate
+     * @param integer $userId
      * @return self
      */
     public static function create(
         string $name,
         int $categoryId,
         int $amount,
-        string $calendarDate
+        string $calendarDate,
+        int $userId
     ): self
     {
         return new self(
@@ -86,7 +101,8 @@ final class Expenditure
             new ExpenditureName($name),
             new ExpenditureCategoryId($categoryId),
             new ExpenditureAmount($amount),
-            new CalendarDate($calendarDate)
+            new CalendarDate($calendarDate),
+            new UserId($userId)
         );
     }
 
@@ -96,6 +112,7 @@ final class Expenditure
      * @param integer $categoryId
      * @param integer $amount
      * @param string $calendarDate
+     * @param integer $userId
      * @return self
      */
     public static function reconstruct(
@@ -103,7 +120,8 @@ final class Expenditure
         string $name,
         int $categoryId,
         int $amount,
-        string $calendarDate
+        string $calendarDate,
+        int $userId
     ): self
     {
         return new self(
@@ -111,7 +129,8 @@ final class Expenditure
             new ExpenditureName($name),
             new ExpenditureCategoryId($categoryId),
             new ExpenditureAmount($amount),
-            new CalendarDate($calendarDate)
+            new CalendarDate($calendarDate),
+            new UserId($userId)
         );
     }
 }
