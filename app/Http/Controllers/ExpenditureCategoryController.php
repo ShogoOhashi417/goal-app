@@ -20,11 +20,7 @@ class ExpenditureCategoryController extends Controller
      */
     public function get()
     {
-        $fetchExpenditureCategoryUseCase = new FetchExpenditureCategoryUseCase(
-            new ExpenditureCategory()
-        );
-
-        $expenditureCategoryInfoList = $fetchExpenditureCategoryUseCase->handle();
+        $expenditureCategoryInfoList = $this->fetchExpenditureCategories();
 
         return [
             "expenditure_category_info_list" => $expenditureCategoryInfoList
@@ -50,11 +46,16 @@ class ExpenditureCategoryController extends Controller
             )
         );
 
-        $createExpenditureCategoryUseCase->handle(
+        $createdCategory = $createExpenditureCategoryUseCase->handle(
             new CreateExpenditureCategoryInputData(
-                $request->expenditureCategoryName
+                $request->name,
+                $request->user()->id
             )
         );
+
+        return [
+            'categoryData' => $createdCategory
+        ];
     }
 
     /**
@@ -80,7 +81,8 @@ class ExpenditureCategoryController extends Controller
     {
         $inputData = new UpdateExpenditureCategoryInputData(
             id: $id,
-            name: $request->expenditureCategoryName
+            name: $request->name,
+            userId: $request->user()->id
         );
 
         $updateExpenditureCategoryUseCase = new UpdateExpenditureCategoryUseCase(
@@ -89,9 +91,16 @@ class ExpenditureCategoryController extends Controller
             )
         );
 
-        $updateExpenditureCategoryUseCase->handle($inputData);
+        $updatedCategory = $updateExpenditureCategoryUseCase->handle($inputData);
+
+        return [
+            'categoryData' => $updatedCategory
+        ];
     }
 
+    /**
+     * Remove the specified resource from storage.
+     */
     public function delete(Request $request)
     {
         $deleteExpenditureCategoryUseCase = new DeleteExpenditureCategoryUseCase(
@@ -102,8 +111,29 @@ class ExpenditureCategoryController extends Controller
 
         $deleteExpenditureCategoryUseCase->handle(
             new DeleteExpenditureCategoryInputData(
-                (int)$request->id
+                (int)$request->id,
+                $request->user()->id
             )
         );
+
+        $expenditureCategoryInfoList = $this->fetchExpenditureCategories();
+
+        return [
+            'expenditure_category_info_list' => $expenditureCategoryInfoList
+        ];
+    }
+
+    /**
+     * Fetch expenditure categories
+     * 
+     * @return array
+     */
+    private function fetchExpenditureCategories(): array
+    {
+        $fetchExpenditureCategoryUseCase = new FetchExpenditureCategoryUseCase(
+            new ExpenditureCategory()
+        );
+
+        return $fetchExpenditureCategoryUseCase->handle();
     }
 }

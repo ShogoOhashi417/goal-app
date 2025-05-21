@@ -21,11 +21,7 @@ class IncomeCategoryController extends Controller
 {
     public function index()
     {
-        $fetchIncomeCategoryUseCase = new FetchIncomeCategoryUseCase(
-            new IncomeCategory()
-        );
-
-        $incomeCategoryInfoList = $fetchIncomeCategoryUseCase->handle();
+        $incomeCategoryInfoList = $this->fetchIncomeCategories();
 
         $fetchExpenditureCategoryUseCase = new FetchExpenditureCategoryUseCase(
             new ExpenditureCategory()
@@ -45,11 +41,7 @@ class IncomeCategoryController extends Controller
      */
     public function get()
     {
-        $fetchIncomeCategoryUseCase = new FetchIncomeCategoryUseCase(
-            new IncomeCategory()
-        );
-
-        $incomeCategoryInfoList = $fetchIncomeCategoryUseCase->handle();
+        $incomeCategoryInfoList = $this->fetchIncomeCategories();
 
         return [
             'income_category_info_list' => $incomeCategoryInfoList
@@ -75,12 +67,16 @@ class IncomeCategoryController extends Controller
             )
         );
 
-        $createIncomeCategoryUseCase->handle(
+        $createdCategory = $createIncomeCategoryUseCase->handle(
             new CreateIncomeCategoryInputData(
                 $request->name,
                 $request->user()->id
             )
         );
+
+        return [
+            'categoryData' => $createdCategory
+        ];
     }
 
     /**
@@ -105,8 +101,9 @@ class IncomeCategoryController extends Controller
     public function update(Request $request, string $id)
     {
         $inputData = new UpdateIncomeCategoryInputData(
-            id: $id,
-            name: $request->incomeCategoryName
+            id: (int)$id,
+            name: $request->name,
+            userId: $request->user()->id
         );
 
         $updateIncomeCategoryUseCase = new UpdateIncomeCategoryUseCase(
@@ -115,7 +112,11 @@ class IncomeCategoryController extends Controller
             )
         );
 
-        $updateIncomeCategoryUseCase->handle($inputData);
+        $updatedCategory = $updateIncomeCategoryUseCase->handle($inputData);
+
+        return [
+            'categoryData' => $updatedCategory
+        ];
     }
 
     /**
@@ -131,8 +132,29 @@ class IncomeCategoryController extends Controller
 
         $deleteIncomeCategoryUseCase->handle(
             new DeleteIncomeCategoryInputData(
-                (int)$request->id
+                (int)$request->id,
+                $request->user()->id
             )
         );
+
+        $incomeCategoryInfoList = $this->fetchIncomeCategories();
+
+        return [
+            'income_category_info_list' => $incomeCategoryInfoList
+        ];
+    }
+
+    /**
+     * Fetch income categories
+     * 
+     * @return array
+     */
+    private function fetchIncomeCategories(): array
+    {
+        $fetchIncomeCategoryUseCase = new FetchIncomeCategoryUseCase(
+            new IncomeCategory()
+        );
+
+        return $fetchIncomeCategoryUseCase->handle();
     }
 }

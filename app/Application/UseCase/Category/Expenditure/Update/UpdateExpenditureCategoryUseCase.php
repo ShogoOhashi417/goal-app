@@ -18,11 +18,11 @@ final class UpdateExpenditureCategoryUseCase
 
     /**
      * @param UpdateExpenditureCategoryInputData $inputData
-     * @return void
+     * @return array
      */
-    public function handle(UpdateExpenditureCategoryInputData $inputData): void
+    public function handle(UpdateExpenditureCategoryInputData $inputData): array
     {
-        $this->repository->edit(
+        return $this->repository->edit(
             ExpenditureCategory::reconstruct(
                 $inputData->id,
                 new ExpenditureCategoryName($inputData->name),

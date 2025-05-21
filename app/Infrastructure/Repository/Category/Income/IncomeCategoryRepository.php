@@ -27,11 +27,11 @@ final class IncomeCategoryRepository implements IncomeCategoryRepositoryInterfac
 
     /**
      * @param IncomeCategory $incomeCategory
-     * @return void
+     * @return array
      */
-    public function save(IncomeCategory $incomeCategory): void
+    public function save(IncomeCategory $incomeCategory): array
     {
-        $this->incomeCategoryModel->createIncomeCategory(
+        return $this->incomeCategoryModel->createIncomeCategory(
             $incomeCategory->getName()->value(),
             $incomeCategory->getUserId()->value()
         );
@@ -39,14 +39,16 @@ final class IncomeCategoryRepository implements IncomeCategoryRepositoryInterfac
 
     /**
      * @param IncomeCategory $incomeCategory
-     * @return void
+     * @return array
      */
-    public function edit(IncomeCategory $incomeCategory): void
+    public function edit(IncomeCategory $incomeCategory): array
     {
         $this->incomeCategoryModel->updateIncomeCategory(
             $incomeCategory->getId(),
             $incomeCategory->getName()->value()
         );
+        
+        return $this->fetchById($incomeCategory->getId(), $incomeCategory->getUserId()->value())[0] ?? [];
     }
 
     /**
