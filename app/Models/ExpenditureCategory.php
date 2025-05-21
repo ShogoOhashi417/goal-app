@@ -2,14 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class ExpenditureCategory extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'user_id'];
 
     /**
      * @return array
@@ -30,15 +30,19 @@ class ExpenditureCategory extends Model
 
     /**
      * @param string $name
-     * @return void
+     * @param integer $userId
+     * @return array
      */
-    public function createExpenditureCategory(string $name): void
+    public function createExpenditureCategory(string $name, int $userId): array
     {
-        $this->create(
+        $category = $this->create(
             [
                 'name' => $name,
+                'user_id' => $userId
             ]
         );
+        
+        return $category->toArray();
     }
 
     /**
@@ -53,10 +57,11 @@ class ExpenditureCategory extends Model
     /**
      * @param integer $id
      * @param string $name
-     * @return void
+     * @return array
      */
-    public function updateById(int $id, string $name): void
+    public function updateById(int $id, string $name): array
     {
         $this->where('id', $id)->update(['name' => $name]);
+        return $this->where('id', $id)->first()->toArray();
     }
 }

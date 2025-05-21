@@ -21,15 +21,15 @@ final class CreateExpenditureCategoryUseCase
 
     /**
      * @param CreateExpenditureCategoryInputData $inputData
-     * @return void
+     * @return array
      */
-    public function handle(CreateExpenditureCategoryInputData $inputData): void
+    public function handle(CreateExpenditureCategoryInputData $inputData): array
     {
         $expenditureCategory = ExpenditureCategory::create(
             new ExpenditureCategoryName($inputData->name),
             new UserId($inputData->userId)
         );
 
-        $this->repository->save($expenditureCategory);
+        return $this->repository->save($expenditureCategory);
     }
 }

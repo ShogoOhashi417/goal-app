@@ -18,16 +18,16 @@ final class UpdateIncomeCategoryUseCase
 
     /**
      * @param UpdateIncomeCategoryInputData $inputData
-     * @return void
+     * @return array
      */
-    public function handle(UpdateIncomeCategoryInputData $inputData): void
+    public function handle(UpdateIncomeCategoryInputData $inputData): array
     {
-        $this->repository->edit(
-            IncomeCategory::reconstruct(
-                $inputData->id,
-                new IncomeCategoryName($inputData->name),
-                new UserId($inputData->userId)
-            )
+        $incomeCategory = IncomeCategory::reconstruct(
+            $inputData->id,
+            new IncomeCategoryName($inputData->name),
+            new UserId($inputData->userId)
         );
+        
+        return $this->repository->edit($incomeCategory);
     }
 } 

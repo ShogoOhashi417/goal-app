@@ -18,13 +18,13 @@ final class CreateIncomeCategoryUseCase
         $this->repository = $repository;
     }
 
-    public function handle(CreateIncomeCategoryInputData $inputData)
+    public function handle(CreateIncomeCategoryInputData $inputData): array
     {
         $incomeCategory = IncomeCategory::create(
             new IncomeCategoryName($inputData->name),
             new UserId($inputData->userId)
         );
 
-        $this->repository->save($incomeCategory);
+        return $this->repository->save($incomeCategory);
     }
 }

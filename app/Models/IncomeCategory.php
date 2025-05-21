@@ -31,16 +31,18 @@ class IncomeCategory extends Model
     /**
      * @param string $name
      * @param int $userId
-     * @return void
+     * @return array
      */
-    public function createIncomeCategory(string $name, int $userId): void
+    public function createIncomeCategory(string $name, int $userId): array
     {
-        $this->create(
+        $category = $this->create(
             [
                 'name' => $name,
                 'user_id' => $userId,
             ]
         );
+        
+        return $category->toArray();
     }
 
     /**
