@@ -9,7 +9,7 @@ final class Expenditure extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'category_id', 'amount', 'calendar_date'];
+    protected $fillable = ['name', 'category_id', 'amount', 'calendar_date', 'user_id'];
 
     public function fetchAll(): array
     {
@@ -25,9 +25,9 @@ final class Expenditure extends Model
      * @param integer $id
      * @return Model|null
      */
-    public function fetchById(int $id): ?Model
+    public function fetchById(int $id, int $userId): ?Model
     {
-        return $this->find($id);
+        return $this->where('id', $id)->where('user_id', $userId)->first();
     }
 
     public function fetchByDateRange(string $startDate, string $endDate): array
@@ -77,7 +77,8 @@ final class Expenditure extends Model
         string $name,
         int $categoryId,
         int $amount,
-        string $calendarDate
+        string $calendarDate,
+        int $userId
     ): void
     {
         $this->create(
@@ -85,7 +86,8 @@ final class Expenditure extends Model
                 'name' => $name,
                 'category_id' => $categoryId,
                 'amount' => $amount,
-                'calendar_date' => $calendarDate
+                'calendar_date' => $calendarDate,
+                'user_id' => $userId
             ]
         );
     }

@@ -24,9 +24,9 @@ final class ExpenditureRepository implements ExpenditureRepositoryInterface
      * @param integer $id
      * @return array
      */
-    public function fetchById(int $id): array
+    public function fetchById(int $id, int $userId): array
     {
-        $expenditure = $this->expenditureModel->fetchById($id);
+        $expenditure = $this->expenditureModel->fetchById($id, $userId);
         return $expenditure ? $expenditure->toArray() : [];
     }
 
@@ -45,6 +45,7 @@ final class ExpenditureRepository implements ExpenditureRepositoryInterface
             $expenditure->getCategoryId()->getValue(),
             $expenditure->getAmount()->getValue(),
             $expenditure->getCalendarDate()->getValue(),
+            $expenditure->getUserId()->value()
         );
     }
 
