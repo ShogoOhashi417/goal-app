@@ -9,7 +9,7 @@ final class Income extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'category_id', 'amount', 'calendar_date'];
+    protected $fillable = ['name', 'category_id', 'amount', 'calendar_date', 'user_id'];
 
     /**
      * @return array
@@ -26,12 +26,13 @@ final class Income extends Model
      * @param integer $id
      * @return ?
      */
-    public function fetchById(int $id): ?Income
+    public function fetchById(int $id, int $userId): ?Income
     {
 		return $this->join('income_categories', 'incomes.category_id', '=', 'income_categories.id')
 					->leftjoin('fixed_incomes', 'incomes.id', '=', 'fixed_incomes.income_id')
 					->select('incomes.*', 'income_categories.name as category_name', 'fixed_incomes.payment_day', 'fixed_incomes.payment_month', 'fixed_incomes.start_date', 'fixed_incomes.end_date', 'fixed_incomes.cycle_unit')
 					->where('incomes.id', $id)
+					->where('incomes.user_id', $userId)
 					->first();
     }
 
@@ -82,7 +83,8 @@ final class Income extends Model
         string $name,
         int $categoryId,
         int $amount,
-        string $calendarDate
+        string $calendarDate,
+        int $userId
     ): void
     {
         $this->create(
@@ -90,7 +92,8 @@ final class Income extends Model
                 'name' => $name,
                 'category_id' => $categoryId,
                 'amount' => $amount,
-                'calendar_date' => $calendarDate
+                'calendar_date' => $calendarDate,
+                'user_id' => $userId
             ]
         );
     }
@@ -107,9 +110,10 @@ final class Income extends Model
         string $name,
         int $categoryId,
         int $amount,
-        string $calendarDate
+        string $calendarDate,
+        int $userId
     ): void {
-        $this->where('id', $id)->update(
+        $this->where('id', $id)->where('user_id', $userId)->update(
             [
                 'name' => $name,
                 'category_id' => $categoryId,
@@ -123,8 +127,8 @@ final class Income extends Model
      * @param integer $id
      * @return void
      */
-    public function deleteById(int $id): void
+    public function deleteById(int $id, int $userId): void
     {
-        $this->where('id', $id)->delete();
+        $this->where('id', $id)->where('user_id', $userId)->delete();
     }
 }

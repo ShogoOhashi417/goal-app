@@ -23,9 +23,9 @@ final class IncomeRepository implements IncomeRepositoryInterface
      * @param integer $id
      * @return array
      */
-    public function fetchById(int $id): array
+    public function fetchById(int $id, int $userId): array
     {
-        $income = $this->incomeModel->fetchById($id);
+        $income = $this->incomeModel->fetchById($id, $userId);
         if (!$income) {
             return [];
         }
@@ -43,6 +43,7 @@ final class IncomeRepository implements IncomeRepositoryInterface
             $income->getCategoryId()->getValue(),
             $income->getAmount()->getValue(),
             $income->getCalendarDate()->getValue(),
+            $income->getUserId()->value()
         );
     }
 
@@ -57,7 +58,8 @@ final class IncomeRepository implements IncomeRepositoryInterface
             $income->getName()->getValue(),
             $income->getCategoryId()->getValue(),
             $income->getAmount()->getValue(),
-            $income->getCalendarDate()->getValue()
+            $income->getCalendarDate()->getValue(),
+            $income->getUserId()->value()
         );
     }
 
@@ -69,6 +71,7 @@ final class IncomeRepository implements IncomeRepositoryInterface
     {
         $this->incomeModel->deleteById(
             $income->getId(),
+            $income->getUserId()->value()
         );
     }
 }
