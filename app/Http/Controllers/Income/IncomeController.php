@@ -75,7 +75,8 @@ class IncomeController extends Controller
                 $request->income_name,
                 (int)$request->income_category_id,
                 (int)$request->income_amount,
-                (new DateTime($request->calendar_date))->format('Y-m-d')
+                (new DateTime($request->calendar_date))->format('Y-m-d'),
+                $request->user()->id
             )
         );
     }
@@ -94,7 +95,8 @@ class IncomeController extends Controller
                 $request->income_name,
                 (int)$request->income_category_id,
                 (int)$request->income_amount,
-                (new DateTime($request->calendar_date))->format('Y-m-d')
+                (new DateTime($request->calendar_date))->format('Y-m-d'),
+                $request->user()->id
             )
         );
     }
@@ -110,6 +112,7 @@ class IncomeController extends Controller
         $deleteIncomeUseCase->handle(
             new DeleteIncomeInputData(
                 (int)$request->id,
+                $request->user()->id
             )
         );
     }

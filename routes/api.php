@@ -35,15 +35,15 @@ Route::prefix('v1')
             return response()->json(['token' => csrf_token()]);
         });
         
-        Route::get('/income', [IncomeController::class, 'get']);
-        Route::post('/income', [IncomeController::class, 'create']);
-        Route::put('/income/update/{id}', [IncomeController::class, 'update']);
-        Route::delete('/income/{id}', [IncomeController::class, 'delete']);
+        Route::get('/incomes', [IncomeController::class, 'get']);
+        Route::post('/incomes/add', [IncomeController::class, 'create']);
+        Route::put('/incomes/update/{id}', [IncomeController::class, 'update']);
+        Route::delete('/incomes/{id}', [IncomeController::class, 'delete']);
 
-        Route::get('/expenditure', [ExpenditureController::class, 'get']);
-        Route::post('/expenditure', [ExpenditureController::class, 'create']);
-        Route::put('/expenditure/update/{id}', [ExpenditureController::class, 'update']);
-        Route::delete('/expenditure/{id}', [ExpenditureController::class, 'delete']);
+        Route::get('/expenditures', [ExpenditureController::class, 'get']);
+        Route::post('/expenditures', [ExpenditureController::class, 'create']);
+        Route::put('/expenditures/update/{id}', [ExpenditureController::class, 'update']);
+        Route::delete('/expenditures/{id}', [ExpenditureController::class, 'delete']);
 
         Route::get('/income-categories', [IncomeCategoryController::class, 'get']);
         Route::post('/income-categories', [IncomeCategoryController::class, 'store']);
