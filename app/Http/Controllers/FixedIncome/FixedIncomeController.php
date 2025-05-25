@@ -12,7 +12,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Domain\Model\FixedIncome\CycleUnit;
 use App\Models\FixedIncome as FixedIncomeModel;
-use App\Domain\Model\FixedIncome\FixedIncome;
 use App\Infrastructure\Repository\FixedIncomeRepository;
 use App\Infrastructure\Repository\Income\IncomeRepository;
 use App\Application\UseCase\FixedIncome\FetchFixedIncomeUseCase;

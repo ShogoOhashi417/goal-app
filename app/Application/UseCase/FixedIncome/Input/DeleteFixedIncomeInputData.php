@@ -8,7 +8,7 @@ final readonly class DeleteFixedIncomeInputData
 {
     public function __construct(
         public readonly int $id,
-		public readonly int $user_id
+		public readonly int $userId
     ) {
     }
 }

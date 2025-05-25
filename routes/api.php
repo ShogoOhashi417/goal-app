@@ -35,10 +35,15 @@ Route::prefix('v1')
             return response()->json(['token' => csrf_token()]);
         });
         
-        Route::get('/incomes', [IncomeController::class, 'get']);
+        Route::get('/incomes/get', [IncomeController::class, 'get']);
         Route::post('/incomes/add', [IncomeController::class, 'create']);
         Route::put('/incomes/update/{id}', [IncomeController::class, 'update']);
         Route::delete('/incomes/{id}', [IncomeController::class, 'delete']);
+
+        Route::get('/fixed-incomes/get', [FixedIncomeController::class, 'get']);
+        Route::post('/fixed-incomes/add', [FixedIncomeController::class, 'create']);
+        Route::put('/fixed-incomes/update/{id}', [FixedIncomeController::class, 'update']);
+        Route::delete('/fixed-incomes/{id}', [FixedIncomeController::class, 'delete']);
 
         Route::get('/expenditures', [ExpenditureController::class, 'get']);
         Route::post('/expenditures/add', [ExpenditureController::class, 'create']);
