@@ -146,9 +146,9 @@ final class Expenditure extends Model
     /**
      * 
      * @param integer $id
-     * @return array
+     * @return self|null
      */
-    public function fetchFixedExpenditureById(int $id): array
+    public function fetchFixedExpenditureById(int $id): ?self
     {
         return $this->join('expenditure_categories', 'expenditures.category_id', '=', 'expenditure_categories.id')
                     ->join('fixed_expenditures', 'expenditures.id', '=', 'fixed_expenditures.expenditure_id')
@@ -163,7 +163,6 @@ final class Expenditure extends Model
                         'fixed_expenditures.end_date'
                     )
                     ->where('expenditures.id', $id)
-                    ->first()
-                    ->toArray();
+                    ->first();
     }
 }

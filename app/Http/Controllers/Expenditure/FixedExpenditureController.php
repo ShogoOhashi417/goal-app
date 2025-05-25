@@ -32,7 +32,7 @@ class FixedExpenditureController extends Controller
 
         return Inertia::render('Expenditure/Fixed',
             [
-                'expenditure_info_list' => $fixedExpenditureInfoList,
+                'expenditureDataList' => $fixedExpenditureInfoList,
                 'expenditure_category_info_list' => $expenditureCategoryInfoList
             ]
         );
@@ -44,7 +44,7 @@ class FixedExpenditureController extends Controller
         $expenditureCategoryInfoList = $this->fetchExpenditureCategoryInfoList();
 
 		return [
-			'expenditure_info_list' => $fixedExpenditureInfoList,
+			'expenditureDataList' => $fixedExpenditureInfoList,
 			'expenditure_category_info_list' => $expenditureCategoryInfoList
 		];
 	}
@@ -70,6 +70,7 @@ class FixedExpenditureController extends Controller
                 $request->payment_month ? (int)$request->payment_month : null,
                 (new DateTime($request->start_date))->format('Y-m-d'),
                 $request->end_date ? (new DateTime($request->end_date))->format('Y-m-d') : null,
+                $request->user()->id
             )
         );
     }
@@ -88,19 +89,20 @@ class FixedExpenditureController extends Controller
 		$updateFixedExpenditureUseCase->handle(
 			new UpdateFixedExpenditureInputData(
 				(int)$id,
-				$request->expenditure_name,
-				(int)$request->expenditure_category_id,
-				(int)$request->expenditure_amount,
+				$request->name,
+				(int)$request->category_id,
+				(int)$request->amount,
 				$request->payment_day ? 1 : 2,
 				$request->payment_day ? (int)$request->payment_day : 1,
 				$request->payment_month ? (int)$request->payment_month : null,
 				$request->period_start_date ? (new DateTime($request->period_start_date))->format('Y-m-d') : (new DateTime())->format('Y-m-d'),
 				$request->period_end_date ? (new DateTime($request->period_end_date))->format('Y-m-d') : null,
+				$request->user()->id
 			)
 		);
 	}
 	
-	public function delete($id)
+	public function delete(Request $request, $id)
 	{
 		$deleteFixedExpenditureUseCase = new DeleteFixedExpenditureUseCase(
 			new FixedExpenditureRepository(
@@ -113,7 +115,8 @@ class FixedExpenditureController extends Controller
 
 		$deleteFixedExpenditureUseCase->handle(
 			new DeleteFixedExpenditureInputData(
-				(int)$id
+				(int)$id,
+				$request->user()->id
 			)
 		);
 	}

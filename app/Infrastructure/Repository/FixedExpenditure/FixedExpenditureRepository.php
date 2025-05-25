@@ -25,7 +25,13 @@ final class FixedExpenditureRepository implements FixedExpenditureRepositoryInte
      */
     public function fetchById(int $id): array
     {
-        return $this->fixedExpenditureModel->fetchById($id);
+        $fixedExpenditure = $this->fixedExpenditureModel->fetchById($id);
+
+        if (!$fixedExpenditure) {
+            return [];
+        }
+
+        return $fixedExpenditure->toArray();
     }
 
     /**
@@ -41,6 +47,7 @@ final class FixedExpenditureRepository implements FixedExpenditureRepositoryInte
             $fixedExpenditure->getPaymentMonth() ? $fixedExpenditure->getPaymentMonth()->getValue() : null,
             $fixedExpenditure->getStartDate()->getValue(),
             $fixedExpenditure->getEndDate() ? $fixedExpenditure->getEndDate()->getValue() : null,
+            $fixedExpenditure->getUserId()
         );
     }
 
@@ -58,6 +65,7 @@ final class FixedExpenditureRepository implements FixedExpenditureRepositoryInte
             $fixedExpenditure->getPaymentMonth() ? $fixedExpenditure->getPaymentMonth()->getValue() : null,
             $fixedExpenditure->getStartDate()->getValue(),
             $fixedExpenditure->getEndDate() ? $fixedExpenditure->getEndDate()->getValue() : null,
+            $fixedExpenditure->getUserId()
         );
     }
 
@@ -69,6 +77,7 @@ final class FixedExpenditureRepository implements FixedExpenditureRepositoryInte
     {
         $this->fixedExpenditureModel->deleteById(
             $fixedExpenditure->getId(),
+            $fixedExpenditure->getUserId()
         );
     }
 } 
