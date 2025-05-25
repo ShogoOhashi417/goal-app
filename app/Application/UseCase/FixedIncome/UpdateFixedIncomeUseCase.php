@@ -20,7 +20,7 @@ final readonly class UpdateFixedIncomeUseCase
 
     public function handle(UpdateFixedIncomeInputData $inputData): void
     {
-        $fixedIncome = $this->incomeRepository->fetchById($inputData->id);
+        $fixedIncome = $this->incomeRepository->fetchById($inputData->id, $inputData->userId);
         
         if (!$fixedIncome) {
             return;
@@ -31,7 +31,8 @@ final readonly class UpdateFixedIncomeUseCase
             $inputData->name,
             $inputData->categoryId,
             $inputData->amount,
-            $inputData->startDate
+            $inputData->startDate,
+            $inputData->userId
         );
         
         $fixedIncome = FixedIncome::reconstruct(

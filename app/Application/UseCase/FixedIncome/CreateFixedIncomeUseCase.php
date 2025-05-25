@@ -33,7 +33,8 @@ final class CreateFixedIncomeUseCase
             $inputData->name,
             $inputData->categoryId,
             $inputData->amount,
-            $inputData->startDate
+            $inputData->startDate,
+            $inputData->userId
         );
 
         $this->incomeRepository->create($income);

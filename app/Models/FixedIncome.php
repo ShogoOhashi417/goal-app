@@ -19,6 +19,7 @@ final class FixedIncome extends Model
         'payment_month',
         'start_date',
         'end_date',
+        'user_id',
     ];
 
     /**
@@ -45,6 +46,7 @@ final class FixedIncome extends Model
         ?int $paymentMonth,
         string $startDate,
         ?string $endDate,
+        int $userId,
     ): void {
         $this->create([
             'income_id' => $incomeId,
@@ -53,6 +55,7 @@ final class FixedIncome extends Model
             'payment_month' => $paymentMonth,
             'start_date' => $startDate,
             'end_date' => $endDate,
+            'user_id' => $userId,
         ]);
     }
 
