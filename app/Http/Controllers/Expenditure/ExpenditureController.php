@@ -52,7 +52,7 @@ class ExpenditureController extends Controller
 
         return Inertia::render('Expenditure/Index',
             [
-                'expenditure_info_list' => $expenditureInfoList,
+                'expenditureDataList' => $expenditureInfoList,
                 'expenditure_category_info_list' => $expenditureCategoryInfoList
             ]
         );
@@ -69,7 +69,7 @@ class ExpenditureController extends Controller
         $expenditureInfoList = $fetchExpenditureUseCase->handle();
 
         return [
-            'expenditure_info_list' => $expenditureInfoList
+            'expenditureDataList' => $expenditureInfoList
         ];
     }
 
@@ -175,7 +175,8 @@ class ExpenditureController extends Controller
                 $request->expenditure_name,
                 (int)$request->expenditure_category_id,
                 (int)$request->expenditure_amount,
-                (new DateTime($request->calendar_date))->format('Y-m-d')
+                (new DateTime($request->calendar_date))->format('Y-m-d'),
+                $request->user()->id
             )
         );
     }
@@ -194,7 +195,8 @@ class ExpenditureController extends Controller
                 $request->expenditure_name,
                 (int)$request->expenditure_category_id,
                 (int)$request->expenditure_amount,
-                (new DateTime($request->calendar_date))->format('Y-m-d')
+                (new DateTime($request->calendar_date))->format('Y-m-d'),
+                $request->user()->id
             )
         );
     }
@@ -210,8 +212,7 @@ class ExpenditureController extends Controller
         $deleteExpenditureUseCase->handle(
             new DeleteExpenditureInputData(
                 (int)$request->id,
-                $request->name,
-                (int)$request->amount
+                $request->user()->id
             )
         );
     }
