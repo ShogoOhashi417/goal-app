@@ -40,7 +40,8 @@ final class UpdateFixedExpenditureUseCase
             $inputData->name,
             $inputData->categoryId,
             $inputData->amount,
-            $inputData->startDate
+            $inputData->startDate,
+            $inputData->userId
         );
 
         $this->expenditureRepository->update($expenditure);
@@ -55,7 +56,8 @@ final class UpdateFixedExpenditureUseCase
             $inputData->paymentMonth,
             $inputData->startDate,
             $inputData->endDate,
-            $expenditureId
+            $expenditureId,
+            $inputData->userId
         );
 
         $this->fixedExpenditureRepository->update($fixedExpenditure);

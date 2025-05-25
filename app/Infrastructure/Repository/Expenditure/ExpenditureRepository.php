@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Repository\Expenditure;
 
+use Illuminate\Support\Facades\Log;
 use App\Domain\Model\Expenditure\Expenditure;
-use App\Domain\Model\Expenditure\ExpenditureHolder;
 use App\Models\Expenditure AS ExpenditureModel;
+use App\Domain\Model\Expenditure\ExpenditureHolder;
 use App\Domain\Model\Expenditure\ExpenditureRepositoryInterface;
 
 final class ExpenditureRepository implements ExpenditureRepositoryInterface
@@ -32,7 +33,14 @@ final class ExpenditureRepository implements ExpenditureRepositoryInterface
 
 	public function fetchFixedExpenditureById(int $id): array
 	{
-		return $this->expenditureModel->fetchFixedExpenditureById($id);
+        $fixedExpenditure = $this->expenditureModel->fetchFixedExpenditureById($id);
+
+        Log::info($id);
+        if (!$fixedExpenditure) {
+            return [];
+        }
+
+        return $fixedExpenditure->toArray();
 	}
 
     /**
