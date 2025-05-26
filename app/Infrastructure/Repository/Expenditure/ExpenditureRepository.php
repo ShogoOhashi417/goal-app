@@ -70,7 +70,8 @@ final class ExpenditureRepository implements ExpenditureRepositoryInterface
                 'name' => $expenditure->getName()->getValue(),
                 'category_id' => $expenditure->getCategoryId()->getValue(),
                 'amount' => $expenditure->getAmount()->getValue(),
-                'calendar_date' => $expenditure->getCalendarDate()->getValue()
+                'calendar_date' => $expenditure->getCalendarDate()->getValue(),
+                'user_id' => $expenditure->getUserId()->value()
             ];
         }
 

@@ -97,9 +97,9 @@ final class Expenditure extends Model
      * @return void
      */
     public function saveBulk(
-        array $saveDataList
+        array $saveDataList,
     ): void {
-        $this->upsert($saveDataList, ['id']);
+        $this->upsert($saveDataList, ['id', 'user_id']);
     }
 
     /**

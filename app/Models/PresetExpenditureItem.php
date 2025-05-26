@@ -10,5 +10,5 @@ class PresetExpenditureItem extends Model
     use HasFactory;
     public $timestamps = false;
 
-    protected $fillable = ['name', 'category_id'];
+    protected $fillable = ['name', 'category_id', 'user_id'];
 }

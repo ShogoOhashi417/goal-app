@@ -7,7 +7,9 @@ use App\Http\Controllers\Income\IncomeController;
 use App\Http\Controllers\ExpenditureCategoryController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Expenditure\ExpenditureController;
+use App\Http\Controllers\FixedIncome\FixedIncomeController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Expenditure\FixedExpenditureController;
 use App\Http\Controllers\IncomeCategory\IncomeCategoryController;
 
 /*
@@ -25,6 +27,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
+                ->name('logout');
+
+Route::get('/user/profile', [AuthController::class, 'profile']);
 Route::post('/login', [AuthenticatedSessionController::class, 'store']);
 Route::post('/forgot-password', [PasswordResetLinkController::class, 'store']);
 
@@ -64,4 +70,9 @@ Route::prefix('v1')
         Route::post('/expense-categories', [ExpenditureCategoryController::class, 'store']);
         Route::put('/expense-categories/{id}', [ExpenditureCategoryController::class, 'update']);
         Route::delete('/expense-categories/{id}', [ExpenditureCategoryController::class, 'delete']);
+
+        Route::get('/expenses/sample', [ExpenditureController::class, 'export']);
+        Route::get('/expenses/download', [ExpenditureController::class, 'exportData']);
+        Route::post('/expenses/import', [ExpenditureController::class, 'import_csv']);
+        Route::post('/expenses/bulk-create', [ExpenditureController::class, 'bulkCreate']);
     });
