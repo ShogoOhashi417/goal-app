@@ -258,7 +258,7 @@ class ExpenditureController extends Controller
             )
         );
 
-        $expenditureList = $importExpenditureCsvUseCase->handle($file_path);
+        $expenditureList = $importExpenditureCsvUseCase->handle($file_path, $request->user()->id);
 
         $result = [];
 
@@ -308,7 +308,8 @@ class ExpenditureController extends Controller
 
         $bulkCreateExpenditureUseCase->handle(
             new BulkCreateExpenditureInputData(
-                $request->items
+                $request->items,
+                $request->user()->id
             )
         );
     }

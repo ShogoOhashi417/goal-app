@@ -35,7 +35,7 @@ final readonly class ImportExpendtureCsvUseCase
      * @param string $file_path
      * @return 
      */
-    public function handle(string $file_path)
+    public function handle(string $file_path, int $userId)
     {
         $file = new \SplFileObject($file_path);
 
@@ -87,7 +87,8 @@ final readonly class ImportExpendtureCsvUseCase
                     $name,
                     (int)$categoryId,
                     (int)$amount,
-                    $date
+                    $date,
+                    $userId
                 )
             );
         }
