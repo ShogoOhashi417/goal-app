@@ -21,7 +21,7 @@ final class ReportController extends Controller
     /**
      * レポートのインデックスページを表示
      */
-    public function saving(): Response
+    public function saving(): string
     {
         $startDate = (new DateTime())->modify('-1 year');
         $endDate = new DateTime();
@@ -37,7 +37,7 @@ final class ReportController extends Controller
             $endDate->format('Y-m-d')
         );
 
-        return Inertia::render('Report/Balance/Index', [
+        return json_encode([
             'incomeDataList' => $incomeInfoList,
             'expenseDataList' => $expenditureInfoList
         ]);
@@ -60,7 +60,7 @@ final class ReportController extends Controller
     /**
      * 支出レポートページを表示
      */
-    public function expense(): Response
+    public function expense(): string
     {
         $startDate = (new DateTime())->modify('-3 month');
         $endDate = (new DateTime())->modify('last day of this month');
@@ -71,7 +71,7 @@ final class ReportController extends Controller
             $endDate->format('Y-m-d')
         );
 
-        return Inertia::render('Report/Expenditure/Index', [
+        return json_encode([
             'expenseInfoList' => $expenseInfoList,
         ]);
     }
