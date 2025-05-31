@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Income\IncomeController;
+use App\Http\Controllers\Report\ReportController;
 use App\Http\Controllers\ExpenditureCategoryController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Expenditure\ExpenditureController;
@@ -40,6 +41,11 @@ Route::prefix('v1')
         Route::get('/csrf-token', function () {
             return response()->json(['token' => csrf_token()]);
         });
+
+        Route::get('/report/saving', [ReportController::class, 'saving']);
+        Route::get('/report/expense', [ReportController::class, 'expense']);
+        Route::get('/report/saving/get', [ReportController::class, 'getCategoryToAmountList']);
+        Route::get('/report/expense/get', [ReportController::class, 'fetchExpenseInfoList']);
         
         Route::get('/incomes/get', [IncomeController::class, 'get']);
         Route::post('/incomes/add', [IncomeController::class, 'create']);
