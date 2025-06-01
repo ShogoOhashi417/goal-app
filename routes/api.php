@@ -29,7 +29,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
-                ->name('logout');
+                ->name('api.logout');
 
 Route::get('/user/profile', [AuthController::class, 'profile']);
 Route::post('/login', [AuthenticatedSessionController::class, 'store']);
