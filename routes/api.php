@@ -33,6 +33,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     // SANCTUM_STATEFUL_DOMAINS の値を取得
     $sanctumStatefulDomains = env('SANCTUM_STATEFUL_DOMAINS');
 
+    dd(response()->json([
+        'user' => $request->user(),
+        'sanctum_stateful_domains' => $sanctumStatefulDomains,
+    ]));
+
     // ユーザー情報と環境変数の値を返す
     return response()->json([
         'user' => $request->user(),
