@@ -19,7 +19,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['http://localhost:3000', 'https://rakukake-web-front.pages.dev'],
+    'allowed_origins' => ['http://localhost:3000', 'https://rakukake-web-front.pages.dev', 'https://vb-a-ducation.com'],
 
     'allowed_origins_patterns' => [],
 
