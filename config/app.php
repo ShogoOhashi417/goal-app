@@ -184,6 +184,4 @@ return [
     'aliases' => Facade::defaultAliases()->merge([
         // 'Example' => App\Facades\Example::class,
     ])->toArray(),
-
-    'db_host' => env('DB_HOST', 'wahaha'),
 ];
