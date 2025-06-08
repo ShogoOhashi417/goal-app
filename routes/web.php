@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
@@ -25,6 +26,14 @@ use App\Http\Controllers\IncomeCategory\IncomeCategoryController;
 */
 
 Route::get('/', function () {
+});
+
+Route::get('/wasshoi', function (Request $request) {
+    return response([
+        'id' => 1,
+        'name' => 'テストユーザー',
+        'email' => 'test@example.com'
+    ]);
 });
 
 Route::get('/income', [IncomeController::class, 'index'])->middleware(['auth', 'verified'])->name('income');

@@ -1,0 +1,14 @@
+[phases.setup]
+nixpkgsArchive = "https://github.com/NixOS/nixpkgs/archive/refs/tags/23.05.tar.gz"
+
+[variables]
+PHP_VERSION = "8.2"
+
+[phases.build]
+cmds = [
+  "composer install --no-dev --optimize-autoloader",
+  "php artisan config:cache"
+]
+
+[start]
+cmd = "php artisan serve --host=0.0.0.0 --port=$PORT"

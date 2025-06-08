@@ -24,12 +24,24 @@ use App\Http\Controllers\IncomeCategory\IncomeCategoryController;
 |
 */
 
+// CSRFトークンを取得するための専用エンドポイント
+Route::get('/csrf-token', function () {
+    return response()->json(['token' => csrf_token()]);
+});
+
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+    // SANCTUM_STATEFUL_DOMAINS の値を取得
+    $sanctumStatefulDomains = env('SANCTUM_STATEFUL_DOMAINS');
+
+    // ユーザー情報と環境変数の値を返す
+    return response()->json([
+        'user' => $request->user(),
+        'sanctum_stateful_domains' => $sanctumStatefulDomains,
+    ]);
 });
 
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
-                ->name('logout');
+                ->name('api.logout');
 
 Route::get('/user/profile', [AuthController::class, 'profile']);
 Route::post('/login', [AuthenticatedSessionController::class, 'store']);
