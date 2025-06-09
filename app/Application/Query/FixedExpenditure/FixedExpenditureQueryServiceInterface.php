@@ -6,5 +6,5 @@ namespace App\Application\Query\FixedExpenditure;
 
 interface FixedExpenditureQueryServiceInterface
 {
-    public function fetchAll(): array;
+    public function fetchAll(int $userId): array;
 } 

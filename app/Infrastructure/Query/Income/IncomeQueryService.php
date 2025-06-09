@@ -19,11 +19,12 @@ final class IncomeQueryService implements IncomeQueryServiceInterface
     }
 
     /**
+     * @param int $userId
      * @return array
      */
-    public function fetchAll(): array
+    public function fetchAll(int $userId): array
     {
-        return $this->incomeModel->fetchAll();
+        return $this->incomeModel->fetchAll($userId);
     }
 
     /**

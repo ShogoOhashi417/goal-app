@@ -19,11 +19,12 @@ class ExpenditureQueryService implements ExpenditureQueryServiceInterface
     }
 
     /**
+     * @param int $userId
      * @return array
      */
-    public function fetchAll(): array
+    public function fetchAll(int $userId): array
     {
-        return $this->expenditureModel->fetchAll();
+        return $this->expenditureModel->fetchAll($userId);
     }
 
     /**

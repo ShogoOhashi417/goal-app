@@ -67,18 +67,20 @@ final class FixedExpenditure extends Model
     }
 
     /**
+     * @param int $userId
      * @return array
      */
-    public function fetchAll(): array
+    public function fetchAll(int $userId): array
     {
         return $this->join('expenditures', 'fixed_expenditures.expenditure_id', '=', 'expenditures.id')
                     ->join('expenditure_categories', 'expenditures.category_id', '=', 'expenditure_categories.id')
+                    ->where('fixed_expenditures.user_id', $userId)
                     ->select(
                         'fixed_expenditures.*', 
                         'expenditures.name',
                         'expenditures.amount',
                         'expenditure_categories.name as category_name',
-						'expenditure_categories.id as category_id'
+                        'expenditure_categories.id as category_id'
                     )
                     ->get()
                     ->toArray();

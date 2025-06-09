@@ -8,13 +8,15 @@ use DateTime;
 use Carbon\Carbon;
 use App\Application\UseCase\Task\Read\ReadTaskUseCase;
 use App\Infrastructure\Task\TaskRepository;
+use App\Application\Service\AuthService;
 
 class TaskController extends Controller
 {
     public function index(Request $request)
     {
         $readTaskUseCase = new ReadTaskUseCase(
-            new TaskRepository()
+            new TaskRepository(),
+            new AuthService()
         );
 
         $task_list = $readTaskUseCase->handle();
@@ -28,7 +30,8 @@ class TaskController extends Controller
     public function get()
     {
         $readTaskUseCase = new ReadTaskUseCase(
-            new TaskRepository()
+            new TaskRepository(),
+            new AuthService()
         );
 
         $taskList = $readTaskUseCase->handle();

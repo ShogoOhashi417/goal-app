@@ -1,19 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Application\UseCase\Task\Read;
 
 use App\Infrastructure\Task\TaskRepositoryInterface;
+use App\Application\Service\AuthService;
 
-class ReadTaskUseCase {
-    private readonly TaskRepositoryInterface $taskRepository;
+final class ReadTaskUseCase
+{
+    public function __construct(
+        private readonly TaskRepositoryInterface $taskRepository,
+        private readonly AuthService $authService
+    ) {}
 
-    public function __construct(TaskRepositoryInterface $taskRepository)
+    public function handle(): array
     {
-        $this->taskRepository = $taskRepository;
-    }
-
-    public function handle()
-    {
-        return $this->taskRepository->fetchTaskInfo();
+        $userId = $this->authService->getCurrentUserId();
+        return $this->taskRepository->fetchTaskInfo($userId);
     }
 }

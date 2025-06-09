@@ -1,25 +1,25 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Application\UseCase\Category\Expenditure\Fetch;
 
 use App\Models\ExpenditureCategory;
+use App\Application\Service\AuthService;
 
-final readonly class FetchExpenditureCategoryUseCase
+final class FetchExpenditureCategoryUseCase
 {
-    private readonly ExpenditureCategory $expenditureCategory;
-
     public function __construct(
-        ExpenditureCategory $expenditureCategory
-    )
-    {
-        $this->expenditureCategory = $expenditureCategory;
-    }
+        private readonly ExpenditureCategory $expenditureCategory,
+        private readonly AuthService $authService
+    ) {}
 
     /**
      * @return array
      */
     public function handle(): array
     {
-        return $this->expenditureCategory->fetchAll();
+        $userId = $this->authService->getCurrentUserId();
+        return $this->expenditureCategory->fetchAll($userId);
     }
 }

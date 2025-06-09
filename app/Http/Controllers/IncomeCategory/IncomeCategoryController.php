@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\IncomeCategory;
 use App\Models\ExpenditureCategory;
 use App\Http\Controllers\Controller;
+use App\Application\Service\AuthService;
 use App\Infrastructure\Repository\Category\Income\IncomeCategoryRepository;
 use App\Application\UseCase\Category\Income\Fetch\FetchIncomeCategoryUseCase;
 use App\Application\UseCase\Category\Income\Create\CreateIncomeCategoryUseCase;
@@ -24,7 +25,8 @@ class IncomeCategoryController extends Controller
         $incomeCategoryInfoList = $this->fetchIncomeCategories();
 
         $fetchExpenditureCategoryUseCase = new FetchExpenditureCategoryUseCase(
-            new ExpenditureCategory()
+            new ExpenditureCategory(),
+            new AuthService()
         );
 
         $expenditureCategoryInfoList = $fetchExpenditureCategoryUseCase->handle();
@@ -152,7 +154,8 @@ class IncomeCategoryController extends Controller
     private function fetchIncomeCategories(): array
     {
         $fetchIncomeCategoryUseCase = new FetchIncomeCategoryUseCase(
-            new IncomeCategory()
+            new IncomeCategory(),
+            new AuthService()
         );
 
         return $fetchIncomeCategoryUseCase->handle();

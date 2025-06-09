@@ -5,17 +5,18 @@ declare(strict_types=1);
 namespace App\Application\UseCase\LifeInsurance\Read;
 
 use App\Domain\LifeInsurance\LifeInsuranceRepositoryInterface;
+use App\Application\Service\AuthService;
 
-class ReadLifeInsuranceUseCase {
-    private readonly LifeInsuranceRepositoryInterface $lifeInsuranceRepository;
-
-    public function __construct(LifeInsuranceRepositoryInterface $lifeInsuranceRepository)
-    {
-        $this->lifeInsuranceRepository = $lifeInsuranceRepository;
-    }
+final class ReadLifeInsuranceUseCase
+{
+    public function __construct(
+        private readonly LifeInsuranceRepositoryInterface $lifeInsuranceRepository,
+        private readonly AuthService $authService
+    ) {}
 
     public function handle(): array
     {
-        return $this->lifeInsuranceRepository->fetchAll();
+        $userId = $this->authService->getCurrentUserId();
+        return $this->lifeInsuranceRepository->fetchAll($userId);
     }
 }

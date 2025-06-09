@@ -1,25 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Application\UseCase\Category\Income\Fetch;
 
 use App\Models\IncomeCategory;
+use App\Application\Service\AuthService;
 
-final readonly class FetchIncomeCategoryUseCase
+final class FetchIncomeCategoryUseCase
 {
-    private readonly IncomeCategory $incomeCategory;
-
     public function __construct(
-        IncomeCategory $incomeCategory
-    )
-    {
-        $this->incomeCategory = $incomeCategory;
-    }
+        private readonly IncomeCategory $incomeCategory,
+        private readonly AuthService $authService
+    ) {}
 
-    /**
-     * @return array
-     */
     public function handle(): array
     {
-        return $this->incomeCategory->fetchAll();
+        $userId = $this->authService->getCurrentUserId();
+        return $this->incomeCategory->fetchAll($userId);
     }
 }

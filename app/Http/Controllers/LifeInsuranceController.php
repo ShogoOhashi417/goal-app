@@ -11,13 +11,15 @@ use App\Domain\LifeInsurance\PaymentType;
 use App\Domain\LifeInsurance\Fee;
 use Exception;
 use RuntimeException;
+use App\Application\Service\AuthService;
 
 class LifeInsuranceController extends Controller
 {
     public function index()
     {
         $readLifeInsuranceUseCase = new ReadLifeInsuranceUseCase(
-            new LifeInsuranceRepository()
+            new LifeInsuranceRepository(),
+            new AuthService()
         );
 
         $lifeInsuranceInfoList = $readLifeInsuranceUseCase->handle();
@@ -40,7 +42,8 @@ class LifeInsuranceController extends Controller
 
     public function get() {
         $readLifeInsuranceUseCase = new ReadLifeInsuranceUseCase(
-            new LifeInsuranceRepository()
+            new LifeInsuranceRepository(),
+            new AuthService()
         );
 
         $lifeInsuranceInfoList = $readLifeInsuranceUseCase->handle();

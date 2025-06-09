@@ -10,10 +10,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\ExpenditureCategory;
 use App\Http\Controllers\Controller;
+use App\Models\PresetExpenditureItem;
+use App\Application\Service\AuthService;
+use App\Infrastructure\Util\CsvExporter;
 use App\Models\Expenditure as ExpenditureModel;
 use App\Infrastructure\Adaptor\Date\DateConverter;
 use App\Infrastructure\Query\Expenditure\ExpenditureQueryService;
 use App\Application\UseCase\CSV\Import\ImportExpendtureCsvUseCase;
+use App\Application\UseCase\CSV\Export\ExportExpenditureCsvUseCase;
 use App\Infrastructure\Adaptor\Calculation\CategoryAmountCalculater;
 use App\Infrastructure\Repository\Expenditure\ExpenditureRepository;
 use App\Application\UseCase\Expenditure\Fetch\FetchExpenditureUseCase;
@@ -21,16 +25,13 @@ use App\Application\UseCase\Expenditure\Create\CreateExpenditureUseCase;
 use App\Application\UseCase\Expenditure\Delete\DeleteExpenditureUseCase;
 use App\Application\UseCase\Expenditure\Update\UpdateExpenditureUseCase;
 use App\Application\UseCase\CSV\Export\ExportSampleExpenditureCsvUseCase;
-use App\Application\UseCase\CSV\Export\ExportExpenditureCsvUseCase;
 use App\Application\UseCase\Expenditure\Create\CreateExpenditureInputData;
 use App\Application\UseCase\Expenditure\Delete\DeleteExpenditureInputData;
 use App\Application\UseCase\Expenditure\Update\UpdateExpenditureInputData;
-use App\Application\UseCase\Category\Expenditure\Fetch\FetchExpenditureCategoryUseCase;
-use App\Application\UseCase\Expenditure\Create\BulkCreateExpenditureInputData;
 use App\Application\UseCase\Expenditure\Create\BulkCreateExpenditureUseCase;
+use App\Application\UseCase\Expenditure\Create\BulkCreateExpenditureInputData;
+use App\Application\UseCase\Category\Expenditure\Fetch\FetchExpenditureCategoryUseCase;
 use App\Infrastructure\Repository\PresetExpenditureItem\PresetExpenditureItemRepository;
-use App\Models\PresetExpenditureItem;
-use App\Infrastructure\Util\CsvExporter;
 
 class ExpenditureController extends Controller
 {
@@ -39,13 +40,15 @@ class ExpenditureController extends Controller
         $fetchExpenditureUseCase = new FetchExpenditureUseCase(
             new ExpenditureQueryService(
                 new ExpenditureModel()
-            )
+            ),
+            new AuthService()
         );
 
         $expenditureInfoList = $fetchExpenditureUseCase->handle();
 
         $fetchExpenditureCategoryUseCase = new FetchExpenditureCategoryUseCase(
-            new ExpenditureCategory()
+            new ExpenditureCategory(),
+            new AuthService()
         );
 
         $expenditureCategoryInfoList = $fetchExpenditureCategoryUseCase->handle();
@@ -63,7 +66,8 @@ class ExpenditureController extends Controller
         $fetchExpenditureUseCase = new FetchExpenditureUseCase(
             new ExpenditureQueryService(
                 new ExpenditureModel()
-            )
+            ),
+            new AuthService()
         );
 
         $expenditureInfoList = $fetchExpenditureUseCase->handle();
@@ -146,7 +150,8 @@ class ExpenditureController extends Controller
         $fetchExpenditureUseCase = new FetchExpenditureUseCase(
             new ExpenditureQueryService(
                 new ExpenditureModel()
-            )
+            ),
+            new AuthService()
         );
 
         $expenditureInfoList = $fetchExpenditureUseCase->handle();
@@ -254,7 +259,8 @@ class ExpenditureController extends Controller
         $importExpenditureCsvUseCase = new ImportExpendtureCsvUseCase(
             new DateConverter(),
             new FetchExpenditureCategoryUseCase(
-                new ExpenditureCategory()
+                new ExpenditureCategory(),
+                new AuthService()
             )
         );
 
