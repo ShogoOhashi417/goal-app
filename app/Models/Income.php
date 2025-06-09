@@ -12,12 +12,14 @@ final class Income extends Model
     protected $fillable = ['name', 'category_id', 'amount', 'calendar_date', 'user_id'];
 
     /**
+     * @param int $userId
      * @return array
      */
-    public function fetchAll(): array
+    public function fetchAll(int $userId): array
     {
         return $this->join('income_categories', 'incomes.category_id', '=', 'income_categories.id')
                     ->select('incomes.*', 'income_categories.name as category_name')
+                    ->where('incomes.user_id', $userId)
                     ->get()
                     ->toArray();
     }

@@ -12,11 +12,12 @@ class ExpenditureCategory extends Model
     protected $fillable = ['name', 'user_id'];
 
     /**
+     * @param int $userId
      * @return array
      */
-    public function fetchAll(): array
+    public function fetchAll(int $userId): array
     {
-        return $this->all()->toArray();
+        return $this->where('user_id', $userId)->get()->toArray();
     }
 
     /**

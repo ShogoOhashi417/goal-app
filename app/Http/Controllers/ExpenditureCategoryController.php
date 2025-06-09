@@ -4,13 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\ExpenditureCategory;
+use App\Application\Service\AuthService;
 use App\Infrastructure\Repository\Category\Expenditure\ExpenditureCategoryRepository;
 use App\Application\UseCase\Category\Expenditure\Fetch\FetchExpenditureCategoryUseCase;
 use App\Application\UseCase\Category\Expenditure\Create\CreateExpenditureCategoryUseCase;
 use App\Application\UseCase\Category\Expenditure\Delete\DeleteExpenditureCategoryUseCase;
+use App\Application\UseCase\Category\Expenditure\Update\UpdateExpenditureCategoryUseCase;
 use App\Application\UseCase\Category\Expenditure\Create\CreateExpenditureCategoryInputData;
 use App\Application\UseCase\Category\Expenditure\Delete\DeleteExpenditureCategoryInputData;
-use App\Application\UseCase\Category\Expenditure\Update\UpdateExpenditureCategoryUseCase;
 use App\Application\UseCase\Category\Expenditure\Update\UpdateExpenditureCategoryInputData;
 
 class ExpenditureCategoryController extends Controller
@@ -131,7 +132,8 @@ class ExpenditureCategoryController extends Controller
     private function fetchExpenditureCategories(): array
     {
         $fetchExpenditureCategoryUseCase = new FetchExpenditureCategoryUseCase(
-            new ExpenditureCategory()
+            new ExpenditureCategory(),
+            new AuthService()
         );
 
         return $fetchExpenditureCategoryUseCase->handle();

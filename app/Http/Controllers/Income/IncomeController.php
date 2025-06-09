@@ -20,6 +20,7 @@ use App\Application\UseCase\Income\Create\CreateIncomeInputData;
 use App\Application\UseCase\Income\Delete\DeleteIncomeInputData;
 use App\Application\UseCase\Income\Update\UpdateIncomeInputData;
 use App\Application\UseCase\Category\Income\Fetch\FetchIncomeCategoryUseCase;
+use App\Application\Service\AuthService;
 
 class IncomeController extends Controller
 {
@@ -28,13 +29,15 @@ class IncomeController extends Controller
         $fetchIncomeUseCase = new FetchIncomeUseCase(
             new IncomeQueryService(
                 new IncomeModel()
-            )
+            ),
+            new AuthService()
         );
 
         $incomeInfoList = $fetchIncomeUseCase->handle();
 
         $fetchIncomeCategoryUseCase = new FetchIncomeCategoryUseCase(
-            new IncomeCategory()
+            new IncomeCategory(),
+            new AuthService()
         );
 
         $incomeCategoryInfoList = $fetchIncomeCategoryUseCase->handle();
@@ -52,7 +55,8 @@ class IncomeController extends Controller
         $fetchIncomeUseCase = new FetchIncomeUseCase(
             new IncomeQueryService(
                 new IncomeModel()
-            )
+            ),
+            new AuthService()
         );
 
         $incomeInfoList = $fetchIncomeUseCase->handle();
@@ -122,13 +126,15 @@ class IncomeController extends Controller
         $fetchIncomeUseCase = new FetchIncomeUseCase(
             new IncomeQueryService(
                 new IncomeModel()
-            )
+            ),
+            new AuthService()
         );
 
         $incomeInfoList = $fetchIncomeUseCase->handle();
 
         $fetchIncomeCategoryUseCase = new FetchIncomeCategoryUseCase(
-            new IncomeCategory()
+            new IncomeCategory(),
+            new AuthService()
         );
 
         $incomeCategoryInfoList = $fetchIncomeCategoryUseCase->handle();

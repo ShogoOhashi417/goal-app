@@ -22,6 +22,7 @@ use App\Application\UseCase\FixedExpenditure\Delete\DeleteFixedExpenditureInputD
 use App\Infrastructure\Query\FixedExpenditure\FixedExpenditureQueryService;
 use App\Application\UseCase\FixedExpenditure\Fetch\FetchFixedExpenditureUseCase;
 use App\Application\UseCase\Category\Expenditure\Fetch\FetchExpenditureCategoryUseCase;
+use App\Application\Service\AuthService;
 
 class FixedExpenditureController extends Controller
 {
@@ -126,7 +127,8 @@ class FixedExpenditureController extends Controller
 		$fetchFixedExpenditureUseCase = new FetchFixedExpenditureUseCase(
 			new FixedExpenditureQueryService(
 				new FixedExpenditureModel()
-			)
+			),
+			new AuthService()
 		);
 
 		return $fetchFixedExpenditureUseCase->handle();
@@ -135,7 +137,8 @@ class FixedExpenditureController extends Controller
 	private function fetchExpenditureCategoryInfoList()
 	{
 		$fetchExpenditureCategoryUseCase = new FetchExpenditureCategoryUseCase(
-			new ExpenditureCategory()
+			new ExpenditureCategory(),
+			new AuthService()
 		);
 
 		return $fetchExpenditureCategoryUseCase->handle();

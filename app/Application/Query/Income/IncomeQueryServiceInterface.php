@@ -6,5 +6,5 @@ namespace App\Application\Query\Income;
 
 interface IncomeQueryServiceInterface
 {
-    public function fetchAll(): array;
+    public function fetchAll(int $userId): array;
 }
