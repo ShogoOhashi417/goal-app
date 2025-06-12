@@ -41,11 +41,13 @@ final class Income extends Model
     /**
      * @param string $startDate
      * @param string $endDate
+     * @param int $userId
      * @return array
      */
-    public function fetchOneTimeIncome(string $startDate, string $endDate): array
+    public function fetchOneTimeIncome(string $startDate, string $endDate, int $userId): array
     {
         return $this->whereBetween('calendar_date', [$startDate, $endDate])
+                    ->where('incomes.user_id', $userId)
                     ->join('income_categories', 'incomes.category_id', '=', 'income_categories.id')
                     ->leftjoin('fixed_incomes', 'incomes.id', '=', 'fixed_incomes.income_id')
                     ->whereNull('fixed_incomes.id')
@@ -55,12 +57,14 @@ final class Income extends Model
     }
 
     /**
+     * @param int $userId
      * @return array
      */
-    public function fetchFixedIncome(): array
+    public function fetchFixedIncome(int $userId): array
     {
         return $this->join('fixed_incomes', 'incomes.id', '=', 'fixed_incomes.income_id')
                     ->join('income_categories', 'incomes.category_id', '=', 'income_categories.id')
+                    ->where('incomes.user_id', $userId)
                     ->select(
                         'incomes.*', 
                         'income_categories.name as category_name',

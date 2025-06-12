@@ -40,9 +40,16 @@ final class Expenditure extends Model
                     ->toArray();
     }
 
-    public function fetchOneTimeExpenditure(string $startDate, string $endDate): array
+    /**
+     * @param string $startDate
+     * @param string $endDate
+     * @param int $userId
+     * @return array
+     */
+    public function fetchOneTimeExpenditure(string $startDate, string $endDate, int $userId): array
     {
         return $this->whereBetween('calendar_date', [$startDate, $endDate])
+                    ->where('expenditures.user_id', $userId)
                     ->join('expenditure_categories', 'expenditures.category_id', '=', 'expenditure_categories.id')
                     ->leftjoin('fixed_expenditures', 'expenditures.id', '=', 'fixed_expenditures.expenditure_id')
                     ->whereNull('fixed_expenditures.id')
@@ -51,10 +58,15 @@ final class Expenditure extends Model
                     ->toArray();
     }
 
-    public function fetchFixedExpenditure(): array
+    /**
+     * @param int $userId
+     * @return array
+     */
+    public function fetchFixedExpenditure(int $userId): array
     {
         return $this->join('fixed_expenditures', 'expenditures.id', '=', 'fixed_expenditures.expenditure_id')
                     ->join('expenditure_categories', 'expenditures.category_id', '=', 'expenditure_categories.id')
+                    ->where('expenditures.user_id', $userId)
                     ->select(
                         'expenditures.*', 
                         'expenditure_categories.name as category_name',
