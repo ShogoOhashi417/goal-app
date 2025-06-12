@@ -15,9 +15,17 @@ use App\Infrastructure\Adaptor\Date\DateConverter;
 use App\Infrastructure\Query\Income\IncomeQueryService;
 use App\Infrastructure\Query\Expenditure\ExpenditureQueryService;
 use App\Infrastructure\Adaptor\Calculation\CategoryAmountCalculater;
+use App\Application\Service\AuthService;
 
 final class ReportController extends Controller
 {
+    private readonly AuthService $authService;
+
+    public function __construct()
+    {
+        $this->authService = new AuthService();
+    }
+
     /**
      * レポートのインデックスページを表示
      */
@@ -98,12 +106,14 @@ final class ReportController extends Controller
      */
     private function createFinancialDataFactory(string $type, string $startDate, string $endDate): array
     {
+        $userId = $this->authService->getCurrentUserId();
+        
         if ($type === 'income') {
             $queryService = new IncomeQueryService(
                 new IncomeModel()
             );
-            $oneTimeDataList = $queryService->fetchOneTimeIncome($startDate, $endDate);
-            $fixedDataList = $queryService->fetchFixedIncome();
+            $oneTimeDataList = $queryService->fetchOneTimeIncome($startDate, $endDate, $userId);
+            $fixedDataList = $queryService->fetchFixedIncome($userId);
 
             return [
                 'queryService' => $queryService,
@@ -117,8 +127,8 @@ final class ReportController extends Controller
             new ExpenditureModel()
         );
 
-        $oneTimeDataList = $queryService->fetchOneTimeExpenditure($startDate, $endDate);
-        $fixedDataList = $queryService->fetchFixedExpenditure();
+        $oneTimeDataList = $queryService->fetchOneTimeExpenditure($startDate, $endDate, $userId);
+        $fixedDataList = $queryService->fetchFixedExpenditure($userId);
 
         return [
             'queryService' => $queryService,

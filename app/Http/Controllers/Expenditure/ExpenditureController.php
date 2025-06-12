@@ -81,14 +81,15 @@ class ExpenditureController extends Controller
     {
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
+        $userId = $request->user()->id;
 
         $expenditureQueryService = new ExpenditureQueryService(
             new ExpenditureModel()
         );
 
-        $oneTimeExpenditureInfoList = $expenditureQueryService->fetchOneTimeExpenditure($startDate, $endDate);
+        $oneTimeExpenditureInfoList = $expenditureQueryService->fetchOneTimeExpenditure($startDate, $endDate, $userId);
         
-        $fixedExpenditureInfoList = $expenditureQueryService->fetchFixedExpenditure();
+        $fixedExpenditureInfoList = $expenditureQueryService->fetchFixedExpenditure($userId);
 
         $targetFixedExpenditureInfoList = [];
         foreach ($fixedExpenditureInfoList as $fixedExpenditure) {
@@ -137,8 +138,6 @@ class ExpenditureController extends Controller
         );
 
         $categoryToAmountList = $categoryAmountCalculater->calculate($expenditureInfoList);
-
-        $fixedExpenditureInfoList = $expenditureQueryService->fetchFixedExpenditure();
 
         return [
             'category_to_amount_list' => $categoryToAmountList
