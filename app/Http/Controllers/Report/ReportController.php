@@ -29,20 +29,20 @@ final class ReportController extends Controller
     /**
      * レポートのインデックスページを表示
      */
-    public function saving(): string
+    public function saving(Request $request): string
     {
-        $startDate = (new DateTime())->modify('-1 year');
-        $endDate = new DateTime();
+        $startDate = date('Y-m-d', strtotime($request->input('start_date')));
+        $endDate = date('Y-m-t', strtotime($request->input('end_date')));
         $expenditureInfoList = $this->fetchFinancialData(
             'expenditure',
-            $startDate->format('Y-m-d'),
-            $endDate->format('Y-m-d')
+            $startDate,
+            $endDate
         );
 
         $incomeInfoList = $this->fetchFinancialData(
             'income',
-            $startDate->format('Y-m-d'),
-            $endDate->format('Y-m-d')
+            $startDate,
+            $endDate
         );
 
         return json_encode([
@@ -68,15 +68,15 @@ final class ReportController extends Controller
     /**
      * 支出レポートページを表示
      */
-    public function expense(): string
+    public function expense(Request $request): string
     {
-        $startDate = (new DateTime())->modify('-3 month');
-        $endDate = (new DateTime())->modify('last day of this month');
+        $startDate = date('Y-m-d', strtotime($request->input('start_date')));
+        $endDate = date('Y-m-t', strtotime($request->input('end_date')));
 
         $expenseInfoList = $this->fetchFinancialData(
             'expenditure',
-            $startDate->format('Y-m-d'),
-            $endDate->format('Y-m-d')
+            $startDate,
+            $endDate
         );
 
         return json_encode([
