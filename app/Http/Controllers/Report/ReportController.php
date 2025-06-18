@@ -32,7 +32,7 @@ final class ReportController extends Controller
     public function saving(Request $request): string
     {
         $startDate = date('Y-m-d', strtotime($request->input('start_date')));
-        $endDate = date('Y-m-t', strtotime($request->input('end_date')));
+        $endDate = date('Y-m-t', strtotime($request->input('end_date') . ' +1 year'));
         $expenditureInfoList = $this->fetchFinancialData(
             'expenditure',
             $startDate,
@@ -45,9 +45,12 @@ final class ReportController extends Controller
             $endDate
         );
 
+        $forecastData = $this->calculateExpenditureForecast($startDate, $endDate, $expenditureInfoList);
+
         return json_encode([
             'incomeDataList' => $incomeInfoList,
-            'expenseDataList' => $expenditureInfoList
+            'expenseDataList' => $expenditureInfoList,
+            'forecastData' => $forecastData
         ]);
     }
 
@@ -204,6 +207,40 @@ final class ReportController extends Controller
 
         return [
             'category_to_amount_list' => $categoryToAmountList
+        ];
+    }
+
+    /**
+     * @param string $requestStartDate リクエストで指定された開始日
+     * @param string $requestEndDate リクエストで指定された終了日
+     * @param array $expenditureInfoList 支出データ
+     * @return array
+     */
+    private function calculateExpenditureForecast(
+        string $requestStartDate,
+        string $requestEndDate,
+        array $expenditureInfoList
+    ): array {
+        $requestStart = new DateTime($requestStartDate);
+        $requestEnd = new DateTime($requestEndDate);
+        
+        $requestPeriodMonths = $requestStart->diff($requestEnd)->m + 
+                              ($requestStart->diff($requestEnd)->y * 12) + 1;
+        
+
+        $forecastCategoryToAmountList = [];
+
+        if (isset($expenditureInfoList['category_to_amount_list'])) {
+            foreach ($expenditureInfoList['category_to_amount_list'] as $categoryName => $monthlyAmounts) {
+                $totalAmount = array_sum($monthlyAmounts);
+                $monthlyAverage = count($monthlyAmounts) > 0 ? $totalAmount / count($monthlyAmounts) : 0;
+
+                $forecastCategoryToAmountList[$categoryName] = array_fill(0, $requestPeriodMonths, (int)$monthlyAverage);
+            }
+        }
+
+        return [
+            'category_to_amount_list' => $forecastCategoryToAmountList
         ];
     }
 }
