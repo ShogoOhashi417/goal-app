@@ -45,7 +45,11 @@ final class ReportController extends Controller
             $endDate
         );
 
-        $forecastData = $this->calculateExpenditureForecast($startDate, $endDate, $expenditureInfoList);
+        $forecastData = $this->calculateExpenditureForecast(
+            $startDate,
+            date('Y-m-t', strtotime($request->input('end_date'))),
+            $expenditureInfoList
+        );
 
         return json_encode([
             'incomeDataList' => $incomeInfoList,
@@ -227,7 +231,6 @@ final class ReportController extends Controller
         $requestPeriodMonths = $requestStart->diff($requestEnd)->m + 
                               ($requestStart->diff($requestEnd)->y * 12) + 1;
         
-
         $forecastCategoryToAmountList = [];
 
         if (isset($expenditureInfoList['category_to_amount_list'])) {
@@ -235,7 +238,16 @@ final class ReportController extends Controller
                 $totalAmount = array_sum($monthlyAmounts);
                 $monthlyAverage = count($monthlyAmounts) > 0 ? $totalAmount / count($monthlyAmounts) : 0;
 
-                $forecastCategoryToAmountList[$categoryName] = array_fill(0, $requestPeriodMonths, (int)$monthlyAverage);
+                $forecastMonthlyAmounts = [];
+                $currentMonth = clone $requestEnd;
+                
+                for ($i = 0; $i < $requestPeriodMonths; $i++) {
+                    $yearMonth = $currentMonth->format('Y-m');
+                    $forecastMonthlyAmounts[$yearMonth] = (int)$monthlyAverage;
+                    $currentMonth->modify('+1 month');
+                }
+
+                $forecastCategoryToAmountList[$categoryName] = $forecastMonthlyAmounts;
             }
         }
 
