@@ -18,8 +18,10 @@ final class Income extends Model
     public function fetchAll(int $userId): array
     {
         return $this->join('income_categories', 'incomes.category_id', '=', 'income_categories.id')
-                    ->select('incomes.*', 'income_categories.name as category_name')
+                    ->leftjoin('fixed_incomes', 'incomes.id', '=', 'fixed_incomes.income_id')
+                    ->select('incomes.*', 'income_categories.name as category_name', 'fixed_incomes.id as fixed_income_id', 'fixed_incomes.cycle_unit', 'fixed_incomes.payment_day', 'fixed_incomes.payment_month', 'fixed_incomes.start_date', 'fixed_incomes.end_date')
                     ->where('incomes.user_id', $userId)
+                    ->orderByRaw('fixed_incomes.id IS NULL DESC')
                     ->get()
                     ->toArray();
     }

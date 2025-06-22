@@ -1,160 +1,241 @@
-# 楽家計（Rakukake）- 家計管理アプリケーション
+# らくカケ API
 
-<p align="center">
-<img src="https://img.shields.io/badge/-PHP-777BB4.svg?logo=php&style=for-the-badge&logoColor=white">
-<img src="https://img.shields.io/badge/-Laravel-FF2D20.svg?logo=laravel&style=for-the-badge&logoColor=white">
-<img src="https://img.shields.io/badge/-React-61DAFB.svg?logo=react&style=for-the-badge&logoColor=black">
-<img src="https://img.shields.io/badge/-Tailwind%20CSS-38B2AC.svg?logo=tailwind-css&style=for-the-badge&logoColor=white">
-<img src="https://img.shields.io/badge/-MySQL-4479A1.svg?logo=mysql&style=for-the-badge&logoColor=white">
-<img src="https://img.shields.io/badge/-Docker-2496ED.svg?logo=docker&style=for-the-badge&logoColor=white">
-</p>
+## 概要
 
-## プロジェクト概要
+らくカケは家計管理を簡単にするためのLaravel APIバックエンドシステムです。収入・支出の管理、カテゴリー分類、レポート機能を提供し、個人の家計管理をサポートします。
 
-楽家計（Rakukake）は、日々の収入と支出を簡単に記録・管理し、家計の健全化をサポートするWebアプリケーションです。収入・支出の登録、カテゴリ管理、固定収支の管理、レポート機能などを提供します。
+## 主な機能
 
-## 使用している主な技術
+- **収入管理**
+  - 収入の登録・更新・削除
+  - 固定収入の管理
+  - 収入カテゴリーの管理
 
-### バックエンド
-- PHP 8.1以上
-- Laravel 10.x
-- MySQL 8.0
+- **支出管理**
+  - 支出の登録・更新・削除
+  - 固定支出の管理
+  - 支出カテゴリーの管理
+  - CSV一括インポート・エクスポート
 
-### フロントエンド
-- React 18.x
-- Inertia.js
-- Tailwind CSS
-- Headless UI
-- Highcharts（グラフ表示）
+- **レポート機能**
+  - 貯蓄レポート
+  - 支出レポート
+  - カテゴリー別集計
 
-### 開発・インフラ
-- Docker / Laravel Sail
-- PHPUnit（テスト）
-- GitHub Actions（CI/CD）
+- **認証機能**
+  - Laravel Sanctumを使用したAPI認証
+  - ユーザー管理
 
-## 環境変数一覧
+## 技術スタック
 
-環境変数の設定は `.env` ファイルで行います。主な環境変数は以下の通りです：
+- **フレームワーク**: Laravel 10.x
+- **PHP**: 8.2以上
+- **認証**: Laravel Sanctum
+- **アーキテクチャ**: ドメイン駆動設計（DDD）
+- **データベース**: MySQL/PostgreSQL対応
 
-| 変数名                 | 役割                      | デフォルト値           |
-|-----------------------|--------------------------|---------------------|
-| APP_NAME              | アプリケーション名          | Laravel             |
-| APP_ENV               | 実行環境                  | local               |
-| APP_KEY               | アプリケーションキー        | 自動生成される値       |
-| APP_DEBUG             | デバッグモード             | true                |
-| APP_URL               | アプリケーションURL        | http://localhost    |
-| DB_CONNECTION         | データベース接続方式        | mysql               |
-| DB_HOST               | データベースホスト          | mysql               |
-| DB_PORT               | データベースポート          | 3306                |
-| DB_DATABASE           | データベース名             | laravel             |
-| DB_USERNAME           | データベースユーザー名      | sail                |
-| DB_PASSWORD           | データベースパスワード      | password            |
+## アーキテクチャ
 
-## コマンド一覧
-
-| コマンド                            | 説明                                         |
-|------------------------------------|---------------------------------------------|
-| `sail up`                          | Docker環境を起動                             |
-| `sail up -d`                       | Docker環境をバックグラウンドで起動             |
-| `sail down`                        | Docker環境を停止                             |
-| `sail artisan migrate`             | データベースマイグレーションを実行              |
-| `sail artisan db:seed`             | シードデータを投入                            |
-| `sail npm run dev`                 | フロントエンド開発サーバーを起動                |
-| `sail npm run build`               | フロントエンドのビルド                        |
-| `sail artisan test`                | テストを実行                                 |
-| `sail php --version`               | PHPのバージョンを確認                         |
-| `sail composer install`            | PHPパッケージをインストール                    |
-| `sail npm install`                 | NPMパッケージをインストール                    |
-
-## ディレクトリ構成
+このプロジェクトはドメイン駆動設計（DDD）とクリーンアーキテクチャの原則に基づいて構築されています。
 
 ```
-rakukake/
-├── app/                  # アプリケーションのコアコード
-│   ├── Http/             # コントローラー、ミドルウェア、リクエスト
-│   ├── Domain/           # ドメインモデル
-│   │   └── Model/        # エンティティと値オブジェクト
-│   ├── UseCase/          # ユースケース（アプリケーションロジック）
-│   └── Repository/       # リポジトリインターフェースと実装
-├── bootstrap/            # アプリケーション起動ファイル
-├── config/               # 設定ファイル
-├── database/             # マイグレーションとシード
-├── public/               # 公開ディレクトリ
-├── resources/            # ビュー、未コンパイルアセット
-│   ├── js/               # Reactコンポーネント
-│   └── css/              # スタイルシート
-├── routes/               # ルート定義
-├── storage/              # アップロードファイル、キャッシュなど
-├── tests/                # テストファイル
-└── vendor/               # Composerパッケージ
+app/
+├── Application/          # アプリケーション層
+│   ├── Port/            # インターフェース定義
+│   ├── Query/           # クエリサービス
+│   ├── Service/         # アプリケーションサービス
+│   └── UseCase/         # ユースケース実装
+├── Domain/              # ドメイン層
+│   └── Model/           # ドメインモデル
+├── Infrastructure/      # インフラストラクチャ層
+│   ├── Adaptor/         # アダプター
+│   ├── Query/           # クエリ実装
+│   └── Repository/      # リポジトリ実装
+└── Http/               # プレゼンテーション層
+    └── Controllers/     # コントローラー
 ```
 
-## 開発環境構築手順
+## セットアップ
 
-### 前提条件
-- Docker
-- Docker Compose
-- Git
+### 必要な環境
 
-### 手順
+- PHP 8.2以上
+- Composer
+- Node.js（フロントエンド開発時）
+- MySQL または PostgreSQL
+
+### インストール手順
 
 1. リポジトリをクローン
 ```bash
-git clone [リポジトリURL]
-cd rakukake
+git clone <repository-url>
+cd backend
 ```
 
-2. 環境設定ファイルをコピー
+2. 依存関係をインストール
+```bash
+composer install
+```
+
+3. 環境設定ファイルをコピー
 ```bash
 cp .env.example .env
 ```
 
-3. Dockerコンテナを起動
-```bash
-./vendor/bin/sail up -d
-```
-
 4. アプリケーションキーを生成
 ```bash
-./vendor/bin/sail artisan key:generate
+php artisan key:generate
 ```
 
-5. 依存パッケージをインストール
+5. データベース設定
+`.env`ファイルでデータベース接続情報を設定
+
+6. マイグレーション実行
 ```bash
-./vendor/bin/sail composer install
-./vendor/bin/sail npm install
+php artisan migrate
 ```
 
-6. マイグレーションを実行
+7. シーダー実行（オプション）
 ```bash
-./vendor/bin/sail artisan migrate
-./vendor/bin/sail artisan db:seed  # （オプション）テストデータを投入
+php artisan db:seed
 ```
 
-7. フロントエンド開発サーバーを起動
+8. 開発サーバー起動
 ```bash
-./vendor/bin/sail npm run dev
+php artisan serve
 ```
 
-8. ブラウザでアクセス  
-http://localhost にアクセスすると、アプリケーションが表示されます。
+## API仕様
 
-## トラブルシューティング
+### 認証
 
-### Docker起動時に「Ports are not available: address already in use」エラーが発生する場合
-別のアプリケーションが同じポートを使用している可能性があります。`.env`ファイルの`APP_PORT`を変更してください。
+すべてのAPIエンドポイントはLaravel Sanctumによる認証が必要です。
 
-### マイグレーション実行時にエラーが発生する場合
-データベースの接続設定を確認してください。`.env`ファイルの`DB_*`設定が正しいことを確認してください。
+### エンドポイント一覧
 
-### フロントエンドのビルドが失敗する場合
-node_modulesを削除して再インストールしてみてください。
+#### 認証関連
+- `POST /api/login` - ログイン
+- `POST /api/logout` - ログアウト
+- `GET /api/user` - ユーザー情報取得
+
+#### 収入管理
+- `GET /api/v1/incomes/get` - 収入一覧取得
+- `POST /api/v1/incomes/add` - 収入追加
+- `PUT /api/v1/incomes/update/{id}` - 収入更新
+- `DELETE /api/v1/incomes/{id}` - 収入削除
+
+#### 固定収入管理
+- `GET /api/v1/fixed-incomes/get` - 固定収入一覧取得
+- `POST /api/v1/fixed-incomes/add` - 固定収入追加
+- `PUT /api/v1/fixed-incomes/update/{id}` - 固定収入更新
+- `DELETE /api/v1/fixed-incomes/{id}` - 固定収入削除
+
+#### 支出管理
+- `GET /api/v1/expenditures` - 支出一覧取得
+- `POST /api/v1/expenditures/add` - 支出追加
+- `PUT /api/v1/expenditures/update/{id}` - 支出更新
+- `DELETE /api/v1/expenditures/{id}` - 支出削除
+- `POST /api/v1/expenses/bulk-create` - 支出一括作成
+
+#### 固定支出管理
+- `GET /api/v1/fixed-expenses/get` - 固定支出一覧取得
+- `POST /api/v1/fixed-expenses/add` - 固定支出追加
+- `PUT /api/v1/fixed-expenses/update/{id}` - 固定支出更新
+- `DELETE /api/v1/fixed-expenses/{id}` - 固定支出削除
+
+#### カテゴリー管理
+- `GET /api/v1/income-categories` - 収入カテゴリー一覧取得
+- `POST /api/v1/income-categories` - 収入カテゴリー作成
+- `PUT /api/v1/income-categories/{id}` - 収入カテゴリー更新
+- `DELETE /api/v1/income-categories/{id}` - 収入カテゴリー削除
+
+- `GET /api/v1/expense-categories/get` - 支出カテゴリー一覧取得
+- `POST /api/v1/expense-categories` - 支出カテゴリー作成
+- `PUT /api/v1/expense-categories/{id}` - 支出カテゴリー更新
+- `DELETE /api/v1/expense-categories/{id}` - 支出カテゴリー削除
+
+#### CSV機能
+- `GET /api/v1/expenses/sample` - サンプルCSVダウンロード
+- `GET /api/v1/expenses/download` - 支出データCSVエクスポート
+- `POST /api/v1/expenses/import` - 支出データCSVインポート
+
+#### レポート
+- `GET /api/v1/report/saving` - 貯蓄レポート
+- `GET /api/v1/report/expense` - 支出レポート
+- `GET /api/v1/report/saving/get` - カテゴリー別貯蓄データ
+- `GET /api/v1/report/expense/get` - 支出情報一覧
+
+## データベース構造
+
+### 主要テーブル
+
+- `users` - ユーザー情報
+- `incomes` - 収入データ
+- `income_categories` - 収入カテゴリー
+- `fixed_incomes` - 固定収入データ
+- `expenditures` - 支出データ
+- `expenditure_categories` - 支出カテゴリー
+- `fixed_expenditures` - 固定支出データ
+- `preset_expenditure_items` - プリセット支出項目
+- `life_insurances` - 生命保険データ
+
+## 開発ガイドライン
+
+### コーディング規約
+
+- 変数名: キャメルケース
+- クラス名: パスカルケース
+- Enumの定数名: パスカルケース
+- すべてのPHPファイルで`declare(strict_types=1);`を使用
+
+### ドメインオブジェクトの実装ルール
+
+- すべてのドメインオブジェクトは`app/Domain/Model`配下に配置
+- プリミティブ型は値オブジェクトでラップ
+- エンティティはコンストラクタでバリデーション実行
+- イミュータブルな設計を心がける
+
+### ユースケースの実装ルール
+
+- 実行メソッド名は必ず`handle`
+- 依存性注入でトランザクションとリポジトリを受け取り
+- InputDataオブジェクトでパラメータを受け取り
+- 対応するInputDataクラスを必ず作成
+
+## テスト
+
 ```bash
-./vendor/bin/sail npm cache clean --force
-./vendor/bin/sail rm -rf node_modules
-./vendor/bin/sail npm install
+# 全テスト実行
+php artisan test
+
+# 特定のテストクラス実行
+php artisan test tests/Feature/ExampleTest.php
+
+# カバレッジ付きテスト実行
+php artisan test --coverage
+```
+
+## デプロイ
+
+### 本番環境への配置
+
+1. 環境変数の設定
+2. 依存関係のインストール
+3. アプリケーションキーの生成
+4. データベースマイグレーション
+5. キャッシュの最適化
+
+```bash
+composer install --no-dev --optimize-autoloader
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
 ```
 
 ## ライセンス
 
-このプロジェクトはMITライセンスの下で公開されています。
+MIT License
+
+## 貢献
+
+プルリクエストや課題報告は歓迎します。貢献する前に、コーディング規約とアーキテクチャガイドラインを確認してください。

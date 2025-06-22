@@ -24,32 +24,6 @@ use App\Application\Service\AuthService;
 
 class IncomeController extends Controller
 {
-    public function index()
-    {
-        $fetchIncomeUseCase = new FetchIncomeUseCase(
-            new IncomeQueryService(
-                new IncomeModel()
-            ),
-            new AuthService()
-        );
-
-        $incomeInfoList = $fetchIncomeUseCase->handle();
-
-        $fetchIncomeCategoryUseCase = new FetchIncomeCategoryUseCase(
-            new IncomeCategory(),
-            new AuthService()
-        );
-
-        $incomeCategoryInfoList = $fetchIncomeCategoryUseCase->handle();
-        
-        return Inertia::render('Income/Index',
-            [
-                'incomeDataList' => $incomeInfoList,
-                'IncomeCategoryDataList' => $incomeCategoryInfoList
-            ]
-        );
-    }
-
     public function get()
     {
         $fetchIncomeUseCase = new FetchIncomeUseCase(
