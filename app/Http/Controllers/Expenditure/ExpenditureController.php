@@ -35,32 +35,6 @@ use App\Infrastructure\Repository\PresetExpenditureItem\PresetExpenditureItemRep
 
 class ExpenditureController extends Controller
 {
-    public function index()
-    {
-        $fetchExpenditureUseCase = new FetchExpenditureUseCase(
-            new ExpenditureQueryService(
-                new ExpenditureModel()
-            ),
-            new AuthService()
-        );
-
-        $expenditureInfoList = $fetchExpenditureUseCase->handle();
-
-        $fetchExpenditureCategoryUseCase = new FetchExpenditureCategoryUseCase(
-            new ExpenditureCategory(),
-            new AuthService()
-        );
-
-        $expenditureCategoryInfoList = $fetchExpenditureCategoryUseCase->handle();
-
-        return Inertia::render('Expenditure/Index',
-            [
-                'expenditureDataList' => $expenditureInfoList,
-                'expenditure_category_info_list' => $expenditureCategoryInfoList
-            ]
-        );
-    }
-
     public function get()
     {
         $fetchExpenditureUseCase = new FetchExpenditureUseCase(

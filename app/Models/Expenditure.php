@@ -15,9 +15,9 @@ final class Expenditure extends Model
     {
         return $this->join('expenditure_categories', 'expenditures.category_id', '=', 'expenditure_categories.id')
                     ->leftjoin('fixed_expenditures', 'expenditures.id', '=', 'fixed_expenditures.expenditure_id')
-                    ->whereNull('fixed_expenditures.id')
                     ->where('expenditures.user_id', $userId)
                     ->select('expenditures.*', 'expenditure_categories.name as category_name', 'fixed_expenditures.id as fixed_expenditure_id', 'fixed_expenditures.cycle_unit', 'fixed_expenditures.payment_day', 'fixed_expenditures.payment_month', 'fixed_expenditures.start_date', 'fixed_expenditures.end_date')
+                    ->orderByRaw('fixed_expenditures.id IS NULL DESC')
                     ->get()
                     ->toArray();
     }
