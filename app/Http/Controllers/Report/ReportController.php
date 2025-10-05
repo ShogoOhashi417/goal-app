@@ -15,31 +15,46 @@ use App\Infrastructure\Adaptor\Date\DateConverter;
 use App\Infrastructure\Query\Income\IncomeQueryService;
 use App\Infrastructure\Query\Expenditure\ExpenditureQueryService;
 use App\Infrastructure\Adaptor\Calculation\CategoryAmountCalculater;
+use App\Application\Service\AuthService;
 
 final class ReportController extends Controller
 {
+    private readonly AuthService $authService;
+
+    public function __construct()
+    {
+        $this->authService = new AuthService();
+    }
+
     /**
      * レポートのインデックスページを表示
      */
-    public function saving(): Response
+    public function saving(Request $request): string
     {
-        $startDate = (new DateTime())->modify('-1 year');
-        $endDate = new DateTime();
+        $startDate = date('Y-m-d', strtotime($request->input('start_date')));
+        $endDate = date('Y-m-t', strtotime($request->input('end_date') . ' +1 year'));
         $expenditureInfoList = $this->fetchFinancialData(
             'expenditure',
-            $startDate->format('Y-m-d'),
-            $endDate->format('Y-m-d')
+            $startDate,
+            $endDate
         );
 
         $incomeInfoList = $this->fetchFinancialData(
             'income',
-            $startDate->format('Y-m-d'),
-            $endDate->format('Y-m-d')
+            $startDate,
+            $endDate
         );
 
-        return Inertia::render('Report/Balance/Index', [
+        $forecastData = $this->calculateExpenditureForecast(
+            $startDate,
+            date('Y-m-t', strtotime($request->input('end_date'))),
+            $expenditureInfoList
+        );
+
+        return json_encode([
             'incomeDataList' => $incomeInfoList,
-            'expenseDataList' => $expenditureInfoList
+            'expenseDataList' => $expenditureInfoList,
+            'forecastData' => $forecastData
         ]);
     }
 
@@ -60,18 +75,18 @@ final class ReportController extends Controller
     /**
      * 支出レポートページを表示
      */
-    public function expense(): Response
+    public function expense(Request $request): string
     {
-        $startDate = (new DateTime())->modify('-3 month');
-        $endDate = (new DateTime())->modify('last day of this month');
+        $startDate = date('Y-m-d', strtotime($request->input('start_date')));
+        $endDate = date('Y-m-t', strtotime($request->input('end_date')));
 
         $expenseInfoList = $this->fetchFinancialData(
             'expenditure',
-            $startDate->format('Y-m-d'),
-            $endDate->format('Y-m-d')
+            $startDate,
+            $endDate
         );
 
-        return Inertia::render('Report/Expenditure/Index', [
+        return json_encode([
             'expenseInfoList' => $expenseInfoList,
         ]);
     }
@@ -98,12 +113,14 @@ final class ReportController extends Controller
      */
     private function createFinancialDataFactory(string $type, string $startDate, string $endDate): array
     {
+        $userId = $this->authService->getCurrentUserId();
+        
         if ($type === 'income') {
             $queryService = new IncomeQueryService(
                 new IncomeModel()
             );
-            $oneTimeDataList = $queryService->fetchOneTimeIncome($startDate, $endDate);
-            $fixedDataList = $queryService->fetchFixedIncome();
+            $oneTimeDataList = $queryService->fetchOneTimeIncome($startDate, $endDate, $userId);
+            $fixedDataList = $queryService->fetchFixedIncome($userId);
 
             return [
                 'queryService' => $queryService,
@@ -117,8 +134,8 @@ final class ReportController extends Controller
             new ExpenditureModel()
         );
 
-        $oneTimeDataList = $queryService->fetchOneTimeExpenditure($startDate, $endDate);
-        $fixedDataList = $queryService->fetchFixedExpenditure();
+        $oneTimeDataList = $queryService->fetchOneTimeExpenditure($startDate, $endDate, $userId);
+        $fixedDataList = $queryService->fetchFixedExpenditure($userId);
 
         return [
             'queryService' => $queryService,
@@ -194,6 +211,48 @@ final class ReportController extends Controller
 
         return [
             'category_to_amount_list' => $categoryToAmountList
+        ];
+    }
+
+    /**
+     * @param string $requestStartDate リクエストで指定された開始日
+     * @param string $requestEndDate リクエストで指定された終了日
+     * @param array $expenditureInfoList 支出データ
+     * @return array
+     */
+    private function calculateExpenditureForecast(
+        string $requestStartDate,
+        string $requestEndDate,
+        array $expenditureInfoList
+    ): array {
+        $requestStart = new DateTime($requestStartDate);
+        $requestEnd = new DateTime($requestEndDate);
+        
+        $requestPeriodMonths = $requestStart->diff($requestEnd)->m + 
+                              ($requestStart->diff($requestEnd)->y * 12) + 1;
+        
+        $forecastCategoryToAmountList = [];
+
+        if (isset($expenditureInfoList['category_to_amount_list'])) {
+            foreach ($expenditureInfoList['category_to_amount_list'] as $categoryName => $monthlyAmounts) {
+                $totalAmount = array_sum($monthlyAmounts);
+                $monthlyAverage = count($monthlyAmounts) > 0 ? $totalAmount / count($monthlyAmounts) : 0;
+
+                $forecastMonthlyAmounts = [];
+                $currentMonth = clone $requestEnd;
+                
+                for ($i = 0; $i < $requestPeriodMonths; $i++) {
+                    $yearMonth = $currentMonth->format('Y-m');
+                    $forecastMonthlyAmounts[$yearMonth] = (int)$monthlyAverage;
+                    $currentMonth->modify('+1 month');
+                }
+
+                $forecastCategoryToAmountList[$categoryName] = $forecastMonthlyAmounts;
+            }
+        }
+
+        return [
+            'category_to_amount_list' => $forecastCategoryToAmountList
         ];
     }
 }

@@ -32,7 +32,8 @@ final class CreateFixedExpenditureUseCase
             $inputData->name,
             $inputData->categoryId,
             $inputData->amount,
-            $inputData->startDate
+            $inputData->startDate,
+            $inputData->userId
         );
 
         $this->expenditureRepository->create($expenditure);
@@ -48,7 +49,8 @@ final class CreateFixedExpenditureUseCase
             $inputData->paymentMonth,
             $inputData->startDate,
             $inputData->endDate,
-            $expenditureId
+            $expenditureId,
+            $inputData->userId
         );
 
         $this->fixedExpenditureRepository->create($fixedExpenditure);

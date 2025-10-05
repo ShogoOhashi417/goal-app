@@ -1,16 +1,18 @@
 <?php
 
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Income\IncomeController;
+use App\Http\Controllers\Report\ReportController;
 use App\Http\Controllers\ExpenditureCategoryController;
 use App\Http\Controllers\Expenditure\ExpenditureController;
+use App\Http\Controllers\FixedIncome\FixedIncomeController;
 use App\Http\Controllers\Expenditure\FixedExpenditureController;
 use App\Http\Controllers\IncomeCategory\IncomeCategoryController;
-use App\Http\Controllers\FixedIncome\FixedIncomeController;
-use App\Http\Controllers\Report\ReportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,11 +26,13 @@ use App\Http\Controllers\Report\ReportController;
 */
 
 Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
+});
+
+Route::get('/wasshoi', function (Request $request) {
+    return response([
+        'id' => 1,
+        'name' => 'テストユーザー',
+        'email' => 'test@example.com'
     ]);
 });
 

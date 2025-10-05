@@ -16,6 +16,7 @@ final class UpdateFixedExpenditureInputData
      * @param integer|null $paymentMonth
      * @param string $startDate
      * @param string|null $endDate
+     * @param integer $userId
      */
     public function __construct(
         public readonly int $id,
@@ -27,6 +28,7 @@ final class UpdateFixedExpenditureInputData
         public readonly ?int $paymentMonth,
         public readonly string $startDate,
         public readonly ?string $endDate,
+        public readonly int $userId,
     )
     {
     }

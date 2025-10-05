@@ -29,6 +29,7 @@ final readonly class FixedIncomeRepository implements FixedIncomeRepositoryInter
             $fixedIncome->getPaymentMonth() ? $fixedIncome->getPaymentMonth()->getValue() : null,
             $fixedIncome->getStartDate()->getValue(),
             $fixedIncome->getEndDate() ? $fixedIncome->getEndDate()->getValue() : null,
+            $fixedIncome->getUserId()
         );
     }
 

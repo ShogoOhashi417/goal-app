@@ -9,14 +9,15 @@ final class Expenditure extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'category_id', 'amount', 'calendar_date'];
+    protected $fillable = ['name', 'category_id', 'amount', 'calendar_date', 'user_id'];
 
-    public function fetchAll(): array
+    public function fetchAll(int $userId): array
     {
         return $this->join('expenditure_categories', 'expenditures.category_id', '=', 'expenditure_categories.id')
                     ->leftjoin('fixed_expenditures', 'expenditures.id', '=', 'fixed_expenditures.expenditure_id')
-                    ->whereNull('fixed_expenditures.id')
+                    ->where('expenditures.user_id', $userId)
                     ->select('expenditures.*', 'expenditure_categories.name as category_name', 'fixed_expenditures.id as fixed_expenditure_id', 'fixed_expenditures.cycle_unit', 'fixed_expenditures.payment_day', 'fixed_expenditures.payment_month', 'fixed_expenditures.start_date', 'fixed_expenditures.end_date')
+                    ->orderByRaw('fixed_expenditures.id IS NULL DESC')
                     ->get()
                     ->toArray();
     }
@@ -25,9 +26,9 @@ final class Expenditure extends Model
      * @param integer $id
      * @return Model|null
      */
-    public function fetchById(int $id): ?Model
+    public function fetchById(int $id, int $userId): ?Model
     {
-        return $this->find($id);
+        return $this->where('id', $id)->where('user_id', $userId)->first();
     }
 
     public function fetchByDateRange(string $startDate, string $endDate): array
@@ -39,9 +40,16 @@ final class Expenditure extends Model
                     ->toArray();
     }
 
-    public function fetchOneTimeExpenditure(string $startDate, string $endDate): array
+    /**
+     * @param string $startDate
+     * @param string $endDate
+     * @param int $userId
+     * @return array
+     */
+    public function fetchOneTimeExpenditure(string $startDate, string $endDate, int $userId): array
     {
         return $this->whereBetween('calendar_date', [$startDate, $endDate])
+                    ->where('expenditures.user_id', $userId)
                     ->join('expenditure_categories', 'expenditures.category_id', '=', 'expenditure_categories.id')
                     ->leftjoin('fixed_expenditures', 'expenditures.id', '=', 'fixed_expenditures.expenditure_id')
                     ->whereNull('fixed_expenditures.id')
@@ -50,10 +58,15 @@ final class Expenditure extends Model
                     ->toArray();
     }
 
-    public function fetchFixedExpenditure(): array
+    /**
+     * @param int $userId
+     * @return array
+     */
+    public function fetchFixedExpenditure(int $userId): array
     {
         return $this->join('fixed_expenditures', 'expenditures.id', '=', 'fixed_expenditures.expenditure_id')
                     ->join('expenditure_categories', 'expenditures.category_id', '=', 'expenditure_categories.id')
+                    ->where('expenditures.user_id', $userId)
                     ->select(
                         'expenditures.*', 
                         'expenditure_categories.name as category_name',
@@ -77,7 +90,8 @@ final class Expenditure extends Model
         string $name,
         int $categoryId,
         int $amount,
-        string $calendarDate
+        string $calendarDate,
+        int $userId
     ): void
     {
         $this->create(
@@ -85,7 +99,8 @@ final class Expenditure extends Model
                 'name' => $name,
                 'category_id' => $categoryId,
                 'amount' => $amount,
-                'calendar_date' => $calendarDate
+                'calendar_date' => $calendarDate,
+                'user_id' => $userId
             ]
         );
     }
@@ -95,9 +110,9 @@ final class Expenditure extends Model
      * @return void
      */
     public function saveBulk(
-        array $saveDataList
+        array $saveDataList,
     ): void {
-        $this->upsert($saveDataList, ['id']);
+        $this->upsert($saveDataList, ['id', 'user_id']);
     }
 
     /**
@@ -144,9 +159,9 @@ final class Expenditure extends Model
     /**
      * 
      * @param integer $id
-     * @return array
+     * @return self|null
      */
-    public function fetchFixedExpenditureById(int $id): array
+    public function fetchFixedExpenditureById(int $id): ?self
     {
         return $this->join('expenditure_categories', 'expenditures.category_id', '=', 'expenditure_categories.id')
                     ->join('fixed_expenditures', 'expenditures.id', '=', 'fixed_expenditures.expenditure_id')
@@ -161,7 +176,6 @@ final class Expenditure extends Model
                         'fixed_expenditures.end_date'
                     )
                     ->where('expenditures.id', $id)
-                    ->first()
-                    ->toArray();
+                    ->first();
     }
 }

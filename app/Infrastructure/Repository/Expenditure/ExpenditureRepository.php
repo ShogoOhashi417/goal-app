@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Repository\Expenditure;
 
+use Illuminate\Support\Facades\Log;
 use App\Domain\Model\Expenditure\Expenditure;
-use App\Domain\Model\Expenditure\ExpenditureHolder;
 use App\Models\Expenditure AS ExpenditureModel;
+use App\Domain\Model\Expenditure\ExpenditureHolder;
 use App\Domain\Model\Expenditure\ExpenditureRepositoryInterface;
 
 final class ExpenditureRepository implements ExpenditureRepositoryInterface
@@ -24,15 +25,22 @@ final class ExpenditureRepository implements ExpenditureRepositoryInterface
      * @param integer $id
      * @return array
      */
-    public function fetchById(int $id): array
+    public function fetchById(int $id, int $userId): array
     {
-        $expenditure = $this->expenditureModel->fetchById($id);
+        $expenditure = $this->expenditureModel->fetchById($id, $userId);
         return $expenditure ? $expenditure->toArray() : [];
     }
 
 	public function fetchFixedExpenditureById(int $id): array
 	{
-		return $this->expenditureModel->fetchFixedExpenditureById($id);
+        $fixedExpenditure = $this->expenditureModel->fetchFixedExpenditureById($id);
+
+        Log::info($id);
+        if (!$fixedExpenditure) {
+            return [];
+        }
+
+        return $fixedExpenditure->toArray();
 	}
 
     /**
@@ -45,6 +53,7 @@ final class ExpenditureRepository implements ExpenditureRepositoryInterface
             $expenditure->getCategoryId()->getValue(),
             $expenditure->getAmount()->getValue(),
             $expenditure->getCalendarDate()->getValue(),
+            $expenditure->getUserId()->value()
         );
     }
 
@@ -61,7 +70,8 @@ final class ExpenditureRepository implements ExpenditureRepositoryInterface
                 'name' => $expenditure->getName()->getValue(),
                 'category_id' => $expenditure->getCategoryId()->getValue(),
                 'amount' => $expenditure->getAmount()->getValue(),
-                'calendar_date' => $expenditure->getCalendarDate()->getValue()
+                'calendar_date' => $expenditure->getCalendarDate()->getValue(),
+                'user_id' => $expenditure->getUserId()->value()
             ];
         }
 

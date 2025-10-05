@@ -19,11 +19,12 @@ class ExpenditureQueryService implements ExpenditureQueryServiceInterface
     }
 
     /**
+     * @param int $userId
      * @return array
      */
-    public function fetchAll(): array
+    public function fetchAll(int $userId): array
     {
-        return $this->expenditureModel->fetchAll();
+        return $this->expenditureModel->fetchAll($userId);
     }
 
     /**
@@ -36,13 +37,23 @@ class ExpenditureQueryService implements ExpenditureQueryServiceInterface
         return $this->expenditureModel->fetchByDateRange($startDate, $endDate);
     }
 
-    public function fetchOneTimeExpenditure(string $startDate, string $endDate): array
+    /**
+     * @param string $startDate
+     * @param string $endDate
+     * @param int $userId
+     * @return array
+     */
+    public function fetchOneTimeExpenditure(string $startDate, string $endDate, int $userId): array
     {
-        return $this->expenditureModel->fetchOneTimeExpenditure($startDate, $endDate);
+        return $this->expenditureModel->fetchOneTimeExpenditure($startDate, $endDate, $userId);
     }
 
-    public function fetchFixedExpenditure(): array
+    /**
+     * @param int $userId
+     * @return array
+     */
+    public function fetchFixedExpenditure(int $userId): array
     {
-        return $this->expenditureModel->fetchFixedExpenditure();
+        return $this->expenditureModel->fetchFixedExpenditure($userId);
     }
 }

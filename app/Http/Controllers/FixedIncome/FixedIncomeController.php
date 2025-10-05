@@ -12,7 +12,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Domain\Model\FixedIncome\CycleUnit;
 use App\Models\FixedIncome as FixedIncomeModel;
-use App\Domain\Model\FixedIncome\FixedIncome;
 use App\Infrastructure\Repository\FixedIncomeRepository;
 use App\Infrastructure\Repository\Income\IncomeRepository;
 use App\Application\UseCase\FixedIncome\FetchFixedIncomeUseCase;
@@ -24,6 +23,7 @@ use App\Application\UseCase\FixedIncome\Input\CreateFixedIncomeInputData;
 use App\Application\UseCase\FixedIncome\Input\DeleteFixedIncomeInputData;
 use App\Application\UseCase\FixedIncome\Input\UpdateFixedIncomeInputData;
 use App\Application\UseCase\Category\Income\Fetch\FetchIncomeCategoryUseCase;
+use App\Application\Service\AuthService;
 
 class FixedIncomeController extends Controller
 {
@@ -32,7 +32,8 @@ class FixedIncomeController extends Controller
         $fixedIncomes = $this->fetchFixedIncomes();
 
 		$fetchIncomeCategoryUseCase = new FetchIncomeCategoryUseCase(
-            new IncomeCategory()
+            new IncomeCategory(),
+            new AuthService()
         );
 
         $incomeCategoryInfoList = $fetchIncomeCategoryUseCase->handle();
@@ -57,7 +58,8 @@ class FixedIncomeController extends Controller
     private function fetchIncomeCategoryInfoList(): array
     {
         $fetchIncomeCategoryUseCase = new FetchIncomeCategoryUseCase(
-            new IncomeCategory()
+            new IncomeCategory(),
+            new AuthService()
         );
 
         return $fetchIncomeCategoryUseCase->handle();
@@ -71,7 +73,8 @@ class FixedIncomeController extends Controller
         $fetchFixedIncomeUseCase = new FetchFixedIncomeUseCase(
             new FixedIncomeQueryService(
                 new FixedIncomeModel()
-            )
+            ),
+            new AuthService()
         );
 
         $fixedIncomes = $fetchFixedIncomeUseCase->handle();

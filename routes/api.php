@@ -2,10 +2,16 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Income\IncomeController;
-use App\Http\Controllers\Expenditure\ExpenditureController;
-use App\Http\Controllers\IncomeCategory\IncomeCategoryController;
+use App\Http\Controllers\Report\ReportController;
 use App\Http\Controllers\ExpenditureCategoryController;
+use App\Http\Controllers\Auth\PasswordResetLinkController;
+use App\Http\Controllers\Expenditure\ExpenditureController;
+use App\Http\Controllers\FixedIncome\FixedIncomeController;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Expenditure\FixedExpenditureController;
+use App\Http\Controllers\IncomeCategory\IncomeCategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,9 +24,28 @@ use App\Http\Controllers\ExpenditureCategoryController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+// CSRFトークンを取得するための専用エンドポイント
+Route::get('/csrf-token', function () {
+    return response()->json(['token' => csrf_token()]);
 });
+
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+    // SANCTUM_STATEFUL_DOMAINS の値を取得
+    $sanctumStatefulDomains = env('SANCTUM_STATEFUL_DOMAINS');
+
+    // ユーザー情報と環境変数の値を返す
+    return response()->json([
+        'user' => $request->user(),
+        'sanctum_stateful_domains' => $sanctumStatefulDomains,
+    ]);
+});
+
+Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
+                ->name('api.logout');
+
+Route::get('/user/profile', [AuthController::class, 'profile']);
+Route::post('/login', [AuthenticatedSessionController::class, 'store']);
+Route::post('/forgot-password', [PasswordResetLinkController::class, 'store']);
 
 Route::prefix('v1')
     ->name('v1.')
@@ -28,24 +53,44 @@ Route::prefix('v1')
         Route::get('/csrf-token', function () {
             return response()->json(['token' => csrf_token()]);
         });
+
+        Route::get('/report/saving', [ReportController::class, 'saving']);
+        Route::get('/report/expense', [ReportController::class, 'expense']);
+        Route::get('/report/saving/get', [ReportController::class, 'getCategoryToAmountList']);
+        Route::get('/report/expense/get', [ReportController::class, 'fetchExpenseInfoList']);
         
-        Route::get('/income', [IncomeController::class, 'get']);
-        Route::post('/income', [IncomeController::class, 'create']);
-        Route::put('/income/update/{id}', [IncomeController::class, 'update']);
-        Route::delete('/income/{id}', [IncomeController::class, 'delete']);
+        Route::get('/incomes/get', [IncomeController::class, 'get']);
+        Route::post('/incomes/add', [IncomeController::class, 'create']);
+        Route::put('/incomes/update/{id}', [IncomeController::class, 'update']);
+        Route::delete('/incomes/{id}', [IncomeController::class, 'delete']);
 
-        Route::get('/expenditure', [ExpenditureController::class, 'get']);
-        Route::post('/expenditure', [ExpenditureController::class, 'create']);
-        Route::put('/expenditure/update/{id}', [ExpenditureController::class, 'update']);
-        Route::delete('/expenditure/{id}', [ExpenditureController::class, 'delete']);
+        Route::get('/fixed-incomes/get', [FixedIncomeController::class, 'get']);
+        Route::post('/fixed-incomes/add', [FixedIncomeController::class, 'create']);
+        Route::put('/fixed-incomes/update/{id}', [FixedIncomeController::class, 'update']);
+        Route::delete('/fixed-incomes/{id}', [FixedIncomeController::class, 'delete']);
 
-        Route::get('/income_category', [IncomeCategoryController::class, 'get']);
-        Route::post('/income_category', [IncomeCategoryController::class, 'store']);
-        Route::put('/income_category/{id}', [IncomeCategoryController::class, 'update']);
-        Route::delete('/income_category/{id}', [IncomeCategoryController::class, 'delete']);
+        Route::get('/expenditures', [ExpenditureController::class, 'get']);
+        Route::post('/expenditures/add', [ExpenditureController::class, 'create']);
+        Route::put('/expenditures/update/{id}', [ExpenditureController::class, 'update']);
+        Route::delete('/expenditures/{id}', [ExpenditureController::class, 'delete']);
 
-        Route::get('/expenditure_category', [ExpenditureCategoryController::class, 'get']);
-        Route::post('/expenditure_category', [ExpenditureCategoryController::class, 'store']);
-        Route::put('/expenditure_category/{id}', [ExpenditureCategoryController::class, 'update']);
-        Route::delete('/expenditure_category/{id}', [ExpenditureCategoryController::class, 'delete']);
+        Route::get('/income-categories', [IncomeCategoryController::class, 'get']);
+        Route::post('/income-categories', [IncomeCategoryController::class, 'store']);
+        Route::put('/income-categories/{id}', [IncomeCategoryController::class, 'update']);
+        Route::delete('/income-categories/{id}', [IncomeCategoryController::class, 'delete']);
+
+        Route::get('/fixed-expenses/get', [FixedExpenditureController::class, 'get']);
+        Route::post('/fixed-expenses/add', [FixedExpenditureController::class, 'create']);
+        Route::put('/fixed-expenses/update/{id}', [FixedExpenditureController::class, 'update']);
+        Route::delete('/fixed-expenses/{id}', [FixedExpenditureController::class, 'delete']);
+
+        Route::get('/expense-categories/get', [ExpenditureCategoryController::class, 'get']);
+        Route::post('/expense-categories', [ExpenditureCategoryController::class, 'store']);
+        Route::put('/expense-categories/{id}', [ExpenditureCategoryController::class, 'update']);
+        Route::delete('/expense-categories/{id}', [ExpenditureCategoryController::class, 'delete']);
+
+        Route::get('/expenses/sample', [ExpenditureController::class, 'export']);
+        Route::get('/expenses/download', [ExpenditureController::class, 'exportData']);
+        Route::post('/expenses/import', [ExpenditureController::class, 'import_csv']);
+        Route::post('/expenses/bulk-create', [ExpenditureController::class, 'bulkCreate']);
     });

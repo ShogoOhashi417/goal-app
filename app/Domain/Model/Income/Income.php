@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Domain\Model\Income;
 
+use App\Domain\Model\User\UserId;
+
 final class Income
 {
     private readonly int $id;
@@ -11,13 +13,15 @@ final class Income
     private readonly IncomeCategoryId $categoryId;
     private readonly IncomeAmount $amount;
     private readonly CalendarDate $calendarDate;
+    private readonly UserId $userId;
 
     private function __construct(
         int $id,
         IncomeName $name,
         IncomeCategoryId $categoryId,
         IncomeAmount $amount,
-        CalendarDate $calendarDate
+        CalendarDate $calendarDate,
+        UserId $userId
     )
     {
         $this->id = $id;
@@ -25,6 +29,7 @@ final class Income
         $this->categoryId = $categoryId;
         $this->amount = $amount;
         $this->calendarDate = $calendarDate;
+        $this->userId = $userId;
     }
 
     /**
@@ -68,16 +73,26 @@ final class Income
     }
 
     /**
+     * @return UserId
+     */
+    public function getUserId(): UserId
+    {
+        return $this->userId;
+    }
+
+    /**
      * @param string $name
      * @param integer $categoryId
      * @param integer $amount
+     * @param integer $userId
      * @return self
      */
     public static function create(
         string $name,
         int $categoryId,
         int $amount,
-        string $calendarDate
+        string $calendarDate,
+        int $userId
     ): self
     {
         return new self(
@@ -85,7 +100,8 @@ final class Income
             new IncomeName($name),
             new IncomeCategoryId($categoryId),
             new IncomeAmount($amount),
-            new CalendarDate($calendarDate)
+            new CalendarDate($calendarDate),
+            new UserId($userId)
         );
     }
 
@@ -94,6 +110,7 @@ final class Income
      * @param string $name
      * @param integer $categoryId
      * @param integer $amount
+     * @param integer $userId
      * @return self
      */
     public static function reconstruct(
@@ -101,7 +118,8 @@ final class Income
         string $name,
         int $categoryId,
         int $amount,
-        string $calendarDate
+        string $calendarDate,
+        int $userId
     ): self
     {
         return new self(
@@ -109,7 +127,8 @@ final class Income
             new IncomeName($name),
             new IncomeCategoryId($categoryId),
             new IncomeAmount($amount),
-            new CalendarDate($calendarDate)
+            new CalendarDate($calendarDate),
+            new UserId($userId)
         );
     }
 }

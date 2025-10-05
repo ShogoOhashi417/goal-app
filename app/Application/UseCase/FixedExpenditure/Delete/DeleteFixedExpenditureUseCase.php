@@ -48,7 +48,8 @@ final class DeleteFixedExpenditureUseCase
             $expenditureInfoList['payment_month'],
             $expenditureInfoList['start_date'],
             $expenditureInfoList['end_date'],
-            $inputData->id
+            $inputData->id,
+            $inputData->userId
         );
 
         $this->fixedExpenditureRepository->remove($fixedExpenditure);
@@ -58,7 +59,8 @@ final class DeleteFixedExpenditureUseCase
             $expenditureInfoList['name'] ?? '',
             $expenditureInfoList['category_id'],
             $expenditureInfoList['amount'],
-            $expenditureInfoList['start_date']
+            $expenditureInfoList['start_date'],
+            $inputData->userId
         );
         $this->expenditureRepository->remove($expenditure);
     }

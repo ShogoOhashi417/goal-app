@@ -20,39 +20,17 @@ use App\Application\UseCase\Income\Create\CreateIncomeInputData;
 use App\Application\UseCase\Income\Delete\DeleteIncomeInputData;
 use App\Application\UseCase\Income\Update\UpdateIncomeInputData;
 use App\Application\UseCase\Category\Income\Fetch\FetchIncomeCategoryUseCase;
+use App\Application\Service\AuthService;
 
 class IncomeController extends Controller
 {
-    public function index()
-    {
-        $fetchIncomeUseCase = new FetchIncomeUseCase(
-            new IncomeQueryService(
-                new IncomeModel()
-            )
-        );
-
-        $incomeInfoList = $fetchIncomeUseCase->handle();
-
-        $fetchIncomeCategoryUseCase = new FetchIncomeCategoryUseCase(
-            new IncomeCategory()
-        );
-
-        $incomeCategoryInfoList = $fetchIncomeCategoryUseCase->handle();
-        
-        return Inertia::render('Income/Index',
-            [
-                'incomeDataList' => $incomeInfoList,
-                'IncomeCategoryDataList' => $incomeCategoryInfoList
-            ]
-        );
-    }
-
     public function get()
     {
         $fetchIncomeUseCase = new FetchIncomeUseCase(
             new IncomeQueryService(
                 new IncomeModel()
-            )
+            ),
+            new AuthService()
         );
 
         $incomeInfoList = $fetchIncomeUseCase->handle();
@@ -75,7 +53,8 @@ class IncomeController extends Controller
                 $request->income_name,
                 (int)$request->income_category_id,
                 (int)$request->income_amount,
-                (new DateTime($request->calendar_date))->format('Y-m-d')
+                (new DateTime($request->calendar_date))->format('Y-m-d'),
+                $request->user()->id
             )
         );
     }
@@ -94,7 +73,8 @@ class IncomeController extends Controller
                 $request->income_name,
                 (int)$request->income_category_id,
                 (int)$request->income_amount,
-                (new DateTime($request->calendar_date))->format('Y-m-d')
+                (new DateTime($request->calendar_date))->format('Y-m-d'),
+                $request->user()->id
             )
         );
     }
@@ -110,6 +90,7 @@ class IncomeController extends Controller
         $deleteIncomeUseCase->handle(
             new DeleteIncomeInputData(
                 (int)$request->id,
+                $request->user()->id
             )
         );
     }
@@ -119,13 +100,15 @@ class IncomeController extends Controller
         $fetchIncomeUseCase = new FetchIncomeUseCase(
             new IncomeQueryService(
                 new IncomeModel()
-            )
+            ),
+            new AuthService()
         );
 
         $incomeInfoList = $fetchIncomeUseCase->handle();
 
         $fetchIncomeCategoryUseCase = new FetchIncomeCategoryUseCase(
-            new IncomeCategory()
+            new IncomeCategory(),
+            new AuthService()
         );
 
         $incomeCategoryInfoList = $fetchIncomeCategoryUseCase->handle();

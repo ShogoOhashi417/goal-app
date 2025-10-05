@@ -26,6 +26,7 @@ final class FixedExpenditure
     private readonly StartDate $startDate;
     private readonly ?EndDate $endDate;
     private readonly int $expenditureId;
+    private readonly int $userId;
 
     private function __construct(
         int $id,
@@ -37,7 +38,8 @@ final class FixedExpenditure
         ?PaymentMonth $paymentMonth,
         StartDate $startDate,
         ?EndDate $endDate,
-        int $expenditureId
+        int $expenditureId,
+        int $userId
     ) {
         $this->id = $id;
         $this->name = $name;
@@ -49,6 +51,7 @@ final class FixedExpenditure
         $this->startDate = $startDate;
         $this->endDate = $endDate;
         $this->expenditureId = $expenditureId;
+        $this->userId = $userId;
     }
 
     /**
@@ -132,6 +135,13 @@ final class FixedExpenditure
     }
 
     /**
+     * @return int
+     */
+    public function getUserId(): int
+    {
+        return $this->userId;
+    }
+    /**
      * @param string $name
      * @param int $categoryId
      * @param int $amount
@@ -152,7 +162,8 @@ final class FixedExpenditure
         ?int $paymentMonth,
         string $startDate,
         ?string $endDate,
-        int $expenditureId
+        int $expenditureId,
+        int $userId
     ): self {
         return new self(
             0,
@@ -164,7 +175,8 @@ final class FixedExpenditure
             $paymentMonth ? new PaymentMonth($paymentMonth) : null,
             new StartDate($startDate),
             $endDate ? new EndDate($endDate) : null,
-            $expenditureId
+            $expenditureId,
+            $userId
         );
     }
 
@@ -191,7 +203,8 @@ final class FixedExpenditure
         ?int $paymentMonth,
         string $startDate,
         ?string $endDate,
-        int $expenditureId
+        int $expenditureId,
+        int $userId
     ): self {
         return new self(
             $id,
@@ -203,7 +216,8 @@ final class FixedExpenditure
             $paymentMonth ? new PaymentMonth($paymentMonth) : null,
             new StartDate($startDate),
             $endDate ? new EndDate($endDate) : null,
-            $expenditureId
+            $expenditureId,
+            $userId
         );
     }
 } 

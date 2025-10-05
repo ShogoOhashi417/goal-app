@@ -10,10 +10,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\ExpenditureCategory;
 use App\Http\Controllers\Controller;
+use App\Models\PresetExpenditureItem;
+use App\Application\Service\AuthService;
+use App\Infrastructure\Util\CsvExporter;
 use App\Models\Expenditure as ExpenditureModel;
 use App\Infrastructure\Adaptor\Date\DateConverter;
 use App\Infrastructure\Query\Expenditure\ExpenditureQueryService;
 use App\Application\UseCase\CSV\Import\ImportExpendtureCsvUseCase;
+use App\Application\UseCase\CSV\Export\ExportExpenditureCsvUseCase;
 use App\Infrastructure\Adaptor\Calculation\CategoryAmountCalculater;
 use App\Infrastructure\Repository\Expenditure\ExpenditureRepository;
 use App\Application\UseCase\Expenditure\Fetch\FetchExpenditureUseCase;
@@ -21,55 +25,29 @@ use App\Application\UseCase\Expenditure\Create\CreateExpenditureUseCase;
 use App\Application\UseCase\Expenditure\Delete\DeleteExpenditureUseCase;
 use App\Application\UseCase\Expenditure\Update\UpdateExpenditureUseCase;
 use App\Application\UseCase\CSV\Export\ExportSampleExpenditureCsvUseCase;
-use App\Application\UseCase\CSV\Export\ExportExpenditureCsvUseCase;
 use App\Application\UseCase\Expenditure\Create\CreateExpenditureInputData;
 use App\Application\UseCase\Expenditure\Delete\DeleteExpenditureInputData;
 use App\Application\UseCase\Expenditure\Update\UpdateExpenditureInputData;
-use App\Application\UseCase\Category\Expenditure\Fetch\FetchExpenditureCategoryUseCase;
-use App\Application\UseCase\Expenditure\Create\BulkCreateExpenditureInputData;
 use App\Application\UseCase\Expenditure\Create\BulkCreateExpenditureUseCase;
+use App\Application\UseCase\Expenditure\Create\BulkCreateExpenditureInputData;
+use App\Application\UseCase\Category\Expenditure\Fetch\FetchExpenditureCategoryUseCase;
 use App\Infrastructure\Repository\PresetExpenditureItem\PresetExpenditureItemRepository;
-use App\Models\PresetExpenditureItem;
-use App\Infrastructure\Util\CsvExporter;
 
 class ExpenditureController extends Controller
 {
-    public function index()
-    {
-        $fetchExpenditureUseCase = new FetchExpenditureUseCase(
-            new ExpenditureQueryService(
-                new ExpenditureModel()
-            )
-        );
-
-        $expenditureInfoList = $fetchExpenditureUseCase->handle();
-
-        $fetchExpenditureCategoryUseCase = new FetchExpenditureCategoryUseCase(
-            new ExpenditureCategory()
-        );
-
-        $expenditureCategoryInfoList = $fetchExpenditureCategoryUseCase->handle();
-
-        return Inertia::render('Expenditure/Index',
-            [
-                'expenditure_info_list' => $expenditureInfoList,
-                'expenditure_category_info_list' => $expenditureCategoryInfoList
-            ]
-        );
-    }
-
     public function get()
     {
         $fetchExpenditureUseCase = new FetchExpenditureUseCase(
             new ExpenditureQueryService(
                 new ExpenditureModel()
-            )
+            ),
+            new AuthService()
         );
 
         $expenditureInfoList = $fetchExpenditureUseCase->handle();
 
         return [
-            'expenditure_info_list' => $expenditureInfoList
+            'expenditureDataList' => $expenditureInfoList
         ];
     }
 
@@ -77,14 +55,15 @@ class ExpenditureController extends Controller
     {
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
+        $userId = $request->user()->id;
 
         $expenditureQueryService = new ExpenditureQueryService(
             new ExpenditureModel()
         );
 
-        $oneTimeExpenditureInfoList = $expenditureQueryService->fetchOneTimeExpenditure($startDate, $endDate);
+        $oneTimeExpenditureInfoList = $expenditureQueryService->fetchOneTimeExpenditure($startDate, $endDate, $userId);
         
-        $fixedExpenditureInfoList = $expenditureQueryService->fetchFixedExpenditure();
+        $fixedExpenditureInfoList = $expenditureQueryService->fetchFixedExpenditure($userId);
 
         $targetFixedExpenditureInfoList = [];
         foreach ($fixedExpenditureInfoList as $fixedExpenditure) {
@@ -134,8 +113,6 @@ class ExpenditureController extends Controller
 
         $categoryToAmountList = $categoryAmountCalculater->calculate($expenditureInfoList);
 
-        $fixedExpenditureInfoList = $expenditureQueryService->fetchFixedExpenditure();
-
         return [
             'category_to_amount_list' => $categoryToAmountList
         ];
@@ -146,7 +123,8 @@ class ExpenditureController extends Controller
         $fetchExpenditureUseCase = new FetchExpenditureUseCase(
             new ExpenditureQueryService(
                 new ExpenditureModel()
-            )
+            ),
+            new AuthService()
         );
 
         $expenditureInfoList = $fetchExpenditureUseCase->handle();
@@ -175,7 +153,8 @@ class ExpenditureController extends Controller
                 $request->expenditure_name,
                 (int)$request->expenditure_category_id,
                 (int)$request->expenditure_amount,
-                (new DateTime($request->calendar_date))->format('Y-m-d')
+                (new DateTime($request->calendar_date))->format('Y-m-d'),
+                $request->user()->id
             )
         );
     }
@@ -194,7 +173,8 @@ class ExpenditureController extends Controller
                 $request->expenditure_name,
                 (int)$request->expenditure_category_id,
                 (int)$request->expenditure_amount,
-                (new DateTime($request->calendar_date))->format('Y-m-d')
+                (new DateTime($request->calendar_date))->format('Y-m-d'),
+                $request->user()->id
             )
         );
     }
@@ -210,8 +190,7 @@ class ExpenditureController extends Controller
         $deleteExpenditureUseCase->handle(
             new DeleteExpenditureInputData(
                 (int)$request->id,
-                $request->name,
-                (int)$request->amount
+                $request->user()->id
             )
         );
     }
@@ -253,11 +232,12 @@ class ExpenditureController extends Controller
         $importExpenditureCsvUseCase = new ImportExpendtureCsvUseCase(
             new DateConverter(),
             new FetchExpenditureCategoryUseCase(
-                new ExpenditureCategory()
+                new ExpenditureCategory(),
+                new AuthService()
             )
         );
 
-        $expenditureList = $importExpenditureCsvUseCase->handle($file_path);
+        $expenditureList = $importExpenditureCsvUseCase->handle($file_path, $request->user()->id);
 
         $result = [];
 
@@ -307,7 +287,8 @@ class ExpenditureController extends Controller
 
         $bulkCreateExpenditureUseCase->handle(
             new BulkCreateExpenditureInputData(
-                $request->items
+                $request->items,
+                $request->user()->id
             )
         );
     }

@@ -10,9 +10,9 @@ use App\Models\LifeInsurance as LifeInsuranceModel;
 
 class LifeInsuranceRepository implements LifeInsuranceRepositoryInterface {
     
-    public function fetchAll(): array
+    public function fetchAll(int $userId): array
     {
-        return LifeInsuranceModel::all()->toArray();
+        return LifeInsuranceModel::where('user_id', $userId)->get()->toArray();
     }
 
     public function save(LifeInsurance $lifeInsurance)

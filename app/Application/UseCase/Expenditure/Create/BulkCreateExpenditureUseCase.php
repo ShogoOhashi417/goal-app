@@ -40,7 +40,8 @@ readonly class BulkCreateExpenditureUseCase
                         $item['name'],
                         $item['category_id'],
                         $item['amount'],
-                        $item['calendar_date']
+                        $item['calendar_date'],
+                        $inputData->userId
                     )
                 );
 
@@ -52,7 +53,8 @@ readonly class BulkCreateExpenditureUseCase
                     $item['name'],
                     $item['category_id'],
                     $item['amount'],
-                    $item['calendar_date']
+                    $item['calendar_date'],
+                    $inputData->userId
                 )
             );
         }

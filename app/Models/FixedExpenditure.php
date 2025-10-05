@@ -17,6 +17,7 @@ final class FixedExpenditure extends Model
         'payment_month', 
         'start_date', 
         'end_date', 
+        'user_id',
     ];
 
     /**
@@ -43,6 +44,7 @@ final class FixedExpenditure extends Model
         ?int $paymentMonth,
         string $startDate,
         ?string $endDate,
+        int $userId,
     ): void
     {
         $this->create([
@@ -52,31 +54,33 @@ final class FixedExpenditure extends Model
             'payment_month' => $paymentMonth,
             'start_date' => $startDate,
             'end_date' => $endDate,
+            'user_id' => $userId,
         ]);
     }
 
     /**
      * @param integer $id
-     * @return array
      */
-    public function fetchById(int $id): array
+    public function fetchById(int $id): ?self
     {
-        return $this->find($id)->toArray();
+        return $this->find($id);
     }
 
     /**
+     * @param int $userId
      * @return array
      */
-    public function fetchAll(): array
+    public function fetchAll(int $userId): array
     {
         return $this->join('expenditures', 'fixed_expenditures.expenditure_id', '=', 'expenditures.id')
                     ->join('expenditure_categories', 'expenditures.category_id', '=', 'expenditure_categories.id')
+                    ->where('fixed_expenditures.user_id', $userId)
                     ->select(
                         'fixed_expenditures.*', 
                         'expenditures.name',
                         'expenditures.amount',
                         'expenditure_categories.name as category_name',
-						'expenditure_categories.id as category_id'
+                        'expenditure_categories.id as category_id'
                     )
                     ->get()
                     ->toArray();
@@ -100,6 +104,7 @@ final class FixedExpenditure extends Model
         ?int $paymentMonth,
         string $startDate,
         ?string $endDate,
+        int $userId,
     ): void {
         $this->where('id', $id)->update([
             'expenditure_id' => $expenditureId,
@@ -108,6 +113,7 @@ final class FixedExpenditure extends Model
             'payment_month' => $paymentMonth,
             'start_date' => $startDate,
             'end_date' => $endDate,
+            'user_id' => $userId,
         ]);
     }
 
@@ -115,8 +121,8 @@ final class FixedExpenditure extends Model
      * @param integer $id
      * @return void
      */
-    public function deleteById(int $id): void
+    public function deleteById(int $id, int $userId): void
     {
-        $this->where('id', $id)->delete();
+        $this->where('id', $id)->where('user_id', $userId)->delete();
     }
 } 

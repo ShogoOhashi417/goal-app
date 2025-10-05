@@ -20,7 +20,7 @@ final readonly class DeleteFixedIncomeUseCase
 
     public function handle(DeleteFixedIncomeInputData $inputData): void
     {
-        $incomeInfoList = $this->incomeRepository->fetchById($inputData->id);
+        $incomeInfoList = $this->incomeRepository->fetchById($inputData->id, $inputData->userId);
 
         if (!$incomeInfoList) {
             throw new \RuntimeException('固定収入が見つかりませんでした。');
@@ -31,7 +31,8 @@ final readonly class DeleteFixedIncomeUseCase
             $incomeInfoList['name'],
             $incomeInfoList['category_id'],
             $incomeInfoList['amount'],
-            $incomeInfoList['calendar_date']
+            $incomeInfoList['calendar_date'],
+            $inputData->userId
         );
 
 		$fixedIncome = FixedIncome::reconstruct(
@@ -44,7 +45,7 @@ final readonly class DeleteFixedIncomeUseCase
 			(int)$incomeInfoList['payment_month'],
 			$incomeInfoList['start_date'],
 			$incomeInfoList['end_date'],
-			$inputData->user_id
+			$inputData->userId
 		);
 
 		$this->incomeRepository->remove($income);

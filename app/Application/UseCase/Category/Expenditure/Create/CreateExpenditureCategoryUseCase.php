@@ -6,6 +6,7 @@ use App\Domain\Model\Category\Expenditure\ExpenditureCategory;
 use App\Domain\Model\Category\Expenditure\ExpenditureCategoryName;
 use App\Domain\Model\Category\Expenditure\ExpenditureCategoryRepositoryInterface;
 use App\Application\UseCase\Category\Expenditure\Create\CreateExpenditureCategoryInputData;
+use App\Domain\Model\User\UserId;
 
 final class CreateExpenditureCategoryUseCase
 {
@@ -20,14 +21,15 @@ final class CreateExpenditureCategoryUseCase
 
     /**
      * @param CreateExpenditureCategoryInputData $inputData
-     * @return void
+     * @return array
      */
-    public function handle(CreateExpenditureCategoryInputData $inputData): void
+    public function handle(CreateExpenditureCategoryInputData $inputData): array
     {
         $expenditureCategory = ExpenditureCategory::create(
-            new ExpenditureCategoryName($inputData->name)
+            new ExpenditureCategoryName($inputData->name),
+            new UserId($inputData->userId)
         );
 
-        $this->repository->save($expenditureCategory);
+        return $this->repository->save($expenditureCategory);
     }
 }

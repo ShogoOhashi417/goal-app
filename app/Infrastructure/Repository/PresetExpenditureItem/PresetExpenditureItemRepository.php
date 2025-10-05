@@ -28,6 +28,7 @@ readonly class PresetExpenditureItemRepository implements PresetExpenditureItemR
             $saveDataList[] = [
                 'name' => $expenditure->getName()->getValue(),
                 'category_id' => $expenditure->getCategoryId()->getValue(),
+                'user_id' => $expenditure->getUserId()->value()
             ];
         }
 

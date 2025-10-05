@@ -18,34 +18,38 @@ final class ExpenditureCategoryRepository implements ExpenditureCategoryReposito
 
     /**
      * @param integer $id
+     * @param integer $userId
      * @return array
      */
-    public function fetchById(int $id): array
+    public function fetchById(int $id, int $userId): array
     {
         return $this->expenditureCategoryModel->fetchById($id);
     }
 
     /**
      * @param ExpenditureCategory $expenditureCategory
-     * @return void
+     * @return array
      */
-    public function save(ExpenditureCategory $expenditureCategory): void
+    public function save(ExpenditureCategory $expenditureCategory): array
     {
-        $this->expenditureCategoryModel->createExpenditureCategory(
-            $expenditureCategory->getName()->value()
+        return $this->expenditureCategoryModel->createExpenditureCategory(
+            $expenditureCategory->getName()->value(),
+            $expenditureCategory->getUserId()->value()
         );
     }
 
     /**
      * @param ExpenditureCategory $expenditureCategory
-     * @return void
+     * @return array
      */
-    public function edit(ExpenditureCategory $expenditureCategory): void
+    public function edit(ExpenditureCategory $expenditureCategory): array
     {
         $this->expenditureCategoryModel->updateById(
             $expenditureCategory->getId(),
             $expenditureCategory->getName()->value()
         );
+        
+        return $this->fetchById($expenditureCategory->getId(), $expenditureCategory->getUserId()->value())[0] ?? [];
     }
 
     /**

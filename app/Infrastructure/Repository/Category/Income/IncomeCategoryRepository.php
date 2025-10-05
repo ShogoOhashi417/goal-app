@@ -20,32 +20,35 @@ final class IncomeCategoryRepository implements IncomeCategoryRepositoryInterfac
      * @param integer $id
      * @return array
      */
-    public function fetchById(int $id): array
+    public function fetchById(int $id, int $userId): array
     {
-        return $this->incomeCategoryModel->fetchById($id);
+        return $this->incomeCategoryModel->fetchById($id, $userId);
     }
 
     /**
      * @param IncomeCategory $incomeCategory
-     * @return void
+     * @return array
      */
-    public function save(IncomeCategory $incomeCategory): void
+    public function save(IncomeCategory $incomeCategory): array
     {
-        $this->incomeCategoryModel->createIncomeCategory(
-            $incomeCategory->getName()->value()
+        return $this->incomeCategoryModel->createIncomeCategory(
+            $incomeCategory->getName()->value(),
+            $incomeCategory->getUserId()->value()
         );
     }
 
     /**
      * @param IncomeCategory $incomeCategory
-     * @return void
+     * @return array
      */
-    public function edit(IncomeCategory $incomeCategory): void
+    public function edit(IncomeCategory $incomeCategory): array
     {
         $this->incomeCategoryModel->updateIncomeCategory(
             $incomeCategory->getId(),
             $incomeCategory->getName()->value()
         );
+        
+        return $this->fetchById($incomeCategory->getId(), $incomeCategory->getUserId()->value())[0] ?? [];
     }
 
     /**

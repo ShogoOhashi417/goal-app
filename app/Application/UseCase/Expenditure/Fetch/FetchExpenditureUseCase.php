@@ -5,23 +5,21 @@ declare(strict_types=1);
 namespace App\Application\UseCase\Expenditure\Fetch;
 
 use App\Application\Query\Expenditure\ExpenditureQueryServiceInterface;
+use App\Application\Service\AuthService;
 
 final class FetchExpenditureUseCase
 {
-    private readonly ExpenditureQueryServiceInterface $query;
-
     public function __construct(
-        ExpenditureQueryServiceInterface $query
-    )
-    {
-        $this->query = $query;
-    }
+        private readonly ExpenditureQueryServiceInterface $query,
+        private readonly AuthService $authService
+    ) {}
 
     /**
      * @return array
      */
     public function handle(): array
     {
-        return $this->query->fetchAll();
+        $userId = $this->authService->getCurrentUserId();
+        return $this->query->fetchAll($userId);
     }
 }

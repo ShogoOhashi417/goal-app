@@ -28,7 +28,8 @@ final class CreateIncomeUseCase
             $inputData->name,
             $inputData->categoryId,
             $inputData->amount,
-            $inputData->calendarDate
+            $inputData->calendarDate,
+            $inputData->userId
         );
 
         $this->incomeRepository->create($income);

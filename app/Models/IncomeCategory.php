@@ -9,36 +9,41 @@ class IncomeCategory extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'user_id'];
 
     /**
+     * @param int $userId
      * @return array
      */
-    public function fetchAll(): array
+    public function fetchAll(int $userId): array
     {
-        return $this->all()->toArray();
+        return $this->where('user_id', $userId)->get()->toArray();
     }
 
     /**
      * @param integer $id
      * @return array
      */
-    public function fetchById(int $id): array
+    public function fetchById(int $id, int $userId): array
     {
-        return $this->where('id', $id)->get()->toArray();
+        return $this->where('id', $id)->where('user_id', $userId)->get()->toArray();
     }
 
     /**
      * @param string $name
-     * @return void
+     * @param int $userId
+     * @return array
      */
-    public function createIncomeCategory(string $name): void
+    public function createIncomeCategory(string $name, int $userId): array
     {
-        $this->create(
+        $category = $this->create(
             [
                 'name' => $name,
+                'user_id' => $userId,
             ]
         );
+        
+        return $category->toArray();
     }
 
     /**

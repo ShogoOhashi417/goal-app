@@ -24,7 +24,7 @@ final class DeleteExpenditureUseCase
      */
     public function handle(DeleteExpenditureInputData $inputData): void
     {
-        $expenditureInfoList = $this->expenditureRepository->fetchById($inputData->id);
+        $expenditureInfoList = $this->expenditureRepository->fetchById($inputData->id, $inputData->userId);
 
         if (!$expenditureInfoList) {
             return;
@@ -36,6 +36,7 @@ final class DeleteExpenditureUseCase
             $expenditureInfoList['category_id'],
             $expenditureInfoList['amount'],
             $expenditureInfoList['calendar_date'],
+            $inputData->userId
         );
         
         $this->expenditureRepository->remove($expenditure);

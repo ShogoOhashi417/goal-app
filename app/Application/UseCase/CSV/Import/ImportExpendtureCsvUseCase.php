@@ -35,7 +35,7 @@ final readonly class ImportExpendtureCsvUseCase
      * @param string $file_path
      * @return 
      */
-    public function handle(string $file_path)
+    public function handle(string $file_path, int $userId)
     {
         $file = new \SplFileObject($file_path);
 
@@ -61,7 +61,7 @@ final readonly class ImportExpendtureCsvUseCase
 
         foreach ($targetLineList as $line) {
 
-            $id = $line[self::ID_COLUMN];
+            $id = $line[self::ID_COLUMN] ?? 0;
 
             $line = array_map(function($value) {
                 $encoding = mb_detect_encoding($value, ['UTF-8', 'SJIS-win', 'eucJP-win']);
@@ -83,11 +83,12 @@ final readonly class ImportExpendtureCsvUseCase
 
             $expenditureHolder->appendExpenditure(
                 Expenditure::reconstruct(
-                    $id,
+                    (int)$id,
                     $name,
-                    $categoryId,
-                    $amount,
-                    $date
+                    (int)$categoryId,
+                    (int)$amount,
+                    $date,
+                    $userId
                 )
             );
         }

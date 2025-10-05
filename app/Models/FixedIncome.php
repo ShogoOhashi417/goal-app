@@ -19,6 +19,7 @@ final class FixedIncome extends Model
         'payment_month',
         'start_date',
         'end_date',
+        'user_id',
     ];
 
     /**
@@ -45,6 +46,7 @@ final class FixedIncome extends Model
         ?int $paymentMonth,
         string $startDate,
         ?string $endDate,
+        int $userId,
     ): void {
         $this->create([
             'income_id' => $incomeId,
@@ -53,6 +55,7 @@ final class FixedIncome extends Model
             'payment_month' => $paymentMonth,
             'start_date' => $startDate,
             'end_date' => $endDate,
+            'user_id' => $userId,
         ]);
     }
 
@@ -119,20 +122,20 @@ final class FixedIncome extends Model
     /**
      * ユーザーIDでフィルタリングし、関連テーブルを結合するメソッド
      * 
+     * @param int $userId
      * @return Builder
      */
-    public function fetchAll(): Builder
+    public function fetchAll(int $userId): Builder
     {
         return $this->join('incomes', 'fixed_incomes.income_id', '=', 'incomes.id')
             ->join('income_categories', 'incomes.category_id', '=', 'income_categories.id')
-            // ->where('incomes.user_id', Auth::id())
+            ->where('incomes.user_id', $userId)
             ->select(
                 'fixed_incomes.*',
                 'incomes.id',
                 'incomes.name',
                 'incomes.amount',
                 'incomes.category_id',
-                // 'incomes.user_id',
                 'income_categories.name as category_name'
             );
     }

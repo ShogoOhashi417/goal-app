@@ -5,6 +5,7 @@ namespace App\Application\UseCase\Category\Income\Create;
 use App\Domain\Model\Category\Income\IncomeCategory;
 use App\Domain\Model\Category\Income\IncomeCategoryName;
 use App\Domain\Model\Category\Income\IncomeCategoryRepositoryInterface;
+use App\Domain\Model\User\UserId;
 
 final class CreateIncomeCategoryUseCase
 {
@@ -17,12 +18,13 @@ final class CreateIncomeCategoryUseCase
         $this->repository = $repository;
     }
 
-    public function handle(CreateIncomeCategoryInputData $inputData)
+    public function handle(CreateIncomeCategoryInputData $inputData): array
     {
         $incomeCategory = IncomeCategory::create(
-            new IncomeCategoryName($inputData->name)
+            new IncomeCategoryName($inputData->name),
+            new UserId($inputData->userId)
         );
 
-        $this->repository->save($incomeCategory);
+        return $this->repository->save($incomeCategory);
     }
 }
