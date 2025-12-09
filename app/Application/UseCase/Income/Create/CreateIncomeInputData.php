@@ -12,6 +12,8 @@ final class CreateIncomeInputData
     public readonly string $calendarDate;
     public readonly int $userId;
 
+    
+
     public function __construct(
         string $name,
         int $categoryId,
